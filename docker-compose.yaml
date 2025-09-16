@@ -1,0 +1,31 @@
+services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db-indarchi
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: indarchi1indarchi1
+      MYSQL_DATABASE: indarchi_db
+      MYSQL_USER: indarchi
+      MYSQL_PASSWORD: indarchi
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin-indarchi
+    ports:
+      - "8080:80"
+    restart: always
+    environment:
+      PMA_HOST: mysql-db
+      PMA_USER: indarchi
+      PMA_PASSWORD: indarchi
+    depends_on:
+      - mysql-db
+
+volumes:
+  postgres_data:
+  mysql_data:

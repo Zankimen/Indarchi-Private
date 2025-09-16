@@ -1,0 +1,11 @@
+{
+    "name": "MySQL",
+    "alias": "mysql",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\MySQL\\Providers\\MySQLServiceProvider"
+    ],
+    "files": []
+}

@@ -1,0 +1,65 @@
+# Laravel & Composer
+/vendor/
+/public/storage
+/.phpunit.result.cache
+
+# Laravel storage (runtime)
+/storage/*.key
+/storage/app/public
+/storage/framework/cache/data
+/storage/framework/sessions
+/storage/framework/testing
+/storage/framework/views
+/storage/logs
+
+# Laravel bootstrap cache (ignore generated, keep dir)
+/bootstrap/cache/*.php
+!/bootstrap/cache/.gitkeep
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Node & Vite
+/node_modules/
+/public/hot
+/public/build
+.vite
+.vercel
+
+# Monorepo modules (safety)
+/Modules/**/node_modules/
+/Modules/**/vendor/
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# IDE/editor
+.idea/
+.fleet/
+.history/
+/.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Build outputs (generic)
+/dist/
+/build/
+/coverage/
+
+# Databases (local dev)
+/database/*.sqlite
+
+# Misc caches
+.cache/
+**/.cache/
