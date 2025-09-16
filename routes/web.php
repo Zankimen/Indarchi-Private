@@ -8,7 +8,7 @@ Route::get('/', function () {
     return Inertia::render('Welcome');
 });
 
-Route::get('/login', [AuthController::class, 'showLoginForm']);
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/register', [AuthController::class, 'showRegisterForm']);
