@@ -13,7 +13,14 @@ class Project extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'nama',
+        'deskripsi',
+        'tanggal_mulai',
+        'tanggal_selesai',
+        'lokasi',
+        'radius',
+    ];
 
     // protected static function newFactory(): ProjectFactory
     // {
