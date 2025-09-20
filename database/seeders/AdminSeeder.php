@@ -14,13 +14,10 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        // Ensure 'admin' role is created as a GLOBAL role (project_id = null)
         $adminRole = Role::firstOrCreate(
             [
-                'name' => 'admin',
-                'guard_name' => 'web',
-                'project_id' => null,
-            ]
+                'name' => 'admin'],
+                ['team_id' => null],
         );
 
         $adminUser = User::firstOrCreate(
