@@ -24,13 +24,6 @@ class AuthController extends Controller
         return Inertia::render('LoginForm');
     }
 
-    public function showRegisterForm()
-    {
-        $this->authService->redirectToDashboardIfAlreadyAuthenticated();
-
-        return Inertia::render('RegisterForm');
-    }
-
     public function login(LoginRequest $request)
     {        
         $this->authService->redirectToDashboardIfAlreadyAuthenticated();
@@ -42,17 +35,6 @@ class AuthController extends Controller
         return back()->withErrors([
             'email' => 'The provided credentials are incorrect.',
         ])->onlyInput('email');
-    }
-
-    public function register(RegisterRequest $request)
-    {
-        $this->authService->redirectToDashboardIfAlreadyAuthenticated();
-
-        $user = $this->authService->register($request);
-
-        $this->authService->loginWithUser($user);
-
-        return redirect()->intended('/dashboard');
     }
 
     public function logout(Request $request)
