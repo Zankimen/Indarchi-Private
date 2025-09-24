@@ -1,11 +1,9 @@
 {
-    "name": "Pekerja",
-    "alias": "pekerja",
-    "description": "",
-    "keywords": [],
-    "priority": 0,
-    "providers": [
-        "Modules\\Pekerja\\Providers\\PekerjaServiceProvider"
-    ],
-    "files": []
+  "name": "Pekerja",
+  "alias": "pekerja",
+  "description": "",
+  "keywords": [],
+  "priority": 0,
+  "providers": ["Modules\\Pekerja\\Providers\\PekerjaServiceProvider"],
+  "files": []
 }
