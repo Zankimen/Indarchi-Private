@@ -1,3 +1,5 @@
 {
-    "MySQL": true
+    "MySQL": true,
+    "Project": true,
+    "Pekerja": true
 }

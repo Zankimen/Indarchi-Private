@@ -67,12 +67,14 @@ const iconMap = {
   AlbumIcon: AlbumIcon,
 };
 
-export default function Dashboard({ children }) {
+export default function Dashboard({ children, title }) {
   const { moduleMenus } = usePage().props;
 
   const { url } = usePage();
 
   const currentPath = url;
+
+  console.log(currentPath);
 
   const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -86,29 +88,31 @@ export default function Dashboard({ children }) {
   }
 
   return (
-    <SidebarProvider>
-      <Sidebar variant="inset" className="border-r border-border/40">
-        <SidebarHeader className="border-b border-border/40 p-4">
+    <SidebarProvider className="max-w-[1440px]">
+      <Sidebar className="border-border/40">
+        <SidebarHeader className="p-4 bg-primary">
           <div className="space-y-4 border-primary border-2 shadow rounded-3xl flex justify-center items-center p-2">
-            <h1 className="text-2xl font-bold">SISTER</h1>
+            <h1 className="text-2xl font-bold">Indarchi</h1>
           </div>
         </SidebarHeader>
 
-        <SidebarContent className="px-2">
+        <SidebarContent className="px-6 bg-primary">
           <SidebarGroup>
-            <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-2 mb-2">
-              Navigation
-            </SidebarGroupLabel>
+            {/* <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-2 mb-2">
+                Navigation
+              </SidebarGroupLabel> */}
             <SidebarMenu className="space-y-1">
               <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild
                   isActive={currentPath === "/"}
-                  className="h-9 px-3 rounded-lg transition-all duration-200 hover:bg-accent/50"
+                  className="h-9 px-4 rounded-sm transition-all duration-200 hover:bg-secondary"
                 >
-                  <Link href="/" className="flex items-center gap-3">
-                    <HomeIcon className="h-4 w-4" />
-                    <span className="font-medium">Dashboard</span>
+                  <Link href="/" className="flex items-center gap-4">
+                    <HomeIcon className="h-4 w-4 text-primary-foreground" />
+                    <span className="text-primary-foreground font-bold">
+                      Dashboard
+                    </span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -126,11 +130,15 @@ export default function Dashboard({ children }) {
                         <CollapsibleTrigger asChild>
                           <SidebarMenuButton
                             className={
-                              "h-9 px-3 rounded-lg transition-all duration-200 hover:bg-accent/50 cursor-pointer"
+                              "h-9 px-4 rounded-sm transition-all duration-200 cursor-pointer"
                             }
                           >
-                            <Icon className="h-4 w-4" />
-                            <span className="font-medium">{menu.title}</span>
+                            <div className="flex justify-center items-center gap-4">
+                              <Icon className="h-4 w-4 text-primary-foreground" />
+                              <span className="font-bold text-primary-foreground">
+                                {menu.title}
+                              </span>
+                            </div>
                             <ChevronDown className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]:rotate-180" />
                           </SidebarMenuButton>
                         </CollapsibleTrigger>
@@ -146,11 +154,11 @@ export default function Dashboard({ children }) {
                                   <SidebarMenuSubButton
                                     asChild
                                     isActive={isActive}
-                                    className="h-8 px-3 rounded-md transition-all duration-200"
+                                    className="h-8 px-2 rounded-sm transition-all duration-200"
                                   >
-                                    <Link href={child.route}>
+                                    <Link href={child.route} className="gap-4">
                                       <SubIcon className="h-4 w-4" />
-                                      <span className="text-sm">
+                                      <span className="text-sm text-primary-foreground font-bold">
                                         {child.title}
                                       </span>
                                     </Link>
@@ -171,14 +179,16 @@ export default function Dashboard({ children }) {
                     <SidebarMenuButton
                       asChild
                       isActive={isActive}
-                      className="h-9 px-3 rounded-lg transition-all duration-200 hover:bg-accent/50"
+                      className="h-9 px-4 rounded-sm transition-all duration-200 hover:bg-accent/50"
                     >
                       <Link
                         href={menu.route}
-                        className="flex items-center gap-3"
+                        className="flex items-center gap-4"
                       >
-                        <Icon className="h-4 w-4" />
-                        <span className="font-medium">{menu.title}</span>
+                        <Icon className="h-4 w-4 text-primary-foreground" />
+                        <span className="text-primary-foreground font-bold">
+                          {menu.title}
+                        </span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -188,20 +198,20 @@ export default function Dashboard({ children }) {
           </SidebarGroup>
         </SidebarContent>
 
-        <SidebarFooter className="border-t border-border/40 p-2">
+        <SidebarFooter className="px-8 py-4">
           <SidebarMenu className="space-y-1">
             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
                 size="sm"
-                className="h-8 px-3 rounded-lg"
+                className="h-8 p-4 rounded-sm"
               >
                 <Link
                   href="/dashboard/tenant"
-                  className="flex items-center gap-3"
+                  className="flex items-center gap-4"
                 >
                   <SquareUserIcon className="h-4 w-4" />
-                  <span className="text-sm">Organization</span>
+                  <span className="text-sm">Logout</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -210,35 +220,40 @@ export default function Dashboard({ children }) {
       </Sidebar>
 
       <SidebarInset className="flex flex-col">
-        <div className="flex flex-col min-h-screen rounded-3xl h-full bg-radial from-secondary to-bg-card">
-          <header className="sticky top-0 z-40 border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 rounded-t-3xl">
-            <div className="flex h-16 items-center gap-4 px-6">
-              <div className="flex items-center gap-2 flex-1">
-                <SidebarTrigger className="-ml-1 h-8 w-8 cursor-pointer text-primary" />
-                <Separator orientation="vertical" className="h-6" />
-                {/* <DynamicBreadcrumbs /> */}
+        <div className="flex flex-col min-h-screen rounded-3xl h-full">
+          {/* backdrop-blur supports-[backdrop-filter]:bg-background/60 */}
+          <header className="sticky top-0 z-40 bg-primary-foreground">
+            <div className="flex h-24 items-center gap-4 px-10">
+              <div className="flex items-center gap-2 flex-1 font-bold text-3xl">
+                {title}
+                {/* <SidebarTrigger className="-ml-1 h-8 w-8 cursor-pointer text-primary" /> */}
               </div>
 
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={toggleDarkMode}
-                  className="h-8 w-8 p-0 cursor-pointer"
-                >
-                  {isDarkMode ? (
-                    <Sun className="h-4 w-4 text-primary" />
-                  ) : (
-                    <Moon className="h-4 w-4 text-primary" />
-                  )}
-                  <span className="sr-only">Toggle theme</span>
-                </Button>
+              <div className="flex items-center gap-4 h-full">
+                <div className="font-medium text-2xl">Joko</div>
+                <Avatar className="h-10 w-10">
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+                {/* <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={toggleDarkMode}
+                    className="h-8 w-8 p-0 cursor-pointer"
+                  >
+                    {isDarkMode ? (
+                      <Sun className="h-4 w-4 text-primary" />
+                    ) : (
+                      <Moon className="h-4 w-4 text-primary" />
+                    )}
+                    <span className="sr-only">Toggle theme</span>
+                  </Button> */}
               </div>
             </div>
           </header>
 
           <main className="flex-1 overflow-hidden">
-            <div className="h-full p-6">{children}</div>
+            <div className="h-full p-6 bg-primary-foreground">{children}</div>
           </main>
         </div>
         <Toaster />
