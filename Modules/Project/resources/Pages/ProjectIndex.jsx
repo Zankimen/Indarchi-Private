@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { usePage, Head, router, Link } from "@inertiajs/react";
-import Dashboard from "@/layout/Dashboard";
 
+import Dashboard from "@/layout/Dashboard";
 import CustomDataTable from "@components/custom/CustomDataTable";
 import CustomPagination from "@components/custom/CustomPagination";
 import CustomTableSearch from "@components/custom/CustomTableSearch";
@@ -112,37 +112,42 @@ function ProjectIndex() {
 
   return (
     <>
-      <Head title="Projects" />
+      <Head title="Assets" />
       <div className="w-full mx-auto">
         <div className="space-y-4">
-          {/* Header */}
-          <Card className="border-border">
+          {/* <Card className="border-border">
             <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">
               <h1 className="flex items-center justify-center sm:justify-start font-bold text-2xl md:text-2xl m-0 p-0">
-                <ClipboardList className="w-10 h-10 bg-accent text-primary rounded-2xl mr-4 p-2" />
-                Projects
+                <Users className="w-10 h-10 bg-accent text-primary rounded-2xl mr-4 p-2" />
+                Mahasiswa
               </h1>
               <div className="grid grid-cols-1 gap-2 sm:flex">
-                <Link href="/projects/create">
+                <Link href="/mysql/mahasiswa/add">
                   <Button className="cursor-pointer">
-                    Add Project
+                    Add Mahasiswa
                     <Plus className="w-4 h-4" />
                   </Button>
                 </Link>
               </div>
             </div>
-          </Card>
+          </Card> */}
 
-          {/* Table + Search */}
-          <Card className="border-border">
-            <div className="flex justify-end items-center gap-2 px-6">
-              <CustomTableSearch
-                search={search}
-                setSearch={setSearch}
-                onSearch={onSearch}
-                placeholder="Search Projects"
-              />
-            </div>
+          <div className="flex justify-between items-center gap-2 px-4">
+            <Link href="/projects/create">
+              <Button className="cursor-pointer">
+                Add Project
+                <Plus className="w-4 h-4" />
+              </Button>
+            </Link>
+
+            <CustomTableSearch
+              search={search}
+              setSearch={setSearch}
+              onSearch={onSearch}
+              placeholder="Search Projects"
+            />
+          </div>
+          <div className="px-4 space-y-4">
             <CustomDataTable
               columns={columns}
               data={projects.data}
@@ -151,18 +156,18 @@ function ProjectIndex() {
               filters={filters}
               noItem="Project"
             />
-          </Card>
-
-          {/* Pagination */}
-          <CustomPagination
-            data={projects}
-            onPaginationChange={onPaginationChange}
-          />
+            <CustomPagination
+              data={projects}
+              onPaginationChange={onPaginationChange}
+            />
+          </div>
         </div>
       </div>
     </>
   );
 }
 
-ProjectIndex.layout = (page) => <Dashboard children={page} />;
+ProjectIndex.layout = (page) => (
+  <Dashboard children={page} title={"Projects"} />
+);
 export default ProjectIndex;
