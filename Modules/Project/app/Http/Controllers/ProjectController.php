@@ -9,12 +9,13 @@ use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
-    public function index() 
+    public function index(Request $request)
     {
         $projects = Project::latest()->get();
         return Inertia::render('Project/ProjectIndex', [
             'users' => 'fatih',
             'projects' => $projects,
+            'filters' => $this-> getAllProjectFilter($request),
         ]);
     }
      public function create()
@@ -65,5 +66,20 @@ class ProjectController extends Controller
         $project->delete();
 
         return redirect()->route('projects.index')->with('success', 'Project deleted!');
+    }
+
+    public function getAllProjectFilter($request)
+    {
+        return [
+            'search' => $request->search,
+            'sort_by' => $request->sort_by,
+            'sort_direction' => $request->sort_direction,
+            'nama' => $request->nama,
+            'deskripsi' => $request->deskripsi,
+            'tanggal mulai' => $request->tanggal_mulai,
+            'tanggal selesai' => $request->tanggal_selesai,
+            'lokasi' => $request->lokasi,
+            'radius' => $request->radius,
+        ];
     }
 }
