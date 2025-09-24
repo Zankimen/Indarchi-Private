@@ -45,7 +45,7 @@ const onRowClick = (item) => {
 function DosenIndex() {
   const { dosen, filters } = usePage().props;
 
-  const [search, setSearch] = useState(filters.search || "");
+  const {search, setSearch} = useState(filters.search || "");
 
   const sortBy = filters.sort_by || "";
   const sortDirection = filters.sort_direction || "";
