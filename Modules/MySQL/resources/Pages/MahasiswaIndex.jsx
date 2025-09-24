@@ -101,7 +101,7 @@ function MahasiswaIndex() {
       <Head title="Assets" />
       <div className="w-full mx-auto">
         <div className="space-y-4">
-          <Card className="border-border">
+          {/* <Card className="border-border">
             <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">
               <h1 className="flex items-center justify-center sm:justify-start font-bold text-2xl md:text-2xl m-0 p-0">
                 <Users className="w-10 h-10 bg-accent text-primary rounded-2xl mr-4 p-2" />
@@ -116,17 +116,24 @@ function MahasiswaIndex() {
                 </Link>
               </div>
             </div>
-          </Card>
+          </Card> */}
 
-          <Card className="border-border">
-            <div className="flex justify-end items-center gap-2 px-6">
-              <CustomTableSearch
-                search={search}
-                setSearch={setSearch}
-                onSearch={onSearch}
-                placeholder="Search Mahasiswa"
-              />
-            </div>
+          <div className="flex justify-between items-center gap-2 px-4">
+            <Link href="/mysql/mahasiswa/add">
+              <Button className="cursor-pointer">
+                Add Mahasiswa
+                <Plus className="w-4 h-4" />
+              </Button>
+            </Link>
+
+            <CustomTableSearch
+              search={search}
+              setSearch={setSearch}
+              onSearch={onSearch}
+              placeholder="Search Mahasiswa"
+            />
+          </div>
+          <div className="px-4 space-y-4">
             <CustomDataTable
               columns={columns}
               data={mahasiswa.data}
@@ -135,16 +142,16 @@ function MahasiswaIndex() {
               filters={filters}
               noItem="Mahasiswa"
             />
-          </Card>
-          <CustomPagination
-            data={mahasiswa}
-            onPaginationChange={onPaginationChange}
-          />
+            <CustomPagination
+              data={mahasiswa}
+              onPaginationChange={onPaginationChange}
+            />
+          </div>
         </div>
       </div>
     </>
   );
 }
 
-MahasiswaIndex.layout = (page) => <Dashboard children={page} />;
+MahasiswaIndex.layout = (page) => <Dashboard children={page} title={"Mahasiswa"} />;
 export default MahasiswaIndex;

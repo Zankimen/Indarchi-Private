@@ -6,4 +6,5 @@ return [
 
     // Ensure module providers are explicitly registered so bindings are available
     Modules\MySQL\Providers\MySQLServiceProvider::class,
+    Modules\Project\Providers\ProjectServiceProvider::class,
 ];
