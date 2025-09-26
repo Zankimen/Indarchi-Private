@@ -2,34 +2,44 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AdminSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $adminRole = Role::firstOrCreate(
-            [
-                'name' => 'admin'],
-                ['team_id' => null],
-        );
+        // Create permissions first
+        $this->call(\Modules\Peran\Database\Seeders\PermissionsSeeder::class);
 
-        $adminUser = User::firstOrCreate(
-            [
-                'email' => 'admin@admin.admin',
-                'name' => 'admin',
-                'password' => bcrypt('admin')
-            ]
-        );
+        // Create admin role with both name and nama fields
+        $adminRole = Role::firstOrCreate([
+            'name' => 'admin',
+            'guard_name' => 'web'
+        ], [
+            'name' => 'admin',
+            'nama' => 'Administrator', // This is required now
+            'guard_name' => 'web'
+        ]);
 
-        if(!$adminUser->hasRole($adminRole)) {
-            $adminUser->assignRole($adminRole);
+        // Give all permissions to admin
+        $adminRole->syncPermissions(Permission::all());
+
+        // Create admin user
+        $admin = User::firstOrCreate([
+            'email' => 'admin@example.com'
+        ], [
+            'name' => 'Administrator',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('password'),
+        ]);
+
+        // Assign role to admin user
+        if (!$admin->hasRole('admin')) {
+            $admin->assignRole('admin');
         }
     }
 }

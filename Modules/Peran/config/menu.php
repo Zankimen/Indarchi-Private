@@ -4,6 +4,6 @@ return [
     [
         'title' => 'Peran',
         'icon' => 'PackageIcon',
-        'route' => '/peran',
+        'route' => '/role',
     ],
 ];

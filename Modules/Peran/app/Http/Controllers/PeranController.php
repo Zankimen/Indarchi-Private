@@ -4,53 +4,99 @@ namespace Modules\Peran\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Modules\Peran\Http\Requests\Peran\CreatePeranRequest;
+use Modules\Peran\Http\Requests\Peran\UpdatePeranRequest;
+use Modules\Peran\Services\PeranService;
+use Modules\Peran\Models\Peran;
 
 class PeranController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    protected $peranService;
+
+    public function __construct(PeranService $peranService)
     {
-        return view('peran::index');
+        $this->peranService = $peranService;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function index(Request $request)
     {
-        return view('peran::create');
+        try {
+            return Inertia::render('Peran/PeranIndex', [
+                'roles' => $this->peranService->getPeransPaginated($request),
+                'filters' => $this->peranService->getAllPeranFilter($request),
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request) {}
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
+    public function details(Peran $role)
     {
-        return view('peran::show');
+        return Inertia::render('Peran/PeranDetails', [
+            'role' => $role->load('permissions'),
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
+    public function addPage()
     {
-        return view('peran::edit');
+        return Inertia::render('Peran/PeranAdd', [
+            'permissions' => $this->peranService->getAllPermissions(),
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id) {}
+    public function create(CreatePeranRequest $request)
+    {
+        try {
+            $this->peranService->createRole($request->validated());
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id) {}
+            return redirect()
+                ->route('role.index')
+                ->with('success', 'Peran berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withErrors(['error' => $e->getMessage()])
+                ->withInput();
+        }
+    }
+
+    public function editPage(Peran $role)
+    {
+        return Inertia::render('Peran/PeranEdit', [
+            'role' => $role->load('permissions'),
+            'permissions' => $this->peranService->getAllPermissions(),
+        ]);
+    }
+
+    public function update(UpdatePeranRequest $request, Peran $role)
+    {
+        try {
+            $this->peranService->updateRole($role, $request->validated());
+
+            return redirect()
+                ->route('role.index')
+                ->with('success', 'Peran berhasil diperbarui.');
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withErrors(['error' => $e->getMessage()])
+                ->withInput();
+        }
+    }
+
+    public function delete(Peran $role)
+    {
+        try {
+            $this->peranService->deleteRole($role);
+
+            return redirect()
+                ->route('role.index')
+                ->with('success', 'Peran berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withErrors(['error' => $e->getMessage()]);
+        }
+    }
 }
