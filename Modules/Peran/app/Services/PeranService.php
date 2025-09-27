@@ -11,6 +11,7 @@ class PeranService
     public function getPeransPaginated($request)
     {
         $query = Peran::with('permissions')
+            ->withCount('permissions')
             ->when($request->search, function ($q, $search) {
                 $q->search($search);
             })

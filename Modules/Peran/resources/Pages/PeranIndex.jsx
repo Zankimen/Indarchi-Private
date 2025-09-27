@@ -25,7 +25,7 @@ const columns = [
     key: "permissions_count",
     label: "Jumlah Permission",
     type: "text",
-    render: (item) => item.permissions?.length || 0,
+    render: (item) => item.permissions_count || item.permissions?.length || 0,
   },
   {
     key: "created_at",
