@@ -113,9 +113,9 @@ function PekerjaIndex() {
           </Card> */}
 
           <div className="flex justify-between items-center gap-2 px-4">
-            <Link href="/mysql/mahasiswa/add">
+            <Link href="/pekerja/add">
               <Button className="cursor-pointer">
-                Tambah Pekerja
+                Tambah Karyawan
                 <Plus className="w-4 h-4" />
               </Button>
             </Link>
@@ -124,7 +124,7 @@ function PekerjaIndex() {
               search={search}
               setSearch={setSearch}
               onSearch={onSearch}
-              placeholder="Search Mahasiswa"
+              placeholder="Search karyawan"
             />
           </div>
           <div className="px-4 space-y-4">
@@ -147,5 +147,5 @@ function PekerjaIndex() {
   );
 }
 
-PekerjaIndex.layout = (page) => <Dashboard children={page} title={"Mahasiswa"} />;
+PekerjaIndex.layout = (page) => <Dashboard children={page} title={"Karyawan"} />;
 export default PekerjaIndex;
