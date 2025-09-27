@@ -14,7 +14,6 @@ class UpdatePeranRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // Fixed: Changed from 'roles,name' to 'roles,nama' to match database column
             'nama' => 'required|string|max:255|unique:roles,nama,' . $this->route('role')->id,
             'permissions' => 'nullable|array',
             'permissions.*' => 'exists:permissions,id'

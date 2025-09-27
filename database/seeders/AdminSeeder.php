@@ -12,10 +12,8 @@ class AdminSeeder extends Seeder
 {
     public function run(): void
     {
-        // Create permissions first
         $this->call(\Modules\Peran\Database\Seeders\PermissionsSeeder::class);
 
-        // Create Admin Role
         $adminRole = Peran::firstOrCreate([
             'name' => 'admin',
             'guard_name' => 'web'
@@ -25,10 +23,8 @@ class AdminSeeder extends Seeder
             'guard_name' => 'web'
         ]);
 
-        // Give all permissions to admin
         $adminRole->syncPermissions(Permission::all());
 
-        // Create Admin User
         $adminUser = User::firstOrCreate([
             'email' => 'admin@example.com'
         ], [
@@ -37,7 +33,6 @@ class AdminSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
-        // Assign role to admin user
         if (!$adminUser->hasRole('admin')) {
             $adminUser->assignRole('admin');
         }
