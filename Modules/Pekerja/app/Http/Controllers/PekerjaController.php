@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Modules\Pekerja\Http\Request\Pekerja\CreatePekerjaRequest;
+use Modules\Pekerja\Http\Request\Pekerja\CreateKaryawanRequest;
 use Modules\Pekerja\Http\Request\Pekerja\UpdatePekerjaRequest;
 use Modules\Pekerja\Services\PekerjaService;
 
@@ -23,6 +23,7 @@ class PekerjaController extends Controller
     {
         return Inertia::render('Pekerja/PekerjaIndex', [
             'pekerja' => $this->pekerjaService->getPekerjaPaginated($request),
+            'karyawan' => $this->pekerjaService->getKaryawanPaginated($request),
             'filters' => $this->pekerjaService->getAllPekerjaFilter($request),
         ]);
     }
@@ -39,13 +40,13 @@ class PekerjaController extends Controller
         return Inertia::render('Pekerja/PekerjaAdd');
     }
 
-    public function create(CreatePekerjaRequest $request)
+    public function create(CreateKaryawanRequest $request)
     {
-        $this->pekerjaService->createPekerja($request->validated());
+        $this->pekerjaService->createKaryawan($request->validated());
 
         return redirect()
             ->route('pekerja.index')
-            ->with('success', 'Pekerja berhasil ditambahkan.');
+            ->with('success', 'Karyawan berhasil ditambahkan.');
     }
 
     public function editPage(User $pekerja)
@@ -66,7 +67,7 @@ class PekerjaController extends Controller
 
     public function delete(User $pekerja)
     {
-        $this->pekerjaService->deleteDosen($pekerja);
+        $this->pekerjaService->deletePekerja($pekerja);
 
         return redirect()
             ->route('pekerja.index')

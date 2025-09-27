@@ -40,21 +40,20 @@ function PekerjaAdd() {
       <Head title="Add Pekerja" />
       <div className="space-y-4">
         {/* Header Card */}
-        <Card className="border-border">
           <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-4 gap-4">
             <h1 className="flex items-center justify-center sm:justify-start font-bold text-2xl md:text-2xl m-0 p-0">
               Tambah Karyawan
             </h1>
             <div className="grid grid-cols-1 gap-2 sm:flex">
               <Link href="/pekerja">
-                <Button className="cursor-pointer">
+                <Button variant="outline" 
+                  className="cursor-pointer rounded-[10px] px-6 py-3 font-bold text-[16px]">
                   <ChevronLeft className="w-4 h-4" />
                   Batal
                 </Button>
               </Link>
             </div>
           </div>
-        </Card>
 
         {/* Form Card */}
         <Card className="px-6 py-8 space-y-2 border-border">
@@ -160,7 +159,7 @@ function PekerjaAdd() {
             <div className="flex justify-end pt-6">
               <Button 
                 type="submit"
-                className="bg-[#194AC2] text-white hover:bg-[#0f3499] rounded-[10px] px-8 py-3 font-semibold text-base disabled:opacity-50"
+                className="bg-[#194AC2] text-white hover:bg-[#0f3499] rounded-[10px] px-8 py-3 font-bold text-[16px] disabled:opacity-50"
                 disabled={processing}
               >
                 {processing ? "Menyimpan..." : "Simpan"}

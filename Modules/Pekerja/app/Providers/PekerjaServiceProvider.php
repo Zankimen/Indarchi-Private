@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Modules\Pekerja\Repositories\Eloquent\KaryawanRepository;
 
 class PekerjaServiceProvider extends ServiceProvider
 {
@@ -36,6 +37,9 @@ class PekerjaServiceProvider extends ServiceProvider
     {
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
+        
+        // Register repositories
+        $this->app->bind(KaryawanRepository::class, KaryawanRepository::class);
     }
 
     /**
