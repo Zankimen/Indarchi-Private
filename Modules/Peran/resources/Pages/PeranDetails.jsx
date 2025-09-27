@@ -1,14 +1,9 @@
 import React from "react";
-
 import { Head, Link, router, usePage } from "@inertiajs/react";
-
 import Dashboard from "@/layout/Dashboard";
-
 import { Pencil, ChevronLeft, Trash, Shield, CheckCircle } from "lucide-react";
-
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-
 import { formatDateNoHour } from "@/components/lib/utils";
 
 function PeranDetails() {
@@ -29,7 +24,6 @@ function PeranDetails() {
     }
   };
 
-  // Simple Badge component as replacement
   const PermissionBadge = ({ children }) => (
     <div className="inline-flex items-center px-3 py-2 rounded-lg bg-accent/50 border border-border text-sm font-medium text-foreground hover:bg-accent/70 transition-colors">
       <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
@@ -39,7 +33,7 @@ function PeranDetails() {
 
   return (
     <>
-      <Head title={role.nama || role.name} />
+      <Head title={role.name} />
       <div className="space-y-4">
         <Card className="border-border">
           <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">
@@ -49,7 +43,7 @@ function PeranDetails() {
               </h1>
               <div>
                 <h1 className="flex items-center h-full m-0 p-0 font-bold text-2xl md:text-2xl">
-                  {role.nama || role.name}
+                  {role.name}
                 </h1>
               </div>
             </div>
@@ -83,10 +77,12 @@ function PeranDetails() {
 
         <Card className="p-6 px-8 border-border">
           <div className="w-full space-y-8">
-            {/* Basic Information */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              <Detail label="Nama Peran" value={role.nama || role.name} />
-              <Detail label="System Name" value={role.name} />
+              <Detail label="Nama Peran" value={role.name} />
+              <Detail
+                label="Deskripsi"
+                value={role.deskripsi || "Tidak ada deskripsi"}
+              />
               <Detail
                 label="Jumlah Permission"
                 value={role.permissions?.length || 0}
@@ -102,7 +98,6 @@ function PeranDetails() {
               />
             </div>
 
-            {/* Permissions Section */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold">Permissions</h3>
@@ -115,7 +110,7 @@ function PeranDetails() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {role.permissions.map((permission) => (
                     <PermissionBadge key={permission.id}>
-                      {permission.nama || permission.name}
+                      {permission.name}
                     </PermissionBadge>
                   ))}
                 </div>
@@ -138,7 +133,6 @@ function PeranDetails() {
               )}
             </div>
 
-            {/* Additional Info */}
             {role.permissions && role.permissions.length > 0 && (
               <div className="space-y-4 border-t border-border pt-6">
                 <h4 className="text-md font-semibold">Permission Categories</h4>

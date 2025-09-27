@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
+use Modules\Peran\Models\Peran;
 use Spatie\Permission\Models\Permission;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -15,21 +15,21 @@ class AdminSeeder extends Seeder
         // Create permissions first
         $this->call(\Modules\Peran\Database\Seeders\PermissionsSeeder::class);
 
-        // Create admin role with both name and nama fields
-        $adminRole = Role::firstOrCreate([
+        // Create Admin Role
+        $adminRole = Peran::firstOrCreate([
             'name' => 'admin',
             'guard_name' => 'web'
         ], [
             'name' => 'admin',
-            'nama' => 'Administrator', // This is required now
+            'deskripsi' => 'Administrator dengan akses penuh ke seluruh sistem',
             'guard_name' => 'web'
         ]);
 
         // Give all permissions to admin
         $adminRole->syncPermissions(Permission::all());
 
-        // Create admin user
-        $admin = User::firstOrCreate([
+        // Create Admin User
+        $adminUser = User::firstOrCreate([
             'email' => 'admin@example.com'
         ], [
             'name' => 'Administrator',
@@ -38,8 +38,8 @@ class AdminSeeder extends Seeder
         ]);
 
         // Assign role to admin user
-        if (!$admin->hasRole('admin')) {
-            $admin->assignRole('admin');
+        if (!$adminUser->hasRole('admin')) {
+            $adminUser->assignRole('admin');
         }
     }
 }

@@ -4,6 +4,7 @@ namespace Modules\Peran\Services;
 
 use Spatie\Permission\Models\Permission;
 use Modules\Peran\Models\Peran;
+use Illuminate\Support\Facades\DB;
 
 class PeranService
 {
@@ -30,8 +31,8 @@ class PeranService
     public function createRole(array $data)
     {
         $role = Peran::create([
-            'name' => $data['nama'],
-            'nama' => $data['nama'],
+            'name' => $data['name'],
+            'deskripsi' => $data['deskripsi'] ?? null,
             'guard_name' => 'web'
         ]);
 
@@ -45,8 +46,8 @@ class PeranService
     public function updateRole($role, array $data)
     {
         $role->update([
-            'name' => $data['nama'],
-            'nama' => $data['nama'],
+            'name' => $data['name'],
+            'deskripsi' => $data['deskripsi'] ?? null,
         ]);
 
         if (isset($data['permissions'])) {
@@ -60,13 +61,11 @@ class PeranService
 
     public function deleteRole($role)
     {
-        // Check if role is being used by users
         if (method_exists($role, 'users') && $role->users()->count() > 0) {
             throw new \Exception('Tidak dapat menghapus peran yang sedang digunakan oleh pengguna.');
         }
 
-        // Check if role is being used in workers table
-        $workersCount = \Illuminate\Support\Facades\DB::table('workers')
+        $workersCount = DB::table('workers')
             ->where('role_id', $role->id)
             ->count();
 

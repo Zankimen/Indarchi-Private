@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Peran\Http\Request\Peran;
+namespace Modules\Peran\Http\Requests\Peran;
 
 use Illuminate\Foundation\Http\FormRequest;
 

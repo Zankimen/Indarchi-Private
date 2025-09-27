@@ -1,22 +1,25 @@
 import React, { useState } from "react";
-
 import { usePage, Head, router, Link } from "@inertiajs/react";
-
 import Dashboard from "@/layout/Dashboard";
 import CustomDataTable from "@components/custom/CustomDataTable";
 import CustomPagination from "@components/custom/CustomPagination";
 import CustomTableSearch from "@components/custom/CustomTableSearch";
-
 import { Plus, Shield } from "lucide-react";
 import { Card } from "@components/ui/card";
 import { Button } from "@/components/ui/button";
 
 const columns = [
   {
-    key: "nama",
+    key: "name",
     label: "Nama Peran",
     type: "text",
     sort: true,
+  },
+  {
+    key: "deskripsi",
+    label: "Deskripsi",
+    type: "text",
+    render: (item) => item.deskripsi || "Tidak ada deskripsi",
   },
   {
     key: "permissions_count",

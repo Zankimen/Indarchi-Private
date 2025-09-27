@@ -1,22 +1,20 @@
 import React from "react";
-
 import { Head, useForm, Link, usePage } from "@inertiajs/react";
-
 import Dashboard from "@/layout/Dashboard";
-
 import { Save, ChevronLeft, Shield } from "lucide-react";
-
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
 
 function PeranEdit() {
   const { role, permissions } = usePage().props;
 
-  const { data, setData, put, processing, errors, reset } = useForm({
-    nama: role.name || "",
+  const { data, setData, put, processing, errors } = useForm({
+    name: role.name || "",
+    deskripsi: role.deskripsi || "",
     permissions: role.permissions?.map((p) => p.id) || [],
   });
 
@@ -33,11 +31,7 @@ function PeranEdit() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    put(`/role/edit/${role.id}`, {
-      onSuccess: () => {
-        // Success handled by redirect in controller
-      },
-    });
+    put(`/role/edit/${role.id}`);
   };
 
   return (
@@ -65,17 +59,31 @@ function PeranEdit() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="nama">Nama Peran</Label>
+                <Label htmlFor="name">Nama Peran</Label>
                 <Input
                   type="text"
-                  id="nama"
-                  value={data.nama}
+                  id="name"
+                  value={data.name}
                   className="border-border"
                   placeholder="Masukkan nama peran"
-                  onChange={(e) => setData("nama", e.target.value)}
+                  onChange={(e) => setData("name", e.target.value)}
                 />
-                {errors.nama && (
-                  <p className="text-sm text-red-500">{errors.nama}</p>
+                {errors.name && (
+                  <p className="text-sm text-red-500">{errors.name}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="deskripsi">Deskripsi</Label>
+                <Textarea
+                  id="deskripsi"
+                  value={data.deskripsi}
+                  className="border-border"
+                  placeholder="Masukkan deskripsi peran"
+                  onChange={(e) => setData("deskripsi", e.target.value)}
+                />
+                {errors.deskripsi && (
+                  <p className="text-sm text-red-500">{errors.deskripsi}</p>
                 )}
               </div>
 
@@ -98,7 +106,7 @@ function PeranEdit() {
                         htmlFor={`permission-${permission.id}`}
                         className="text-sm font-normal cursor-pointer"
                       >
-                        {permission.nama || permission.name}
+                        {permission.name}
                       </Label>
                     </div>
                   ))}
