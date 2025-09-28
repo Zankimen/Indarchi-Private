@@ -7,6 +7,8 @@ import CustomDataTable from "@components/custom/CustomDataTable";
 import CustomPagination from "@components/custom/CustomPagination";
 import CustomTableSearch from "@components/custom/CustomTableSearch";
 
+import DataTable from "@/components/custom/NewCustomDataTable";
+
 import { Plus, Users } from "lucide-react";
 import { Card } from "@components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -96,28 +98,15 @@ function MahasiswaIndex() {
     );
   };
 
+  {
+    console.log(mahasiswa.data);
+  }
+
   return (
     <>
       <Head title="Assets" />
       <div className="w-full mx-auto">
         <div className="space-y-4">
-          {/* <Card className="border-border">
-            <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">
-              <h1 className="flex items-center justify-center sm:justify-start font-bold text-2xl md:text-2xl m-0 p-0">
-                <Users className="w-10 h-10 bg-accent text-primary rounded-2xl mr-4 p-2" />
-                Mahasiswa
-              </h1>
-              <div className="grid grid-cols-1 gap-2 sm:flex">
-                <Link href="/mysql/mahasiswa/add">
-                  <Button className="cursor-pointer">
-                    Add Mahasiswa
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </Card> */}
-
           <div className="flex justify-between items-center gap-2 px-4">
             <Link href="/mysql/mahasiswa/add">
               <Button className="cursor-pointer">
@@ -134,14 +123,29 @@ function MahasiswaIndex() {
             />
           </div>
           <div className="px-4 space-y-4">
-            <CustomDataTable
-              columns={columns}
+            <DataTable
               data={mahasiswa.data}
-              onRowClick={onRowClick}
-              onSort={handleSort}
               filters={filters}
-              noItem="Mahasiswa"
-            />
+              onSort={handleSort}
+              onRowClick={onRowClick}
+              noItem="mahasiswa"
+            >
+              <DataTable.Column accessor="nama" label="Nama" type="text" sort />
+              <DataTable.Column accessor="nim" label="NIM" type="text" sort />
+              <DataTable.Column
+                accessor="alamat"
+                label="Alamat"
+                type="text"
+                sort
+              />
+              <DataTable.Column
+                accessor="created_at"
+                label="Created At"
+                type="time"
+                sort
+              />
+            </DataTable>
+
             <CustomPagination
               data={mahasiswa}
               onPaginationChange={onPaginationChange}
@@ -153,5 +157,7 @@ function MahasiswaIndex() {
   );
 }
 
-MahasiswaIndex.layout = (page) => <Dashboard children={page} title={"Mahasiswa"} />;
+MahasiswaIndex.layout = (page) => (
+  <Dashboard children={page} title={"Mahasiswa"} />
+);
 export default MahasiswaIndex;

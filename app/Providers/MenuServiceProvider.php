@@ -33,8 +33,6 @@ class MenuServiceProvider extends ServiceProvider
             'moduleMenus' => function () {
                 $menus = collect();
 
-                
-
                 foreach (Module::allEnabled() as $module) {
                     $path = $module->getPath() . '/config/menu.php';
 
