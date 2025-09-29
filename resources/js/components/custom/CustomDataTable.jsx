@@ -50,7 +50,7 @@ function renderCell(column, value, item, onEdit, onDelete) {
           className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
           onClick={(e) => {
             e.stopPropagation();
-            onEdit?.(item);
+            onEdit?.(item.user?.id ?? item.id); 
           }}
         >
           <Edit className="h-4 w-4" />

@@ -1,12 +1,6 @@
 import React from "react";
-
-import { Head, useForm, Link, usePage } from "@inertiajs/react";
-
+import { Head, useForm, Link } from "@inertiajs/react";
 import Dashboard from "@/layout/Dashboard";
-import { ComboBoxInput } from "@components/custom/ComboBoxInput";
-
-import { Save, ChevronLeft, UserPlus } from "lucide-react";
-
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -19,31 +13,32 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ChevronLeft } from "lucide-react";
 
-function PekerjaAdd() {
-  const { data, setData, post, processing, errors, reset } = useForm({
-    email: "",
+export default function PekerjaEdit({ karyawan }) {
+  const { data, setData, put, processing, errors, reset } = useForm({
+    nama_karyawan: karyawan.nama_karyawan || "",
+    alamat: karyawan.alamat || "",
+    posisi: karyawan.posisi || "",
+    email: karyawan.user?.email || "",
     password: "",
-    nama_karyawan: "",
-    alamat: "",
-    posisi: "",
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    post("/pekerja/add", {
+    put(`/pekerja/${karyawan.user_id}`, {
       onSuccess: () => reset(),
     });
   };
 
   return (
     <>
-      <Head title="Add Pekerja" />
+      <Head title="Edit Karyawan" />
       <div className="space-y-4">
         {/* Header Card */}
         <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-4 gap-4">
           <h1 className="flex items-center justify-center sm:justify-start font-bold text-2xl md:text-2xl m-0 p-0">
-            Tambah Karyawan
+            Edit Karyawan
           </h1>
           <div className="grid grid-cols-1 gap-2 sm:flex">
             <Link href="/pekerja">
@@ -87,7 +82,7 @@ function PekerjaAdd() {
                 htmlFor="password" 
                 className="text-[#000000] font-semibold text-base block"
               >
-                Password
+                Password (Opsional)
               </Label>
               <Input
                 type="password"
@@ -95,7 +90,7 @@ function PekerjaAdd() {
                 name="password"
                 value={data.password}
                 className="w-full border border-gray-300 rounded-[10px] px-4 py-3 h-12 text-[#000000] placeholder:text-gray-400 focus:ring-2 focus:ring-[#194AC2] focus:border-transparent text-base"
-                placeholder="Masukkan password"
+                placeholder="Masukkan password baru (jika ingin ganti)"
                 onChange={(e) => setData("password", e.target.value)}
               />
               {errors.password && (
@@ -217,6 +212,5 @@ function PekerjaAdd() {
   );
 }
 
-PekerjaAdd.layout = (page) => <Dashboard children={page} />;
+PekerjaEdit.layout = (page) => <Dashboard children={page} />;
 
-export default PekerjaAdd;
