@@ -12,19 +12,26 @@ const iconMap = {
   PackageIcon: Icons.PackageIcon,
 };
 
-export default function DashboardPage({children}) {
+export default function DashboardPage({ title, children }) {
   const {
     url: currentPath,
     props: { moduleMenus },
   } = usePage();
 
-  console.log("module Menus:", moduleMenus);
-
   return (
     <Dashboard currentPath={currentPath}>
       <Dashboard.Sidebar>
         <Dashboard.SidebarHeader>
-          <h1 className="text-2xl font-bold">Indarchi</h1>
+          <div className="flex items-center justify-center gap-4">
+            <img
+              src="/storage/logo.png"
+              alt="Indarchi Logo"
+              className="h-10"
+            />
+            <h1 className="text-2xl font-bold">
+              Indarchi
+            </h1>
+          </div>
         </Dashboard.SidebarHeader>
         <Dashboard.SidebarContent>
           <Dashboard.MenuGroup>
@@ -65,9 +72,9 @@ export default function DashboardPage({children}) {
 
       <Dashboard.Content>
         <Dashboard.Header>
-          <Dashboard.Title>Mahasiswa</Dashboard.Title>
+          <Dashboard.Title>{title}</Dashboard.Title>
         </Dashboard.Header>
-        <div>{children}</div>
+        <div className="mt-4">{children}</div>
       </Dashboard.Content>
     </Dashboard>
   );

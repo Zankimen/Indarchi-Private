@@ -1,123 +1,163 @@
-import React from "react";
+import React from "react"
 
-import { Head, useForm, Link, usePage } from "@inertiajs/react";
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Calendar, ImageIcon } from "lucide-react"
 
-import Dashboard from "@/layout/Dashboard";
-import { ComboBoxInput } from "@components/custom/ComboBoxInput";
+export default function CreateProjectPage() {
+  const [formData, setFormData] = useState({
+    namaProject: "",
+    deskripsi: "",
+    klien: "",
+    tanggalMulai: "",
+    tanggalSelesai: "",
+    lokasi: "",
+    gambar: null,
+  })
 
-import { Save, ChevronLeft, UserStar } from "lucide-react";
+  const handleInputChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }))
+  }
 
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-// import NoAssetType from "../Components/AssetType/NoAssetType";
-
-function DosenAdd() {
-  const { data, setData, post, processing, errors, reset } = useForm({
-    nip: "",
-    nama: "",
-    alamat: "",
-  });
+  const handleFileUpload = (event) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      setFormData((prev) => ({ ...prev, gambar: file }))
+    }
+  }
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    post("/mysql/dosen/add", {
-      onSuccess: () => reset(),
-    });
-  };
+    e.preventDefault()
+    console.log("Form submitted:", formData)
+  }
 
   return (
-    <>
-      <Head title="Add Asset" />
-      <div className="space-y-4">
-        <Card className="border-border">
-          <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">
-            <h1 className="flex items-center justify-center sm:justify-start font-bold text-2xl md:text-2xl m-0 p-0">
-              <UserStar className="w-10 h-10 bg-accent text-primary rounded-2xl mr-4 p-2" />
-              Add Dosen
-            </h1>
-            <div className="grid grid-cols-1 gap-2 sm:flex">
-              <Link href="/mysql/dosen">
-                <Button className="cursor-pointer">
-                  <ChevronLeft className="w-4 h-4" />
-                  Back
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </Card>
+    <div className="min-h-screen bg-primary p-4 flex items-center justify-center">
+      <div className="w-full max-w-2xl">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-white text-xl font-semibold">Buat Project Baru</h1>
+          <Button variant="secondary" className="px-6 bg-background text-foreground hover:bg-accent hover:text-background cursor-pointer">
+            Batal
+          </Button>
+        </div>
 
-        <Card className="px-6 py-8 space-y-2 border-border">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+        <Card className="bg-background border-0">
+          <CardContent className="p-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="nip">NIP</Label>
+                <Label htmlFor="namaProject" className="text-sm font-medium text-muted-foreground">
+                  Nama Project
+                </Label>
                 <Input
-                  type="text"
-                  id="nim"
-                  value={data.nip}
-                  className="border-border"
-                  onChange={(e) => setData("nip", e.target.value)}
+                  id="namaProject"
+                  value={formData.namaProject}
+                  onChange={(e) => handleInputChange("namaProject", e.target.value)}
+                  className="w-full"
                 />
-                {errors.nip && (
-                  <p className="text-sm text-red-500">{errors.nip}</p>
-                )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="nama">Nama</Label>
-                <Input
-                  type="text"
-                  id="nama"
-                  value={data.nama}
-                  className="border-border"
-                  onChange={(e) => setData("nama", e.target.value)}
-                />
-                {errors.nama && (
-                  <p className="text-sm text-red-500">{errors.nama}</p>
-                )}
-              </div>
-
-              <div className="sm:col-span-2 space-y-2">
-                <Label htmlFor="alamat">Alamat</Label>
+                <Label htmlFor="deskripsi" className="text-sm font-medium text-muted-foreground">
+                  Deskripsi
+                </Label>
                 <Textarea
-                  id="alamat"
-                  value={data.alamat}
-                  className="border-border"
-                  onChange={(e) => setData("alamat", e.target.value)}
+                  id="deskripsi"
+                  value={formData.deskripsi}
+                  onChange={(e) => handleInputChange("deskripsi", e.target.value)}
+                  className="w-full min-h-[80px] resize-none"
                 />
-                {errors.alamat && (
-                  <p className="text-sm text-red-500">{errors.alamat}</p>
-                )}
               </div>
-            </div>
 
-            <div className="flex justify-end items-center">
-              <Button
-                type="submit"
-                className="cursor-pointer"
-                disabled={processing}
-              >
-                Save
-                <Save className="w-4 h-4 mr-2" />
-              </Button>
-            </div>
-          </form>
+              <div className="space-y-2">
+                <Label htmlFor="klien" className="text-sm font-medium text-muted-foreground">
+                  Klien
+                </Label>
+                <Input
+                  id="klien"
+                  value={formData.klien}
+                  onChange={(e) => handleInputChange("klien", e.target.value)}
+                  className="w-full"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="tanggalMulai" className="text-sm font-medium text-muted-foreground">
+                  Tanggal Mulai
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="tanggalMulai"
+                    type="date"
+                    value={formData.tanggalMulai}
+                    onChange={(e) => handleInputChange("tanggalMulai", e.target.value)}
+                    className="w-full pr-10 text-muted-foreground"
+                    placeholder="dd/mm/yyyy"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="tanggalSelesai" className="text-sm font-medium text-muted-foreground">
+                  Tanggal Selesai
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="tanggalSelesai"
+                    type="date"
+                    value={formData.tanggalSelesai}
+                    onChange={(e) => handleInputChange("tanggalSelesai", e.target.value)}
+                    className="w-full pr-10 text-muted-foreground"
+                    placeholder="dd/mm/yyyy"
+                  />
+                </div>
+              </div>
+
+              {/* Lokasi */}
+              <div className="space-y-2">
+                <Label htmlFor="lokasi" className="text-sm font-medium text-muted-foreground">
+                  Lokasi
+                </Label>
+                <Input
+                  id="lokasi"
+                  value={formData.lokasi}
+                  onChange={(e) => handleInputChange("lokasi", e.target.value)}
+                  className="w-full"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-muted-foreground">Gambar</Label>
+                <div className="border-2 border-dashed border-border rounded-lg text-center bg-muted">
+                  <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" id="file-upload" />
+                  <label htmlFor="file-upload" className="cursor-pointer">
+                    <div className="flex flex-col items-center space-y-2 p-8">
+                      <ImageIcon className="h-8 w-8 text-muted-foreground" />
+                      <div className="text-sm text-muted-foreground">
+                        <span className="font-medium">Unggah File untuk Project ini</span>
+                        <br />
+                        Format: JPG, PNG, Maksimal 5MB
+                      </div>
+                    </div>
+                  </label>
+                  {formData.gambar && (
+                    <div className="mt-2 text-sm text-muted-foreground">File terpilih: {formData.gambar.name}</div>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex justify-end pt-4">
+                <Button type="submit" className="bg-primary hover:bg-accent text-primary-foreground px-6 cursor-pointer">
+                  Simpan
+                </Button>
+              </div>
+            </form>
+          </CardContent>
         </Card>
       </div>
-    </>
-  );
+    </div>
+  )
 }
-
-DosenAdd.layout = (page) => <Dashboard children={page} />;
-
-export default DosenAdd;

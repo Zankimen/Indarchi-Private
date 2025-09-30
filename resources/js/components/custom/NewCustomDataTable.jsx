@@ -56,8 +56,8 @@ function DataTable({
         columns,
       }}
     >
-      <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
-        <Table className="overflow-hidden">
+      <div className="rounded-lg border border-border shadow-sm overflow-hidden">
+        <Table>
           <Header />
           <Body />
         </Table>
@@ -71,7 +71,7 @@ function Header() {
 
   return (
     <TableHeader>
-      <TableRow className="bg-gray-50 border-b border-gray-200">
+      <TableRow className="bg-muted dark:bg-card border-b border-border">
         {columns.map((col, index) => {
           const isFirst = index === 0;
           const isLast = index === columns.length - 1;
@@ -82,18 +82,17 @@ function Header() {
             <TableHead
               key={accessor}
               className={cn(
-                "text-gray-700 font-medium text-sm py-4",
+                "text-foreground font-medium text-sm py-4",
                 isFirst && "pl-6",
                 isLast && "pr-6 text-right"
               )}
             >
               {sortable ? (
                 <Button
-                  size="sm"
                   variant={filters?.sort_by === accessor ? "default" : "ghost"}
                   className={cn(
-                    "cursor-pointer h-auto p-0 font-medium",
-                    filters?.sort_by === accessor && "text-primary"
+                    "cursor-pointer h-auto p-2 font-medium hover:text-card hover:bg-accent dark:hover:bg-accent",
+                    filters?.sort_by === accessor && "text-primary-foreground"
                   )}
                   onClick={() => onSort?.(accessor)}
                 >
@@ -125,14 +124,14 @@ function Body() {
           >
             <div className="flex flex-col gap-4">
               <FileQuestionMark
-                className="max-w-60 m-auto text-gray-400"
-                size={120}
+                className="max-w-60 m-auto text-muted-foreground"
+                size={60}
               />
               <div>
-                <h1 className="font-bold text-sm text-gray-900">
+                <h1 className="font-bold text-sm text-muted-foreground">
                   No {noItem} Found.
                 </h1>
-                <p className="font-light text-sm text-gray-500">
+                <p className="font-light text-sm text-muted-foreground">
                   Add {noItem} or try searching with different keyword
                 </p>
               </div>
@@ -148,7 +147,7 @@ function Body() {
       {data.map((item, rowIndex) => (
         <TableRow
           key={item.id || rowIndex}
-          className="group relative hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+          className="group relative bg-card text-foreground hover:text-background hover:bg-accent cursor-pointer border-b border-muted last:border-b-0"
           onClick={() => onRowClick?.(item)}
         >
           {columns.map((col, index) => {
@@ -161,7 +160,7 @@ function Body() {
               <TableCell
                 key={accessor}
                 className={cn(
-                  "py-4 text-sm text-gray-900 max-w-[200px] truncate",
+                  "py-4 text-sm  max-w-[200px] truncate",
                   isFirst && "pl-6 font-medium",
                   isLast && "pr-6 text-right"
                 )}

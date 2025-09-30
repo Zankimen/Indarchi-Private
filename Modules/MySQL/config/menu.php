@@ -2,7 +2,7 @@
 
 return [
     [
-        'title' => 'MySQL',
+        'title' => 'Template',
         'icon' => 'PackageIcon',
         'route' => '/mysql',
         'children' => [
@@ -15,16 +15,6 @@ return [
                 'title' => 'Dosen',
                 'icon' => 'UserStarIcon',
                 'route' => '/mysql/dosen',
-            ],
-            [
-                'title' => 'Mata Kuliah',
-                'icon' => 'BookUserIcon',
-                'route' => '/mysql/matakuliah',
-            ],
-            [
-                'title' => 'Kuliah',
-                'icon' => 'AlbumIcon',
-                'route' => '/mysql/kuliah',
             ],
         ],
     ],

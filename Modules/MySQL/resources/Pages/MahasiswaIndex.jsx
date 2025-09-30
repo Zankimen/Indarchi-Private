@@ -109,7 +109,7 @@ function MahasiswaIndex() {
         <div className="space-y-4">
           <div className="flex justify-between items-center gap-2 px-4">
             <Link href="/mysql/mahasiswa/add">
-              <Button className="cursor-pointer">
+              <Button variant="default" className="cursor-pointer">
                 Add Mahasiswa
                 <Plus className="w-4 h-4" />
               </Button>

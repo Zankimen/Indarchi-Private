@@ -4,6 +4,7 @@ import { usePage, Head, router, Link } from "@inertiajs/react";
 
 import Dashboard from "@/layout/Dashboard";
 import CustomDataTable from "@components/custom/CustomDataTable";
+import DataTable from "@/components/custom/NewCustomDataTable";
 import CustomPagination from "@components/custom/CustomPagination";
 import CustomTableSearch from "@components/custom/CustomTableSearch";
 
@@ -92,8 +93,8 @@ function PekerjaIndex() {
 
   return (
     <>
-      <Head title="Assets" />
-      <div className="w-full mx-auto">
+      <Head title="Pekerja" />
+      <div className="">
         <div className="space-y-4">
           {/* <Card className="border-border">
             <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">
@@ -113,7 +114,7 @@ function PekerjaIndex() {
           </Card> */}
 
           <div className="flex justify-between items-center gap-2 px-4">
-            <Link href="/mysql/mahasiswa/add">
+            <Link href="/mysql/mahasiswa/add" className="flex-1">
               <Button className="cursor-pointer">
                 Tambah Pekerja
                 <Plus className="w-4 h-4" />
@@ -128,14 +129,23 @@ function PekerjaIndex() {
             />
           </div>
           <div className="px-4 space-y-4">
-            <CustomDataTable
-              columns={columns}
+            <DataTable
               data={pekerja.data}
-              onRowClick={onRowClick}
-              onSort={handleSort}
               filters={filters}
-              noItem="Mahasiswa"
-            />
+              onSort={handleSort}
+              onRowClick={onRowClick}
+              noItem="Pekerja"
+            >
+              <DataTable.Column accessor="name" label="Nama" type="text" sort />
+              <DataTable.Column accessor="email" label="Email" type="text" sort />
+              <DataTable.Column
+                accessor="created_at"
+                label="Created At"
+                type="time"
+                sort
+              />
+            </DataTable>
+
             <CustomPagination
               data={pekerja}
               onPaginationChange={onPaginationChange}
@@ -147,5 +157,7 @@ function PekerjaIndex() {
   );
 }
 
-PekerjaIndex.layout = (page) => <Dashboard children={page} title={"Mahasiswa"} />;
+PekerjaIndex.layout = (page) => (
+  <Dashboard children={page} title={"Mahasiswa"} />
+);
 export default PekerjaIndex;
