@@ -53,6 +53,8 @@ const onRowClick = (item) => {
 function PekerjaIndex() {
   const { pekerja, filters } = usePage().props;
 
+  console.log(pekerja);
+
   const [search, setSearch] = useState(filters.search || "");
 
   const sortBy = filters.sort_by || "";

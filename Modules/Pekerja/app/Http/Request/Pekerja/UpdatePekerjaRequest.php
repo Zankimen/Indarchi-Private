@@ -14,8 +14,11 @@ class UpdatePekerjaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'    => 'required|string|max:255',
-            'email'   => 'required|string|max:255',
+            'nama_karyawan' => 'required|string|max:255',
+            'alamat' => 'required|string',
+            'posisi' => 'required|string|max:50',
+            'email' => 'required|email|unique:users,email,' . $this->route('user_id'),
+            'password' => 'nullable|min:6',
         ];
     }
 }

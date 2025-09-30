@@ -4,11 +4,8 @@ namespace Modules\Pekerja\Http\Request\Pekerja;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateKaryawanRequest extends FormRequest
+class CreatePekerjaRequest extends FormRequest
 {   
-    /**
-     * Get the validation rules that apply to the request.
-     */
     public function rules(): array
     {
         return [
@@ -20,9 +17,6 @@ class CreateKaryawanRequest extends FormRequest
         ];
     }
 
-    /**
-     * Get custom messages for validator errors.
-     */
     public function messages(): array
     {
         return [
@@ -41,9 +35,6 @@ class CreateKaryawanRequest extends FormRequest
         ];
     }
 
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
