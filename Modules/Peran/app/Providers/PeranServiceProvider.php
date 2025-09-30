@@ -1,25 +1,22 @@
 <?php
 
-namespace Modules\Pekerja\Providers;
+namespace Modules\Peran\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use Modules\Pekerja\Repositories\Eloquent\KaryawanRepository;
+use Modules\Peran\Services\PeranService;
 
-class PekerjaServiceProvider extends ServiceProvider
+class PeranServiceProvider extends ServiceProvider
 {
     use PathNamespace;
 
-    protected string $name = 'Pekerja';
+    protected string $name = 'Peran';
 
-    protected string $nameLower = 'pekerja';
+    protected string $nameLower = 'peran';
 
-    /**
-     * Boot the application events.
-     */
     public function boot(): void
     {
         $this->registerCommands();
@@ -30,40 +27,26 @@ class PekerjaServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
     }
 
-    /**
-     * Register the service provider.
-     */
     public function register(): void
     {
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
-        
-        // Register repositories
-        $this->app->bind(KaryawanRepository::class, KaryawanRepository::class);
+
+        $this->app->bind(PeranService::class, function ($app) {
+            return new PeranService();
+        });
     }
 
-    /**
-     * Register commands in the format of Command::class
-     */
     protected function registerCommands(): void
     {
-        // $this->commands([]);
+        // 
     }
 
-    /**
-     * Register command Schedules.
-     */
     protected function registerCommandSchedules(): void
     {
-        // $this->app->booted(function () {
-        //     $schedule = $this->app->make(Schedule::class);
-        //     $schedule->command('inspire')->hourly();
-        // });
+        //
     }
 
-    /**
-     * Register translations.
-     */
     public function registerTranslations(): void
     {
         $langPath = resource_path('lang/modules/' . $this->nameLower);
@@ -77,9 +60,6 @@ class PekerjaServiceProvider extends ServiceProvider
         }
     }
 
-    /**
-     * Register config.
-     */
     protected function registerConfig(): void
     {
         $configPath = module_path($this->name, config('modules.paths.generator.config.path'));
@@ -93,7 +73,6 @@ class PekerjaServiceProvider extends ServiceProvider
                     $config_key = str_replace([DIRECTORY_SEPARATOR, '.php'], ['.', ''], $config);
                     $segments = explode('.', $this->nameLower . '.' . $config_key);
 
-                    // Remove duplicated adjacent segments
                     $normalized = [];
                     foreach ($segments as $segment) {
                         if (end($normalized) !== $segment) {
@@ -110,9 +89,6 @@ class PekerjaServiceProvider extends ServiceProvider
         }
     }
 
-    /**
-     * Merge config from the given path recursively.
-     */
     protected function merge_config_from(string $path, string $key): void
     {
         $existing = config($key, []);
@@ -121,9 +97,6 @@ class PekerjaServiceProvider extends ServiceProvider
         config([$key => array_replace_recursive($existing, $module_config)]);
     }
 
-    /**
-     * Register views.
-     */
     public function registerViews(): void
     {
         $viewPath = resource_path('views/modules/' . $this->nameLower);
@@ -136,9 +109,6 @@ class PekerjaServiceProvider extends ServiceProvider
         Blade::componentNamespace(config('modules.namespace') . '\\' . $this->name . '\\View\\Components', $this->nameLower);
     }
 
-    /**
-     * Get the services provided by the provider.
-     */
     public function provides(): array
     {
         return [];

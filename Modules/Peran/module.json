@@ -1,0 +1,9 @@
+{
+  "name": "Peran",
+  "alias": "peran",
+  "description": "",
+  "keywords": [],
+  "priority": 0,
+  "providers": ["Modules\\Peran\\Providers\\PeranServiceProvider"],
+  "files": []
+}
