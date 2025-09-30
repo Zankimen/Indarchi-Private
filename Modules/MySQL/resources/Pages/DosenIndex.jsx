@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { usePage, Head, router, Link } from "@inertiajs/react";
 
 import Dashboard from "@/layout/Dashboard";
+import Navbar from "@/layout/NavBar";
 import CustomDataTable from "@components/custom/CustomDataTable";
 import CustomPagination from "@components/custom/CustomPagination";
 import CustomTableSearch from "@components/custom/CustomTableSearch";
@@ -146,5 +147,7 @@ function DosenIndex() {
   );
 }
 
-DosenIndex.layout = (page) => <Dashboard children={page} />;
+
+
+DosenIndex.layout = (page) => <Navbar children={page} />;
 export default DosenIndex;

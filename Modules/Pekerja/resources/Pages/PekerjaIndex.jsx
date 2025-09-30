@@ -4,6 +4,7 @@ import { usePage, Head, router, Link } from "@inertiajs/react";
 
 import Dashboard from "@/layout/Dashboard";
 import CustomDataTable from "@components/custom/CustomDataTable";
+import DataTable from "@/components/custom/NewCustomDataTable";
 import CustomPagination from "@components/custom/CustomPagination";
 import CustomTableSearch from "@components/custom/CustomTableSearch";
 
@@ -109,10 +110,33 @@ function PekerjaIndex() {
   return (
     <>
       <Head title="Pekerja" />
-      <div className="w-full mx-auto">
-        <div className="space-y-6">
-          {/* Header dengan tombol tambah */}
-          <div className="flex flex-row-reverse justify-between items-center gap-2 px-4 mb-6">
+      <div className="">
+        <div className="space-y-4">
+          {/* <Card className="border-border">
+            <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">
+              <h1 className="flex items-center justify-center sm:justify-start font-bold text-2xl md:text-2xl m-0 p-0">
+                <Users className="w-10 h-10 bg-accent text-primary rounded-2xl mr-4 p-2" />
+                Mahasiswa
+              </h1>
+              <div className="grid grid-cols-1 gap-2 sm:flex">
+                <Link href="/mysql/mahasiswa/add">
+                  <Button className="cursor-pointer">
+                    Add Mahasiswa
+                    <Plus className="w-4 h-4" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </Card> */}
+
+          <div className="flex justify-between items-center gap-2 px-4">
+            <Link href="/mysql/mahasiswa/add" className="flex-1">
+              <Button className="cursor-pointer">
+                Tambah Pekerja
+                <Plus className="w-4 h-4" />
+              </Button>
+            </Link>
+
             <CustomTableSearch
               search={search}
               setSearch={setSearch}
@@ -126,35 +150,36 @@ function PekerjaIndex() {
               </Button>
             </Link>
           </div>
+          <div className="px-4 space-y-4">
+            <DataTable
+              data={pekerja.data}
+              filters={filters}
+              onSort={handleSort}
+              onRowClick={onRowClick}
+              noItem="Pekerja"
+            >
+              <DataTable.Column accessor="name" label="Nama" type="text" sort />
+              <DataTable.Column accessor="email" label="Email" type="text" sort />
+              <DataTable.Column
+                accessor="created_at"
+                label="Created At"
+                type="time"
+                sort
+              />
+            </DataTable>
 
-          <CustomDataTable
-            columns={columns}
-            data={pekerja.data}
-            onSort={handleSort} // ← tambahkan ini
-            onRowClick={(item) => {
-              router.get(`/pekerja/${item.id}`);
-            }}
-            onEdit={(item) => {
-              router.get(`/pekerja/${item.id}/edit`);
-            }}
-            onDelete={(item) => {
-              if (confirm("Apakah kamu yakin ingin menghapus karyawan ini?")) {
-                router.delete(`/pekerja/${item.id}`);
-              }
-            }}
-            filters={filters}
-            noItem="Karyawan"
-          />
-
-          <CustomPagination
-            data={pekerja}
-            onPaginationChange={onPaginationChange}
-          />
+            <CustomPagination
+              data={pekerja}
+              onPaginationChange={onPaginationChange}
+            />
+          </div>
         </div>
       </div>
     </>
   );
 }
 
-PekerjaIndex.layout = (page) => <Dashboard children={page} title={"Karyawan"} />;
+PekerjaIndex.layout = (page) => (
+  <Dashboard children={page} title={"Mahasiswa"} />
+);
 export default PekerjaIndex;

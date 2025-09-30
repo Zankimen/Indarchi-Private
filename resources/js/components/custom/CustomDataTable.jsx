@@ -89,7 +89,7 @@ function CustomDataTable({
 }) {
   return (
     <>
-      <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
+      <div className="rounded-lg border border-border bg-card shadow-sm">
         <Table className="overflow-hidden">
           <TableHeader>
             <TableRow className="bg-gray-50 border-b border-gray-200">
@@ -101,20 +101,19 @@ function CustomDataTable({
                   <TableHead
                     key={column.key}
                     className={cn(
-                      "text-gray-700 font-medium text-sm py-4",
+                      "text-accent-foreground font-medium text-sm py-4",
                       isFirst && "pl-6",
                       isLast && "pr-6 text-right"
                     )}
                   >
                     {column.sort ? (
                       <Button
-                        size="sm"
                         variant={
                           filters?.sort_by === column.key ? "default" : "ghost"
                         }
                         className={cn(
-                          "cursor-pointer h-auto p-0 font-medium",
-                          filters?.sort_by === column.key && "text-primary"
+                          "cursor-pointer h-auto py-2 font-medium text-foreground",
+                          filters?.sort_by === column.key && "text-primary-foreground"
                         )}
                         onClick={() => onSort(column.key)}
                       >
@@ -135,7 +134,7 @@ function CustomDataTable({
               data.map((item, rowIndex) => (
                 <TableRow
                   key={item.id || rowIndex}
-                  className="group relative hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                  className="group relative hover:bg-muted cursor-pointer border-b border-border last:border-b-0"
                   onClick={() => onRowClick?.(item)}
                 >
                   {columns.map((column, index) => {

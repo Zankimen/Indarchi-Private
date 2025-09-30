@@ -1,36 +1,31 @@
 import React from "react";
-import { Search } from "lucide-react"; // atau SearchIcon
-import { Input } from "@components/ui/input";
-import { Button } from "@components/ui/button";
+
+import { SearchIcon } from "lucide-react"
+
+import { Input } from "@components/ui/input"
 
 function CustomTableSearch({ search, setSearch, onSearch, placeholder }) {
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      e.preventDefault();
-      onSearch();
+      onSearch()
     }
-  };
+  }
 
   return (
-    <div className="flex w-full max-w-sm items-center gap-2">
-      <Input
-        type="text"
-        placeholder={placeholder || "Search..."}
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        onKeyDown={handleKeyDown}
-        className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#194AC2]"
-      />
-      <Button
-        type="button"
-        variant="outline"
-        className="border-border cursor-pointer flex items-center justify-center"
-        onClick={onSearch}
-      >
-        <Search className="w-4 h-4" />
-      </Button>
+    <div className="flex w-full max-w-sm items-center">
+      <div className="relative w-full">
+        <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <Input
+          type="text"
+          placeholder={placeholder}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={handleKeyDown}
+          className="border-border pl-10 dark:caret-foreground dark:text-foreground"
+        />
+      </div>
     </div>
-  );
+  )
 }
 
-export default CustomTableSearch;
+export default CustomTableSearch

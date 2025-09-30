@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./bootstrap";
 
 createInertiaApp({
+    title: title => `${title} - Indarchi`,
     resolve: async (name) => {
         try {
             return (await import(`./Pages/${name}.jsx`)).default;

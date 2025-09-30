@@ -1,7 +1,13 @@
-import React from "react"
-import { router } from "@inertiajs/react"
+import React from "react";
+import { router } from "@inertiajs/react";
 
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
 
 import {
   Pagination,
@@ -11,72 +17,74 @@ import {
   PaginationNext,
   PaginationLink,
   PaginationEllipsis,
-} from "@components/ui/pagination"
+} from "@components/ui/pagination";
 
-import { Button } from "@components/ui/button"
-import { Tooltip, TooltipTrigger, TooltipContent } from "@components/ui/tooltip"
+import { Button } from "@components/ui/button";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@components/ui/tooltip";
 
 function generatePaginationItems(currentPage, totalPages) {
-  const items = []
-  const showEllipsis = totalPages > 7
+  const items = [];
+  const showEllipsis = totalPages > 7;
 
   if (!showEllipsis) {
-    // Show all pages if 7 or fewer
     for (let i = 1; i <= totalPages; i++) {
-      items.push(i)
+      items.push(i);
     }
   } else {
-    // Always show first page
-    items.push(1)
+    items.push(1);
 
     if (currentPage <= 4) {
-      // Show pages 2, 3, 4, 5, ellipsis, last
       for (let i = 2; i <= Math.min(5, totalPages - 1); i++) {
-        items.push(i)
+        items.push(i);
       }
       if (totalPages > 5) {
-        items.push("ellipsis")
-        items.push(totalPages)
+        items.push("ellipsis");
+        items.push(totalPages);
       }
     } else if (currentPage >= totalPages - 3) {
-      // Show 1, ellipsis, then last 4 pages
-      items.push("ellipsis")
+      items.push("ellipsis");
       for (let i = Math.max(2, totalPages - 4); i <= totalPages; i++) {
-        items.push(i)
+        items.push(i);
       }
     } else {
-      // Show 1, ellipsis, current-1, current, current+1, ellipsis, last
-      items.push("ellipsis")
+      items.push("ellipsis");
       for (let i = currentPage - 1; i <= currentPage + 1; i++) {
-        items.push(i)
+        items.push(i);
       }
-      items.push("ellipsis")
-      items.push(totalPages)
+      items.push("ellipsis");
+      items.push(totalPages);
     }
   }
 
-  return items
+  return items;
 }
 
 function CustomPagination({ data, onPaginationChange }) {
-  const currentPage = data.current_page
-  const totalPages = data.last_page
-  const paginationItems = generatePaginationItems(currentPage, totalPages)
+  const currentPage = data.current_page;
+  const totalPages = data.last_page;
+  const paginationItems = generatePaginationItems(currentPage, totalPages);
 
   const handlePageClick = (page, e) => {
-    e.preventDefault()
-    const url = data.links.find((link) => link.label === String(page))?.url
+    e.preventDefault();
+    const url = data.links.find((link) => link.label === String(page))?.url;
     if (url) {
-      router.visit(url)
+      router.visit(url);
     }
-  }
+  };
 
   return (
     <div className="flex items-center justify-between gap-2">
       <div className="flex items-center justify-center gap-2">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="outline" className="border-border bg-white dark:bg-secondary">
+            <Button
+              variant="outline"
+              className="border-border dark:border-border dark:bg-card dark:hover:bg-accent dark:hover:text-card text-foreground shadow hover:border-accent dark:hover:border-accent"
+            >
               {data.from}-{data.to} of {data.total}
             </Button>
           </TooltipTrigger>
@@ -87,18 +95,30 @@ function CustomPagination({ data, onPaginationChange }) {
           </TooltipContent>
         </Tooltip>
 
-        <Select defaultValue={String(data.per_page)} onValueChange={onPaginationChange}>
-          <SelectTrigger className="w-[180px] cursor-pointer border-border transition-all hover:bg-secondary hover:text-white">
+        <Select
+          defaultValue={String(data.per_page)}
+          onValueChange={onPaginationChange}
+        >
+          <SelectTrigger className=" cursor-pointer border-border transition-all dark:bg-card dark:hover:bg-accent dark:hover:text-card hover:bg-accent hover:text-background text-foreground shadow hover:border-accent dark:hover:border-secondary hover:decoration-accent">
             <SelectValue placeholder="Select a value" />
           </SelectTrigger>
-          <SelectContent className="border-border">
-            <SelectItem value="10" className="cursor-pointer">
+          <SelectContent className="border-border text-foreground dark:bg-card">
+            <SelectItem
+              value="10"
+              className="cursor-pointer dark:hover:text-card"
+            >
               10
             </SelectItem>
-            <SelectItem value="25" className="cursor-pointer">
+            <SelectItem
+              value="25"
+              className="cursor-pointer dark:hover:text-card"
+            >
               25
             </SelectItem>
-            <SelectItem value="50" className="cursor-pointer">
+            <SelectItem
+              value="50"
+              className="cursor-pointer dark:hover:text-card"
+            >
               50
             </SelectItem>
           </SelectContent>
@@ -108,19 +128,22 @@ function CustomPagination({ data, onPaginationChange }) {
       <Pagination className="justify-end items-center">
         <PaginationContent>
           {data.prev_page_url && (
-            <PaginationItem className="bg-card shadow rounded-3xl">
+            <PaginationItem className="bg-background shadow rounded-lg border-border dark:bg-card dark:hover:bg-accent dark:border-border text-foreground dark:hover:text-card hover:border-accent dark:hover:border-accent">
               <PaginationPrevious
                 href={data.prev_page_url}
                 onClick={(e) => {
-                  e.preventDefault()
-                  router.visit(data.prev_page_url)
+                  e.preventDefault();
+                  router.visit(data.prev_page_url);
                 }}
               />
             </PaginationItem>
           )}
 
           {paginationItems.map((item, index) => (
-            <PaginationItem key={index} className="bg-card shadow rounded-3xl">
+            <PaginationItem
+              key={index}
+              className="bg-background shadow rounded-lg border-border dark:bg-card dark:hover:bg-accent dark:border-border text-foreground dark:hover:text-card hover:border-accent dark:hover:border-accent"
+            >
               {item === "ellipsis" ? (
                 <PaginationEllipsis />
               ) : (
@@ -128,7 +151,7 @@ function CustomPagination({ data, onPaginationChange }) {
                   href="#"
                   isActive={item === currentPage}
                   onClick={(e) => handlePageClick(item, e)}
-                  className="cursor-pointer"
+                  className="cursor-pointer bg-background shadow rounded-lg border-border dark:bg-card dark:hover:bg-accent dark:border-border text-foreground dark:hover:text-card hover:border-accent dark:hover:border-accent"
                 >
                   {item}
                 </PaginationLink>
@@ -137,12 +160,12 @@ function CustomPagination({ data, onPaginationChange }) {
           ))}
 
           {data.next_page_url && (
-            <PaginationItem className="bg-card shadow rounded-3xl">
+            <PaginationItem className="bg-background shadow rounded-lg border-border dark:bg-card dark:hover:bg-accent dark:border-border text-foreground dark:hover:text-card hover:border-accent dark:hover:border-accent">
               <PaginationNext
                 href={data.next_page_url}
                 onClick={(e) => {
-                  e.preventDefault()
-                  router.visit(data.next_page_url)
+                  e.preventDefault();
+                  router.visit(data.next_page_url);
                 }}
               />
             </PaginationItem>
@@ -150,7 +173,7 @@ function CustomPagination({ data, onPaginationChange }) {
         </PaginationContent>
       </Pagination>
     </div>
-  )
+  );
 }
 
-export default CustomPagination
+export default CustomPagination;
