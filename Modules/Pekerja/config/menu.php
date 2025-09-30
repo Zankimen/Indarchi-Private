@@ -3,7 +3,7 @@
 return [
     [
         'title' => 'Pekerja',
-        'icon' => 'PackageIcon',
+        'icon' => 'UsersIcon',
         'route' => '/pekerja',
     ],
 ];

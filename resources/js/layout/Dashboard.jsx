@@ -6,10 +6,9 @@ import * as Icons from "lucide-react";
 const iconMap = {
   HomeIcon: Icons.HomeIcon,
   UsersIcon: Icons.UsersIcon,
-  UserStarIcon: Icons.UserStarIcon,
-  BookUserIcon: Icons.BookUserIcon,
-  AlbumIcon: Icons.AlbumIcon,
   PackageIcon: Icons.PackageIcon,
+  ShieldIcon: Icons.ShieldIcon,
+  FolderKanbanIcon: Icons.FolderKanban
 };
 
 export default function DashboardPage({ title, children }) {
@@ -74,7 +73,7 @@ export default function DashboardPage({ title, children }) {
         <Dashboard.Header>
           <Dashboard.Title>{title}</Dashboard.Title>
         </Dashboard.Header>
-        <div className="mt-4">{children}</div>
+        <div className="my-4">{children}</div>
       </Dashboard.Content>
     </Dashboard>
   );

@@ -3,58 +3,19 @@ import React, { useState } from "react";
 import { usePage, Head, router, Link } from "@inertiajs/react";
 
 import Dashboard from "@/layout/Dashboard";
-import CustomDataTable from "@components/custom/CustomDataTable";
 import DataTable from "@/components/custom/NewCustomDataTable";
 import CustomPagination from "@components/custom/CustomPagination";
 import CustomTableSearch from "@components/custom/CustomTableSearch";
 
-import { Plus, Users } from "lucide-react";
-import { Card } from "@components/ui/card";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-// Combined columns for unified table
-const columns = [
-  {
-    key: "name",
-    label: "Nama",
-    type: "text",
-    sort: true,
-  },
-  {
-    key: "email",
-    label: "Email",
-    type: "text",
-    sort: true,
-  },
-  {
-    key: "alamat",
-    label: "Alamat",
-    type: "text",
-    sort: true,
-  },
-  {
-    key: "posisi",
-    label: "Posisi/Role",
-    type: "text",
-    sort: true,
-  },
-  {
-    key: "created_at",
-    label: "Tanggal Ditambahkan",
-    type: "time",
-    sort: true,
-  },
-];
-
 const onRowClick = (item) => {
-  console.log("Row clicked:", item);
   router.visit(`/pekerja/${item.user_id ?? item.id}`);
 };
 
 function PekerjaIndex() {
   const { pekerja, filters } = usePage().props;
-
-  console.log(pekerja);
 
   const [search, setSearch] = useState(filters.search || "");
 
@@ -112,25 +73,8 @@ function PekerjaIndex() {
       <Head title="Pekerja" />
       <div className="">
         <div className="space-y-4">
-          {/* <Card className="border-border">
-            <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">
-              <h1 className="flex items-center justify-center sm:justify-start font-bold text-2xl md:text-2xl m-0 p-0">
-                <Users className="w-10 h-10 bg-accent text-primary rounded-2xl mr-4 p-2" />
-                Mahasiswa
-              </h1>
-              <div className="grid grid-cols-1 gap-2 sm:flex">
-                <Link href="/mysql/mahasiswa/add">
-                  <Button className="cursor-pointer">
-                    Add Mahasiswa
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </Card> */}
-
           <div className="flex justify-between items-center gap-2 px-4">
-            <Link href="/mysql/mahasiswa/add" className="flex-1">
+            <Link href="/pekerja/add">
               <Button className="cursor-pointer">
                 Tambah Pekerja
                 <Plus className="w-4 h-4" />
@@ -143,12 +87,6 @@ function PekerjaIndex() {
               onSearch={onSearch}
               placeholder="Cari karyawan"
             />
-            <Link href="/pekerja/add">
-              <Button className="cursor-pointer font-bold text-[16px] px-6 py-3 rounded-[10px]">
-                <Plus className="w-4 h-4 ml-2" />
-                Tambah Karyawan
-              </Button>
-            </Link>
           </div>
           <div className="px-4 space-y-4">
             <DataTable
@@ -160,6 +98,7 @@ function PekerjaIndex() {
             >
               <DataTable.Column accessor="name" label="Nama" type="text" sort />
               <DataTable.Column accessor="email" label="Email" type="text" sort />
+              <DataTable.Column accessor="role" label="Role" type="text" sort />
               <DataTable.Column
                 accessor="created_at"
                 label="Created At"
@@ -180,6 +119,7 @@ function PekerjaIndex() {
 }
 
 PekerjaIndex.layout = (page) => (
-  <Dashboard children={page} title={"Mahasiswa"} />
+  <Dashboard children={page} title={"Pekerja"} />
 );
+
 export default PekerjaIndex;

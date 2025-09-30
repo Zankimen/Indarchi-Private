@@ -3,9 +3,11 @@
 namespace Modules\Pekerja\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 use Modules\Pekerja\Services\PekerjaService;
+use Modules\Pekerja\Http\Request\Pekerja\CreatePekerjaRequest;
+use Modules\Pekerja\Http\Request\Pekerja\UpdatePekerjaRequest;
 
 class PekerjaController extends Controller
 {
@@ -22,7 +24,7 @@ class PekerjaController extends Controller
 
         return Inertia::render('Pekerja/PekerjaIndex', [
             'pekerja' => $pekerja,
-            'filters' => $request->all(),
+            'filters' => $this->pekerjaService->getAllPekerjaFilter($request),
         ]);
     }
 
@@ -31,57 +33,70 @@ class PekerjaController extends Controller
         return Inertia::render('Pekerja/PekerjaAdd');
     }
 
-    // public function store(CreatePekerjaRequest $request)
-    // {
-        
+    public function store(CreatePekerjaRequest $request)
+    {
+        try {
+            $this->pekerjaService->createPekerja($request->validated());
 
-    //     return redirect()->route('pekerja.index')
-    //         ->with('success', 'Karyawan berhasil ditambahkan.');
-    // }
+            return redirect()
+                ->route('pekerja.index')
+                ->with('success', 'Karyawan berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withErrors(['error' => $e->getMessage()])
+                ->withInput();
+        }
+    }
 
-    // public function details($user_id)
-    // {
-    //     $karyawan = Karyawan::with('user')
-    //         ->where('user_id', $user_id)
-    //         ->firstOrFail();
+    public function details($id)
+    {
+        $user = $this->pekerjaService->findUserById((int) $id);
 
-    //     return Inertia::render('Pekerja/PekerjaDetails', [
-    //         'karyawan' => $karyawan,
-    //     ]);
-    // }
+        return Inertia::render('Pekerja/PekerjaDetails', [
+            'karyawan' => $this->pekerjaService->getKaryawanPayload($user),
+        ]);
+    }
 
-    // public function edit($user_id)
-    // {
-    //     $karyawan = Karyawan::with('user')
-    //         ->where('user_id', $user_id)
-    //         ->firstOrFail();
+    public function edit($user_id)
+    {
+        $user = $this->pekerjaService->findUserById((int) $user_id);
 
-    //     return Inertia::render('Pekerja/PekerjaEdit', [
-    //         'karyawan' => $karyawan,
-    //     ]);
-    // }
+        return Inertia::render('Pekerja/PekerjaEdit', [
+            'karyawan' => $this->pekerjaService->getKaryawanPayload($user),
+        ]);
+    }
 
-    // public function update(UpdatePekerjaRequest $request, $userId)
-    // {
-    //     $karyawan = Karyawan::with('user')
-    //         ->where('user_id', $userId)
-    //         ->firstOrFail();
+    public function update(UpdatePekerjaRequest $request, $user_id)
+    {
+        try {
+            $user = $this->pekerjaService->findUserById((int) $user_id);
+            $this->pekerjaService->updatePekerja($user, $request->validated());
 
-    //     return redirect()->route('pekerja.index')
-    //         ->with('success', 'Data karyawan berhasil diperbarui.');
-    // }
+            return redirect()
+                ->route('pekerja.index')
+                ->with('success', 'Data karyawan berhasil diperbarui.');
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withErrors(['error' => $e->getMessage()])
+                ->withInput();
+        }
+    }
 
-    // public function destroy($user_id)
-    // {
-    //     $karyawan = Karyawan::with('user')
-    //         ->where('user_id', $user_id)
-    //         ->firstOrFail();
+    public function destroy($id)
+    {
+        try {
+            $user = $this->pekerjaService->findUserById((int) $id);
+            $this->pekerjaService->deletePekerja($user);
 
-    //     if ($karyawan->user) {
-    //         $this->pekerjaService->deletePekerja($karyawan->user);
-    //     }
-
-    //     return redirect()->route('pekerja.index')
-    //         ->with('success', 'Karyawan berhasil dihapus.');
-    // }
+            return redirect()
+                ->route('pekerja.index')
+                ->with('success', 'Karyawan berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withErrors(['error' => $e->getMessage()]);
+        }
+    }
 }

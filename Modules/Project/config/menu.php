@@ -3,8 +3,7 @@
 return [
     [
         'title' => 'Project',
-        'icon' => 'PackageIcon',
+        'icon' => 'FolderKanbanIcon',
         'route' => '/projects'
-        
     ],
 ];

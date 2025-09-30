@@ -3,7 +3,7 @@
 return [
     [
         'title' => 'Peran',
-        'icon' => 'PackageIcon',
+        'icon' => 'ShieldIcon',
         'route' => '/role',
     ],
 ];

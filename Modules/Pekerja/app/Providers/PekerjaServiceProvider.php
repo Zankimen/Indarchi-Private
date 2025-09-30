@@ -4,6 +4,7 @@ namespace Modules\Pekerja\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Modules\Pekerja\Repositories\Eloquent\PekerjaRepository;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -39,7 +40,7 @@ class PekerjaServiceProvider extends ServiceProvider
         $this->app->register(RouteServiceProvider::class);
         
         // Register repositories
-        $this->app->bind(KaryawanRepository::class, KaryawanRepository::class);
+        $this->app->bind(PekerjaRepository::class, PekerjaRepository::class);
     }
 
     /**

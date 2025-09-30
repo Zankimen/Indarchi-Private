@@ -1,39 +1,11 @@
 import React, { useState } from "react";
 import { usePage, Head, router, Link } from "@inertiajs/react";
 import Dashboard from "@/layout/Dashboard";
-import CustomDataTable from "@components/custom/CustomDataTable";
+import DataTable from "@/components/custom/NewCustomDataTable";
 import CustomPagination from "@components/custom/CustomPagination";
 import CustomTableSearch from "@components/custom/CustomTableSearch";
-import { Plus, Shield } from "lucide-react";
-import { Card } from "@components/ui/card";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-const columns = [
-  {
-    key: "name",
-    label: "Nama Peran",
-    type: "text",
-    sort: true,
-  },
-  {
-    key: "deskripsi",
-    label: "Deskripsi",
-    type: "text",
-    render: (item) => item.deskripsi || "Tidak ada deskripsi",
-  },
-  {
-    key: "permissions_count",
-    label: "Jumlah Permission",
-    type: "text",
-    render: (item) => item.permissions_count || item.permissions?.length || 0,
-  },
-  {
-    key: "created_at",
-    label: "Dibuat",
-    type: "time",
-    sort: true,
-  },
-];
 
 const onRowClick = (item) => {
   router.visit(`/role/${item.id}`);
@@ -95,27 +67,17 @@ function PeranIndex() {
 
   return (
     <>
-      <Head title="Manajemen Peran" />
-      <div className="w-full mx-auto">
+      <Head title="Pekerja" />
+      <div className="">
         <div className="space-y-4">
-          <Card className="border-border">
-            <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">
-              <h1 className="flex items-center justify-center sm:justify-start font-bold text-2xl md:text-2xl m-0 p-0">
-                <Shield className="w-10 h-10 bg-accent text-primary rounded-2xl mr-4 p-2" />
-                Manajemen Peran
-              </h1>
-              <div className="grid grid-cols-1 gap-2 sm:flex">
-                <Link href="/role/add">
-                  <Button className="cursor-pointer">
-                    Tambah Peran
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </Card>
-
           <div className="flex justify-between items-center gap-2 px-4">
+            <Link href="/role/add">
+              <Button className="cursor-pointer">
+                Tambah Peran
+                <Plus className="w-4 h-4" />
+              </Button>
+            </Link>
+
             <CustomTableSearch
               search={search}
               setSearch={setSearch}
@@ -123,16 +85,24 @@ function PeranIndex() {
               placeholder="Cari Peran"
             />
           </div>
-
           <div className="px-4 space-y-4">
-            <CustomDataTable
-              columns={columns}
+            <DataTable
               data={roles.data}
-              onRowClick={onRowClick}
-              onSort={handleSort}
               filters={filters}
+              onSort={handleSort}
+              onRowClick={onRowClick}
               noItem="Peran"
-            />
+            >
+              <DataTable.Column accessor="name" label="Nama" type="text" sort />
+              <DataTable.Column accessor="deskripsi" label="Deskripsi" type="text" sort />
+              <DataTable.Column
+                accessor="created_at"
+                label="Created At"
+                type="time"
+                sort
+              />
+            </DataTable>
+
             <CustomPagination
               data={roles}
               onPaginationChange={onPaginationChange}
@@ -145,6 +115,6 @@ function PeranIndex() {
 }
 
 PeranIndex.layout = (page) => (
-  <Dashboard children={page} title={"Manajemen Peran"} />
+  <Dashboard children={page} title={"Peran"} />
 );
 export default PeranIndex;
