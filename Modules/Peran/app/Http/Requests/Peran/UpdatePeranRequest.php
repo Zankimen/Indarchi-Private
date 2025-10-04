@@ -14,7 +14,8 @@ class UpdatePeranRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama' => 'required|string|max:255|unique:roles,nama,' . $this->route('role')->id,
+            'name' => 'required|string|max:255|unique:roles,name,' . $this->route('role')->id,
+            'deskripsi' => 'nullable|string',
             'permissions' => 'nullable|array',
             'permissions.*' => 'exists:permissions,id'
         ];
@@ -23,8 +24,8 @@ class UpdatePeranRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'nama.required' => 'Nama peran harus diisi.',
-            'nama.unique' => 'Nama peran sudah ada.',
+            'name.required' => 'Nama peran harus diisi.',
+            'name.unique' => 'Nama peran sudah ada.',
             'permissions.*.exists' => 'Permission yang dipilih tidak valid.'
         ];
     }
