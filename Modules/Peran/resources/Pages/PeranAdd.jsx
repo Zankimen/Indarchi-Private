@@ -9,8 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 
-function PeranAdd() {
-  const { permissions } = usePage().props;
+function PeranAdd({ permissions }) {
 
   const { data, setData, post, processing, errors, reset } = useForm({
     name: "",

@@ -70,7 +70,7 @@ function PeranIndex() {
       <Head title="Pekerja" />
       <div className="">
         <div className="space-y-4">
-          <div className="flex justify-between items-center gap-2 px-4">
+          <div className="flex justify-between items-center gap-2">
             <Link href="/role/add">
               <Button className="cursor-pointer">
                 Tambah Peran
@@ -85,7 +85,7 @@ function PeranIndex() {
               placeholder="Cari Peran"
             />
           </div>
-          <div className="px-4 space-y-4">
+          <div className="space-y-4">
             <DataTable
               data={roles.data}
               filters={filters}

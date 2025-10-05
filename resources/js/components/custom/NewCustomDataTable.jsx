@@ -1,9 +1,15 @@
+import React from "react";
+
+import { ArrowUpDown, Edit, Trash2, FolderIcon } from "lucide-react";
+
 import {
-  ArrowUpDown,
-  FileQuestion as FileQuestionMark,
-  Edit,
-  Trash2,
-} from "lucide-react";
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyDescription,
+  EmptyTitle,
+  EmptyContent,
+} from "../ui/empty";
 
 import { createContext, useContext, useMemo } from "react";
 import { formatDate, cn } from "../lib/utils";
@@ -120,22 +126,24 @@ function Body() {
         <TableRow>
           <TableCell
             colSpan={columns.length}
-            className="text-center py-12 px-6"
+            className="text-center px-4"
           >
-            <div className="flex flex-col gap-4">
-              <FileQuestionMark
-                className="max-w-60 m-auto text-muted-foreground"
-                size={60}
-              />
-              <div>
-                <h1 className="font-bold text-sm text-muted-foreground">
-                  No {noItem} Found.
-                </h1>
-                <p className="font-light text-sm text-muted-foreground">
-                  Add {noItem} or try searching with different keyword
-                </p>
-              </div>
-            </div>
+            {React.isValidElement(noItem) ? (
+              noItem
+            ) : (
+              <Empty>
+                <EmptyHeader>
+                  <EmptyMedia variant="icon">
+                    <FolderIcon />
+                  </EmptyMedia>
+                  <EmptyTitle className="text-foreground">Belum ada {noItem}</EmptyTitle>
+                  <EmptyDescription>
+                    Anda belum membuat {noItem}. <br />
+                    Tekan tombol tambah {noItem} untuk membuat {noItem} pertama.
+                  </EmptyDescription>
+                </EmptyHeader>
+              </Empty>
+            )}
           </TableCell>
         </TableRow>
       </TableBody>
