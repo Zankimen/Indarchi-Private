@@ -3,10 +3,7 @@
 namespace Modules\Pekerja\Services;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
 use Modules\Pekerja\Repositories\Eloquent\PekerjaRepository;
-use Throwable;
 
 class PekerjaService
 {
@@ -20,18 +17,22 @@ class PekerjaService
     public function createPekerja(array $data)
     {
         $userData = [
-            'name'    => $data['nama_karyawan'] ?? $data['name'] ?? '',
-            'email'   => $data['email'],
-            'password'=> $data['password'] ?? null,
-            'alamat'  => $data['alamat'] ?? null,
-            'posisi'  => $data['posisi'] ?? null,
+            'name' => $data['nama_karyawan'] ?? $data['name'] ?? '',
+            'email' => $data['email'],
+            'password' => $data['password'] ?? null,
+            'alamat' => $data['alamat'] ?? null,
+
         ];
 
         if (empty($userData['password'])) {
             unset($userData['password']);
         }
 
-        return $this->pekerjaRepository->create($userData);
+        $user = $this->pekerjaRepository->create($userData);
+
+        $user->assignRole($data['posisi']);
+
+        return $user;
     }
 
     public function getPekerjaPaginated($request)
@@ -39,25 +40,26 @@ class PekerjaService
         return $this->pekerjaRepository->getFilteredSortedAndSearched($request);
     }
 
-    public function deletePekerja(User $pekerja) {
+    public function deletePekerja(User $pekerja)
+    {
         $this->pekerjaRepository->delete($pekerja->id);
     }
 
-    public function findUserById(int $id): User
+    public function findPekerjaById(int $id)
     {
         return $this->pekerjaRepository->find($id);
     }
 
-    public function updatePekerja(User $user, array $data): User
+    public function updatePekerja(User $user, array $data)
     {
         $updateData = [
-            'name'   => $data['nama_karyawan'] ?? $user->name,
-            'email'  => $data['email'] ?? $user->email,
+            'name' => $data['nama_karyawan'] ?? $user->name,
+            'email' => $data['email'] ?? $user->email,
             'alamat' => $data['alamat'] ?? $user->alamat,
             'posisi' => $data['posisi'] ?? $user->posisi,
         ];
 
-        if (!empty($data['password'])) {
+        if (! empty($data['password'])) {
             $updateData['password'] = $data['password'];
         }
 
@@ -67,15 +69,15 @@ class PekerjaService
     public function getKaryawanPayload(User $user): array
     {
         return [
-            'user_id'        => $user->id,
-            'nama_karyawan'  => $user->name,
-            'alamat'         => $user->alamat,
-            'posisi'         => $user->posisi,
-            'user'           => [
+            'user_id' => $user->id,
+            'nama_karyawan' => $user->name,
+            'alamat' => $user->alamat,
+            'posisi' => $user->posisi,
+            'user' => [
                 'email' => $user->email,
             ],
-            'created_at'     => $user->created_at,
-            'updated_at'     => $user->updated_at,
+            'created_at' => $user->created_at,
+            'updated_at' => $user->updated_at,
         ];
     }
 

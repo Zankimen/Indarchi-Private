@@ -42,9 +42,16 @@ export default function LoginForm({ errors }) {
             className="p-18 h-full flex justify-center items-center"
           >
             <div className="flex flex-col gap-6 w-full">
-              <div className="font-bold">Indarchi</div>
-              <div className="flex flex-col items-start text-center">
-                <h1 className="text-2xl font-bold">Nice to see you again</h1>
+              <div className="flex gap-2 flex-col justify-center items-center">
+                <div className="flex items-center gap-2 font-bold text-3xl">
+                  <img
+                    src="/storage/logo.png"
+                    alt="Indarchi Logo"
+                    className="h-10"
+                  />
+                  Indarchi
+                </div>
+                  <h1 className="text-2xl">Nice to see you again</h1>
               </div>
 
               <div className="grid gap-2">
@@ -57,7 +64,7 @@ export default function LoginForm({ errors }) {
                 <Input
                   id="email"
                   type="email"
-                  className="bg-slate-200 p-6"
+                  className="w-full border border-border rounded-lg px-4 py-3 h-12 text-foreground placeholder:text-border focus:ring-2 focus:ring-secondary focus:border-transparent text-base"
                   required
                   value={data.email}
                   onChange={(e) => setData("email", e.target.value)}
@@ -81,7 +88,7 @@ export default function LoginForm({ errors }) {
                 <Input
                   id="password"
                   type="password"
-                  className="bg-slate-200 p-6"
+                  className="w-full border border-border rounded-lg px-4 py-3 h-12 text-foreground placeholder:text-border focus:ring-2 focus:ring-secondary focus:border-transparent text-base"
                   required
                   value={data.password}
                   onChange={(e) => setData("password", e.target.value)}
@@ -94,16 +101,16 @@ export default function LoginForm({ errors }) {
                 )}
               </div>
 
-              {/* Remember Me */}
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center justify-end space-x-2">
                 <Checkbox
                   id="remember"
                   checked={data.remember}
                   onCheckedChange={(checked) =>
                     setData("remember", checked ? true : false)
                   }
+                  className="cursor-pointer border-border"
                 />
-                <Label htmlFor="remember">Remember me</Label>
+                <Label htmlFor="remember">Remember me?</Label>
               </div>
 
               <div className="grid gap-2">

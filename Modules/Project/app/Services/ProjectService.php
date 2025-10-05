@@ -20,22 +20,22 @@ class ProjectService
         return $this->projectRepository->getFilteredSortedAndSearched($request);
     }
 
-    public function createProject(array $data): Project
+    public function createProject(array $data)
     {
         return $this->projectRepository->create($data);
     }
 
-    public function updateProject(Project $project, array $data): Project
+    public function updateProject(Project $project, array $data)
     {
         return $this->projectRepository->update($project, $data);
     }
 
-    public function deleteProject(Project $project): bool|int|null
+    public function deleteProject(Project $project)
     {
         return $this->projectRepository->delete($project->id);
     }
 
-    public function getAllProjectFilter(Request $request): array
+    public function getAllProjectFilter(Request $request)
     {
         return [
             'search'          => $request->search,

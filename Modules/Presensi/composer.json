@@ -1,0 +1,30 @@
+{
+    "name": "nwidart/presensi",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Presensi\\": "app/",
+            "Modules\\Presensi\\Database\\Factories\\": "database/factories/",
+            "Modules\\Presensi\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Presensi\\Tests\\": "tests/"
+        }
+    }
+}

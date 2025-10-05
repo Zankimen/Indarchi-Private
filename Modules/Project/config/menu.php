@@ -4,6 +4,13 @@ return [
     [
         'title' => 'Project',
         'icon' => 'FolderKanbanIcon',
-        'route' => '/projects'
+        'route' => '/dashboard/projects',
+        'type' => 'dashboard',
+    ],
+    [
+        'title' => 'Informasi',
+        'icon' => 'FolderKanbanIcon',
+        'route' => '/informasi',
+        'type' => 'project',
     ],
 ];

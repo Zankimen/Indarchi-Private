@@ -1,63 +1,12 @@
 import React, { useState } from "react";
-import { usePage, Head, router, Link } from "@inertiajs/react";
+import { usePage, Head, router } from "@inertiajs/react";
 
 import Dashboard from "@/layout/Dashboard";
-import CustomDataTable from "@components/custom/CustomDataTable";
 import DataTable from "@/components/custom/NewCustomDataTable";
 import CustomPagination from "@components/custom/CustomPagination";
 import CustomTableSearch from "@components/custom/CustomTableSearch";
 
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
-
-const columns = [
-  {
-    key: "nama",
-    label: "Nama",
-    type: "text",
-    sort: true,
-  },
-  {
-    key: "deskripsi",
-    label: "Deskripsi",
-    type: "text",
-    sort: true,
-  },
-  {
-    key: "lokasi",
-    label: "Lokasi",
-    type: "text",
-    sort: true,
-  },
-  {
-    key: "tanggal_mulai",
-    label: "Tanggal Mulai",
-    type: "date",
-    sort: true,
-  },
-  {
-    key: "tanggal_selesai",
-    label: "Tanggal Selesai",
-    type: "date",
-    sort: true,
-  },
-  {
-    key: "radius",
-    label: "Radius",
-    type: "text",
-    sort: true,
-  },
-  {
-    key: "created_at",
-    label: "Created At",
-    type: "time",
-    sort: true,
-  },
-];
-
-const onRowClick = (item) => {
-  router.visit(`/projects/${item.id}/show`);
-};
+import ProjectCreate from "./ProjectCreate";
 
 function ProjectIndex() {
   const { projects, filters } = usePage().props;
@@ -66,6 +15,10 @@ function ProjectIndex() {
   const sortBy = filters.sort_by || "";
   const sortDirection = filters.sort_direction || "";
 
+  const onRowClick = (item) => {
+    router.visit(`/projects/${item.id}/informasi`);
+  };
+
   const handleSort = (column) => {
     let direction = "asc";
     if (sortBy === column && sortDirection === "asc") {
@@ -73,7 +26,7 @@ function ProjectIndex() {
     }
 
     router.get(
-      "/projects",
+      "/dashboard/projects",
       {
         per_page: projects.per_page,
         search,
@@ -86,7 +39,7 @@ function ProjectIndex() {
 
   const onPaginationChange = (value) => {
     router.get(
-      "/projects",
+      "/dashboard/projects",
       {
         per_page: value,
         search,
@@ -99,7 +52,7 @@ function ProjectIndex() {
 
   const onSearch = () => {
     router.get(
-      "/projects",
+      "/dashboard/projects",
       {
         per_page: projects.per_page,
         search,
@@ -110,20 +63,13 @@ function ProjectIndex() {
     );
   };
 
-  
-
   return (
     <>
       <Head title="Projects" />
       <div className="">
         <div className="space-y-4">
-          <div className="flex justify-between items-center gap-2 px-4">
-            <Link href="/projects/create">
-              <Button className="cursor-pointer">
-                Tambah Projects
-                <Plus className="w-4 h-4" />
-              </Button>
-            </Link>
+          <div className="flex justify-between items-center gap-2">
+            <ProjectCreate />
 
             <CustomTableSearch
               search={search}
@@ -132,13 +78,13 @@ function ProjectIndex() {
               placeholder="Cari Project"
             />
           </div>
-          <div className="px-4 space-y-4">
+          <div className="space-y-4">
             <DataTable
               data={projects.data}
               filters={filters}
               onSort={handleSort}
               onRowClick={onRowClick}
-              noItem="Pekerja"
+              noItem="Project"
             >
               <DataTable.Column accessor="nama" label="Nama" type="text" sort />
               <DataTable.Column
@@ -171,7 +117,7 @@ function ProjectIndex() {
                 type="text"
                 sort
               />
-              
+
               <DataTable.Column
                 accessor="created_at"
                 label="Created At"

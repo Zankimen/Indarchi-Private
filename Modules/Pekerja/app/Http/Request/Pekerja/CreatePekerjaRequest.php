@@ -13,7 +13,7 @@ class CreatePekerjaRequest extends FormRequest
             'password' => 'required|string|min:8|max:255',
             'nama_karyawan' => 'required|string|max:255',
             'alamat' => 'required|string',
-            'posisi' => 'required|in:supervisor,manager,kuli,mandor',
+            'posisi' => 'required',
         ];
     }
 
@@ -31,7 +31,6 @@ class CreatePekerjaRequest extends FormRequest
             'nama_karyawan.max' => 'Nama karyawan maksimal 255 karakter.',
             'alamat.required' => 'Alamat wajib diisi.',
             'posisi.required' => 'Posisi wajib dipilih.',
-            'posisi.in' => 'Posisi harus salah satu dari: supervisor, manager, kuli, mandor.',
         ];
     }
 

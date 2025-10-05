@@ -34,19 +34,23 @@ class MenuServiceProvider extends ServiceProvider
                 $menus = collect();
 
                 foreach (Module::allEnabled() as $module) {
-                    $path = $module->getPath() . '/config/menu.php';
+                    $path = $module->getPath().'/config/menu.php';
 
                     if (file_exists($path)) {
                         $configMenus = require $path;
-
                         foreach ($configMenus as $menu) {
                             $menus->push($menu);
                         }
                     }
                 }
 
-                return $menus->values();
+                return [
+                    'dashboard' => $menus->where('type', 'dashboard')->values(),
+                    'project' => $menus->where('type', 'project')->values(),
+                    'landing' => $menus->where('type', 'landing')->values(),
+                ];
             },
+
         ]);
     }
 }

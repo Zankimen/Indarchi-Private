@@ -32,7 +32,7 @@ class AdminSeeder extends Seeder
             'email' => 'admin@example.com',
             'password' => Hash::make('password'),
         ]);
-
+        
         if (!$adminUser->hasRole('admin')) {
             $adminUser->assignRole('admin');
         }

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Peran extends Role
 {
-    protected $fillable = ['name', 'deskripsi', 'guard_name'];
+    protected $fillable = ['name', 'deskripsi', 'guard_name', 'team_id'];
 
     protected $table = 'roles';
 

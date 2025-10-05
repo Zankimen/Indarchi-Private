@@ -62,7 +62,7 @@ Dashboard.Sidebar = function DashboardSidebar({ children }) {
 
 Dashboard.SidebarHeader = function DashboardSidebarHeader({ children }) {
   return (
-    <SidebarHeader className="py-8 px-4 bg-sidebar-background">{children}</SidebarHeader>
+    <SidebarHeader className="py-8 bg-sidebar-background">{children}</SidebarHeader>
   );
 };
 
@@ -90,10 +90,16 @@ Dashboard.MenuItem = function DashboardMenuItem({
   href,
   icon: Icon,
   children,
+  exact = false,
 }) {
+  const { currentPath } = useDashboard();
+  const isActive = exact
+    ? currentPath === href
+    : currentPath === href || (href !== "/" && currentPath.startsWith(href + "/"));
+
   return (
     <SidebarMenuItem>
-      <SidebarMenuButton asChild>
+      <SidebarMenuButton asChild isActive={isActive}>
         <Link href={href} className="flex items-center gap-4 font-bold">
           {Icon && <Icon className="h-4 w-4" />}
           <span>{children}</span>
@@ -103,12 +109,12 @@ Dashboard.MenuItem = function DashboardMenuItem({
   );
 };
 
-Dashboard.SubMenu = function DashboardSubMenu({ title, icon: Icon, children }) {
+Dashboard.SubMenu = function DashboardSubMenu({ title, icon: Icon, children, defaultOpen = false, active = false }) {
   return (
-    <Collapsible>
+    <Collapsible defaultOpen={defaultOpen}>
       <SidebarMenuItem>
         <CollapsibleTrigger asChild>
-          <SidebarMenuButton className="h-9 px-2 group gap-4 cursor-pointer">
+          <SidebarMenuButton className="h-9 px-2 group gap-4 cursor-pointer" isActive={active}>
             {Icon && <Icon className="h-4 w-4" />}
             <span className="text-sidebar-foreground font-bold">{title}</span>
             <ChevronDown className="ml-auto h-4 w-4 transition-transform group-data-[state=open]:rotate-180" />
@@ -129,15 +135,18 @@ Dashboard.SubMenuItem = function DashboardSubMenuItem({
   icon: Icon,
   children,
 }) {
+  const { currentPath } = useDashboard();
+  const isActive = currentPath === href || (href !== "/" && currentPath.startsWith(href + "/"));
+
   return (
-    <SidebarMenuItem>
-      <SidebarMenuButton asChild>
+    <SidebarMenuSubItem>
+      <SidebarMenuSubButton asChild isActive={isActive}>
         <Link href={href} className="flex items-center gap-4">
           {Icon && <Icon className="h-4 w-4" />}
           <span>{children}</span>
         </Link>
-      </SidebarMenuButton>
-    </SidebarMenuItem>
+      </SidebarMenuSubButton>
+    </SidebarMenuSubItem>
   );
 };
 
@@ -146,7 +155,7 @@ Dashboard.Header = function DashboardHeader({ children }) {
 
   return (
     <header className="sticky top-0 z-40 bg-background">
-      <div className="flex h-24 items-center gap-4 px-4">
+      <div className="flex h-24 items-center gap-4">
         <div className="flex items-center gap-2 flex-1 text-foreground font-bold text-3xl">
           {children}
         </div>

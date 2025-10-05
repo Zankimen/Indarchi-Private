@@ -1,21 +1,19 @@
 import React, { useState } from "react";
 
-import { usePage, Head, router, Link } from "@inertiajs/react";
+import { Head, router} from "@inertiajs/react";
 
 import Dashboard from "@/layout/Dashboard";
 import DataTable from "@/components/custom/NewCustomDataTable";
 import CustomPagination from "@components/custom/CustomPagination";
 import CustomTableSearch from "@components/custom/CustomTableSearch";
 
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import PekerjaAdd from "./PekerjaAdd";
 
 const onRowClick = (item) => {
-  router.visit(`/pekerja/${item.user_id ?? item.id}`);
+  router.visit(`/dashboard/pekerja/${item.user_id ?? item.id}`);
 };
 
-function PekerjaIndex() {
-  const { pekerja, filters } = usePage().props;
+function PekerjaIndex({ pekerja, peran, filters }) {
 
   const [search, setSearch] = useState(filters.search || "");
 
@@ -29,7 +27,7 @@ function PekerjaIndex() {
     }
 
     router.get(
-      "/pekerja",
+      "/dashboard/pekerja",
       {
         per_page: pekerja.per_page,
         search,
@@ -42,7 +40,7 @@ function PekerjaIndex() {
 
   const onPaginationChange = (value) => {
     router.get(
-      `/pekerja`,
+      `/dashboard/pekerja`,
       {
         per_page: value,
         search,
@@ -57,7 +55,7 @@ function PekerjaIndex() {
 
   const onSearch = () => {
     router.get(
-      "/pekerja",
+      "/dashboard/pekerja",
       {
         per_page: pekerja.per_page,
         search,
@@ -73,22 +71,17 @@ function PekerjaIndex() {
       <Head title="Pekerja" />
       <div className="">
         <div className="space-y-4">
-          <div className="flex justify-between items-center gap-2 px-4">
-            <Link href="/pekerja/add">
-              <Button className="cursor-pointer">
-                Tambah Pekerja
-                <Plus className="w-4 h-4" />
-              </Button>
-            </Link>
+          <div className="flex justify-between items-center gap-2">
+            <PekerjaAdd peran={peran} />
 
             <CustomTableSearch
               search={search}
               setSearch={setSearch}
               onSearch={onSearch}
-              placeholder="Cari karyawan"
+              placeholder="Cari Pekerja"
             />
           </div>
-          <div className="px-4 space-y-4">
+          <div className="space-y-4">
             <DataTable
               data={pekerja.data}
               filters={filters}

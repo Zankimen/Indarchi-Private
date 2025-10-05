@@ -1,70 +1,15 @@
 import React from "react";
-import { Head, Link, router, usePage } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 
-import Dashboard from "@/layout/Dashboard";
-import { Pencil, ChevronLeft, Trash } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { formatDateNoHour } from "@/components/lib/utils";
+import Navbar from "@/layout/NavBar";
 
-function ProjectDetail() {
-  const { project } = usePage().props;
-
+function ProjectDetail({ project }) {
   return (
     <>
       <Head title={project.nama} />
       <div className="space-y-4">
-        {/* Header */}
-        <Card className="border-border">
-          <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">
-            {/* Nama project */}
-            <div className="flex items-center gap-4 m-0 p-0 w-full justify-center sm:justify-start">
-              <h1 className="flex font-bold text-2xl text-primary bg-accent items-center justify-center rounded-2xl w-10 h-10">
-                {project.nama?.charAt(0) || "P"}
-              </h1>
-              <div>
-                <h1 className="flex items-center h-full m-0 p-0 font-bold text-2xl md:text-2xl">
-                  {project.nama}
-                </h1>
-              </div>
-            </div>
-
-            {/* Tombol aksi */}
-            <div className="grid grid-cols-1 gap-2 sm:flex">
-              <Link href="/projects">
-                <Button className="cursor-pointer">
-                  <ChevronLeft className="w-4 h-4" />
-                  Back
-                </Button>
-              </Link>
-              <Link href={`/projects/${project.id}/edit`}>
-                <Button
-                  variant="outline"
-                  className="cursor-pointer border-border"
-                >
-                  <Pencil className="w-4 h-4" />
-                  Edit
-                </Button>
-              </Link>
-              <Button
-                variant="destructive"
-                className="cursor-pointer"
-                onClick={() => {
-                  if (
-                    confirm("Are you sure you want to delete this Project?")
-                  ) {
-                    router.delete(`/projects/${project.id}`);
-                  }
-                }}
-              >
-                <Trash className="w-4 h-4" />
-                Delete
-              </Button>
-            </div>
-          </div>
-        </Card>
-
-        {/* Detail Project */}
         <Card className="p-6 px-8 border-border">
           <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-2">
             <Detail label="Nama" value={project.nama} />
@@ -101,6 +46,6 @@ const Detail = ({ label, value }) => (
   </div>
 );
 
-ProjectDetail.layout = (page) => <Dashboard children={page} />;
+ProjectDetail.layout = (page) => <Navbar children={page} />;
 
 export default ProjectDetail;

@@ -5,6 +5,7 @@ namespace Modules\Project\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Exception;
 use Modules\Project\Models\Project;
 use Modules\Project\Services\ProjectService;
 use Modules\Project\Http\Requests\Project\CreateProjectRequest;
@@ -26,14 +27,9 @@ class ProjectController extends Controller
                 'projects' => $this->projectService->getProjectsPaginated($request),
                 'filters'  => $this->projectService->getAllProjectFilter($request),
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
-    }
-
-    public function create()
-    {
-        return Inertia::render('Project/ProjectCreate');
     }
 
     public function store(CreateProjectRequest $request)
@@ -42,7 +38,7 @@ class ProjectController extends Controller
             $this->projectService->createProject($request->validated());
 
             return redirect()->route('projects.index')->with('success', 'Project berhasil ditambahkan.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return redirect()
                 ->back()
                 ->withErrors(['error' => $e->getMessage()])
@@ -63,7 +59,7 @@ class ProjectController extends Controller
             $this->projectService->updateProject($project, $request->validated());
 
             return redirect()->route('projects.index')->with('success', 'Project berhasil diperbarui.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return redirect()
                 ->back()
                 ->withErrors(['error' => $e->getMessage()])
@@ -77,7 +73,7 @@ class ProjectController extends Controller
             $this->projectService->deleteProject($project);
 
             return redirect()->route('projects.index')->with('success', 'Project berhasil dihapus.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return redirect()
                 ->back()
                 ->withErrors(['error' => $e->getMessage()]);

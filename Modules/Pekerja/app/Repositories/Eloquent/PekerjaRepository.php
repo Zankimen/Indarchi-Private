@@ -23,8 +23,7 @@ class PekerjaRepository
 
     public function update(User $user, array $data)
     {
-        $user->update($data);
-        return $user;
+        return $user->update($data);
     }
 
     public function getFilteredSortedAndSearched($request)

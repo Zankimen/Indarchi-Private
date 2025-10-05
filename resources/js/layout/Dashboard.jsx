@@ -17,8 +17,10 @@ export default function DashboardPage({ title, children }) {
     props: { moduleMenus },
   } = usePage();
 
+  const pathNoQuery = currentPath.split("?")[0];
+
   return (
-    <Dashboard currentPath={currentPath}>
+    <Dashboard currentPath={pathNoQuery}>
       <Dashboard.Sidebar>
         <Dashboard.SidebarHeader>
           <div className="flex items-center justify-center gap-4">
@@ -34,15 +36,22 @@ export default function DashboardPage({ title, children }) {
         </Dashboard.SidebarHeader>
         <Dashboard.SidebarContent>
           <Dashboard.MenuGroup>
-            <Dashboard.MenuItem href="/" icon={Icons.HomeIcon}>
+            <Dashboard.MenuItem href="/dashboard" icon={Icons.HomeIcon} exact>
               Dashboard
             </Dashboard.MenuItem>
 
-            {moduleMenus.map((menu, idx) => {
+            {moduleMenus.dashboard.map((menu, idx) => {
               const Icon = iconMap[menu.icon] || Icons.PackageIcon;
 
+              const isChildActive = Array.isArray(menu.children) && menu.children.some((child) => {
+                const childRoute = child.route || "";
+                return pathNoQuery === childRoute || (childRoute !== "/" && pathNoQuery.startsWith(childRoute + "/"));
+              });
+              const isParentActive = !!menu.route && (pathNoQuery === menu.route || pathNoQuery.startsWith(menu.route + "/"));
+              const shouldOpen = isChildActive || isParentActive;
+
               return menu.children?.length ? (
-                <Dashboard.SubMenu key={idx} title={menu.title} icon={Icon}>
+                <Dashboard.SubMenu key={idx} title={menu.title} icon={Icon} defaultOpen={shouldOpen} active={shouldOpen}>
                   {menu.children.map((child, cidx) => {
                     const ChildIcon = iconMap[child.icon] || Icons.PackageIcon;
                     return (

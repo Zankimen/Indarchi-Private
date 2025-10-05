@@ -3,34 +3,32 @@
 namespace Modules\Pekerja\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Inertia\Inertia;
 use Illuminate\Http\Request;
-use Modules\Pekerja\Services\PekerjaService;
+use Inertia\Inertia;
 use Modules\Pekerja\Http\Request\Pekerja\CreatePekerjaRequest;
 use Modules\Pekerja\Http\Request\Pekerja\UpdatePekerjaRequest;
+use Modules\Pekerja\Services\PekerjaService;
+use Modules\Peran\Services\PeranService;
 
 class PekerjaController extends Controller
 {
     protected PekerjaService $pekerjaService;
 
-    public function __construct(PekerjaService $pekerjaService)
+    protected PeranService $peranService;
+
+    public function __construct(PekerjaService $pekerjaService, PeranService $peranService)
     {
         $this->pekerjaService = $pekerjaService;
+        $this->peranService = $peranService;
     }
 
     public function index(Request $request)
     {
-        $pekerja = $this->pekerjaService->getPekerjaPaginated($request);
-
         return Inertia::render('Pekerja/PekerjaIndex', [
-            'pekerja' => $pekerja,
+            'pekerja' => $this->pekerjaService->getPekerjaPaginated($request),
+            'peran' => $this->peranService->getAllPeran(),
             'filters' => $this->pekerjaService->getAllPekerjaFilter($request),
         ]);
-    }
-
-    public function create()
-    {
-        return Inertia::render('Pekerja/PekerjaAdd');
     }
 
     public function store(CreatePekerjaRequest $request)
@@ -42,6 +40,8 @@ class PekerjaController extends Controller
                 ->route('pekerja.index')
                 ->with('success', 'Karyawan berhasil ditambahkan.');
         } catch (\Exception $e) {
+            dd($e->getMessage());
+
             return redirect()
                 ->back()
                 ->withErrors(['error' => $e->getMessage()])
@@ -51,26 +51,24 @@ class PekerjaController extends Controller
 
     public function details($id)
     {
-        $user = $this->pekerjaService->findUserById((int) $id);
-
         return Inertia::render('Pekerja/PekerjaDetails', [
-            'karyawan' => $this->pekerjaService->getKaryawanPayload($user),
+            'pekerja' => $this->pekerjaService->findPekerjaById($id),
         ]);
     }
 
     public function edit($user_id)
     {
-        $user = $this->pekerjaService->findUserById((int) $user_id);
+        // $user = $this->pekerjaService->findUserById((int) $user_id);
 
-        return Inertia::render('Pekerja/PekerjaEdit', [
-            'karyawan' => $this->pekerjaService->getKaryawanPayload($user),
-        ]);
+        // return Inertia::render('Pekerja/PekerjaEdit', [
+        //     'karyawan' => $this->pekerjaService->getKaryawanPayload($user),
+        // ]);
     }
 
-    public function update(UpdatePekerjaRequest $request, $user_id)
+    public function update(UpdatePekerjaRequest $request, $id)
     {
         try {
-            $user = $this->pekerjaService->findUserById((int) $user_id);
+            $user = $this->pekerjaService->findPekerjaById($id);
             $this->pekerjaService->updatePekerja($user, $request->validated());
 
             return redirect()
@@ -87,7 +85,7 @@ class PekerjaController extends Controller
     public function destroy($id)
     {
         try {
-            $user = $this->pekerjaService->findUserById((int) $id);
+            $user = $this->pekerjaService->findPekerjaById($id);
             $this->pekerjaService->deletePekerja($user);
 
             return redirect()
@@ -98,5 +96,14 @@ class PekerjaController extends Controller
                 ->back()
                 ->withErrors(['error' => $e->getMessage()]);
         }
+    }
+
+    public function project(Request $request)
+    {
+        return Inertia::render('Pekerja/PekerjaProject', [
+            'pekerja' => $this->pekerjaService->getPekerjaPaginated($request),
+            // 'peran' => $this->peranService->getAllPeran(),
+            // 'filters' => $this->pekerjaService->getAllPekerjaFilter($request),
+        ]);
     }
 }

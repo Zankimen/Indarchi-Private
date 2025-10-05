@@ -17,5 +17,6 @@ return [
                 'route' => '/mysql/dosen',
             ],
         ],
+        'type' => 'dashboard',
     ],
 ];

@@ -24,8 +24,7 @@ class ProjectRepository
 
     public function update(Project $project, array $data)
     {
-        $project->update($data);
-        return $project;
+        return $project->update($data);
     }
 
     public function delete($id)
@@ -82,10 +81,5 @@ class ProjectRepository
         $query->orderBy($sortBy, $sortDirection);
 
         return $query->paginate($perPage)->withQueryString();
-    }
-
-    public function refresh(Project $project)
-    {
-        return $project->refresh();
     }
 }

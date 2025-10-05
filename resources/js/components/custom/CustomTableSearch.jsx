@@ -20,8 +20,8 @@ function CustomTableSearch({ search, setSearch, onSearch, placeholder }) {
           placeholder={placeholder}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          className="pl-10"
           onKeyDown={handleKeyDown}
-          className="border-border pl-10 dark:caret-foreground dark:text-foreground"
         />
       </div>
     </div>

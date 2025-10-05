@@ -1,11 +1,20 @@
 import React from "react";
 
-import { Head, useForm, Link, usePage } from "@inertiajs/react";
+import { useForm } from "@inertiajs/react";
 
-import Dashboard from "@/layout/Dashboard";
-import { ComboBoxInput } from "@components/custom/ComboBoxInput";
+import {
+  DialogTrigger,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 
-import { Save, ChevronLeft, UserPlus } from "lucide-react";
+import { ChevronLeft, Plus, Users, Save } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -20,7 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-function PekerjaAdd() {
+function PekerjaAdd({ peran }) {
   const { data, setData, post, processing, errors, reset } = useForm({
     email: "",
     password: "",
@@ -31,39 +40,52 @@ function PekerjaAdd() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    post("/pekerja/add", {
+    post("/dashboard/pekerja", {
       onSuccess: () => reset(),
     });
   };
 
   return (
-    <>
-      <Head title="Add Pekerja" />
-      <div className="space-y-4">
-        {/* Header Card */}
-        <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-4 gap-4">
-          <h1 className="flex items-center justify-center sm:justify-start font-bold text-2xl md:text-2xl m-0 p-0">
-            Tambah Karyawan
-          </h1>
-          <div className="grid grid-cols-1 gap-2 sm:flex">
-            <Link href="/pekerja">
-              <Button variant="outline" 
-                className="cursor-pointer rounded-[10px] px-6 py-3 font-bold text-[16px]">
-                <ChevronLeft className="w-4 h-4" />
-                Batal
-              </Button>
-            </Link>
-          </div>
-        </div>
+    <Dialog className="z-50">
+      <DialogTrigger asChild>
+        <Button className="cursor-pointer">
+          Tambah Pekerja <Plus />
+        </Button>
+      </DialogTrigger>
+      <DialogContent
+        className="sm:max-w-[800px] border-border"
+        aria-describedby={undefined}
+      >
+        <DialogHeader>
+          <Card className="border-border">
+            <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">
+              <DialogTitle>
+                <div className="flex items-center justify-center sm:justify-start font-bold text-2xl md:text-2xl m-0 p-0">
+                  <Users className="w-10 h-10 bg-accent text-background rounded-2xl mr-4 p-2" />
+                  Tambah Pekerja
+                </div>
+              </DialogTitle>
+              <DialogDescription className="sr-only">
+                Form untuk membuat Pekerja baru.
+              </DialogDescription>
+              <div className="grid grid-cols-1 gap-2 sm:flex">
+                <DialogPrimitive.Close asChild>
+                  <Button className="cursor-pointer">
+                    <ChevronLeft className="w-4 h-4" />
+                    Back
+                  </Button>
+                </DialogPrimitive.Close>
+              </div>
+            </div>
+          </Card>
+        </DialogHeader>
 
-        {/* Form Card */}
         <Card className="px-6 py-8 space-y-2 border-border">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email */}
-            <div className="space-y-3">
-              <Label 
-                htmlFor="email" 
-                className="text-[#000000] font-semibold text-base block"
+            <div className="space-y-2">
+              <Label
+                htmlFor="email"
+                className="text-foreground text-base block"
               >
                 Email
               </Label>
@@ -72,7 +94,6 @@ function PekerjaAdd() {
                 id="email"
                 name="email"
                 value={data.email}
-                className="w-full border border-gray-300 rounded-[10px] px-4 py-3 h-12 text-[#000000] placeholder:text-gray-400 focus:ring-2 focus:ring-[#194AC2] focus:border-transparent text-base"
                 placeholder="Masukkan email"
                 onChange={(e) => setData("email", e.target.value)}
               />
@@ -81,11 +102,10 @@ function PekerjaAdd() {
               )}
             </div>
 
-            {/* Password */}
-            <div className="space-y-3">
-              <Label 
-                htmlFor="password" 
-                className="text-[#000000] font-semibold text-base block"
+            <div className="space-y-2">
+              <Label
+                htmlFor="password"
+                className="text-foreground text-base block"
               >
                 Password
               </Label>
@@ -94,7 +114,6 @@ function PekerjaAdd() {
                 id="password"
                 name="password"
                 value={data.password}
-                className="w-full border border-gray-300 rounded-[10px] px-4 py-3 h-12 text-[#000000] placeholder:text-gray-400 focus:ring-2 focus:ring-[#194AC2] focus:border-transparent text-base"
                 placeholder="Masukkan password"
                 onChange={(e) => setData("password", e.target.value)}
               />
@@ -103,11 +122,10 @@ function PekerjaAdd() {
               )}
             </div>
 
-            {/* Nama Karyawan */}
-            <div className="space-y-3">
-              <Label 
-                htmlFor="nama_karyawan" 
-                className="text-[#000000] font-semibold text-base block"
+            <div className="space-y-2">
+              <Label
+                htmlFor="nama_karyawan"
+                className="text-foreground text-base block"
               >
                 Nama Karyawan
               </Label>
@@ -116,7 +134,6 @@ function PekerjaAdd() {
                 id="nama_karyawan"
                 name="nama_karyawan"
                 value={data.nama_karyawan}
-                className="w-full border border-gray-300 rounded-[10px] px-4 py-3 h-12 text-[#000000] placeholder:text-gray-400 focus:ring-2 focus:ring-[#194AC2] focus:border-transparent text-base"
                 placeholder="Masukkan nama karyawan"
                 onChange={(e) => setData("nama_karyawan", e.target.value)}
               />
@@ -125,11 +142,10 @@ function PekerjaAdd() {
               )}
             </div>
 
-            {/* Alamat */}
-            <div className="space-y-3">
-              <Label 
-                htmlFor="alamat" 
-                className="text-[#000000] font-semibold text-base block"
+            <div className="space-y-2">
+              <Label
+                htmlFor="alamat"
+                className="text-foreground text-base block"
               >
                 Alamat
               </Label>
@@ -137,7 +153,7 @@ function PekerjaAdd() {
                 id="alamat"
                 name="alamat"
                 value={data.alamat}
-                className="w-full border border-gray-300 rounded-[10px] px-4 py-3 min-h-[100px] text-[#000000] placeholder:text-gray-400 focus:ring-2 focus:ring-[#194AC2] focus:border-transparent text-base resize-none"
+                className="border-border"
                 placeholder="Masukkan alamat lengkap"
                 onChange={(e) => setData("alamat", e.target.value)}
               />
@@ -146,11 +162,10 @@ function PekerjaAdd() {
               )}
             </div>
 
-            {/* Posisi */}
-            <div className="space-y-3">
-              <Label 
-                htmlFor="posisi" 
-                className="text-[#000000] font-semibold text-base block"
+            <div className="space-y-2">
+              <Label
+                htmlFor="posisi"
+                className="text-foreground text-base block"
               >
                 Posisi
               </Label>
@@ -159,40 +174,24 @@ function PekerjaAdd() {
                 value={data.posisi}
                 onValueChange={(value) => setData("posisi", value)}
               >
-                <SelectTrigger 
-                  id="posisi" 
-                  className="w-full border border-gray-300 rounded-[10px] px-4 py-3 h-12 text-[#000000] focus:ring-2 focus:ring-[#194AC2] focus:border-transparent text-base"
+                <SelectTrigger
+                  id="posisi"
+                  className="w-full border-border rounded-lg cursor-pointer text-foreground placeholder:text-border focus:ring-2 focus:ring-muted active:ring-2 active:ring-muted"
                 >
-                  <SelectValue 
-                    placeholder="Pilih Posisi" 
-                    className="text-gray-400"
+                  <SelectValue
+                    placeholder="Pilih Posisi"
+                    className="text-border"
                   />
                 </SelectTrigger>
-                <SelectContent className="rounded-[10px] border border-gray-300 bg-white shadow-lg">
-                  <SelectItem 
-                    value="supervisor" 
-                    className="text-[#000000] py-3 px-4 text-base hover:bg-gray-50 cursor-pointer"
-                  >
-                    Supervisor
-                  </SelectItem>
-                  <SelectItem 
-                    value="manager" 
-                    className="text-[#000000] py-3 px-4 text-base hover:bg-gray-50 cursor-pointer"
-                  >
-                    Manager
-                  </SelectItem>
-                  <SelectItem 
-                    value="kuli" 
-                    className="text-[#000000] py-3 px-4 text-base hover:bg-gray-50 cursor-pointer"
-                  >
-                    Kuli
-                  </SelectItem>
-                  <SelectItem 
-                    value="mandor" 
-                    className="text-[#000000] py-3 px-4 text-base hover:bg-gray-50 cursor-pointer"
-                  >
-                    Mandor
-                  </SelectItem>
+                <SelectContent className="rounded-lg border-border bg-background shadow">
+                  {peran.map((role) => (
+                    <SelectItem
+                      value={role.name}
+                      className="text-foreground text-base hover:bg-border cursor-pointer"
+                    >
+                      {role.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               {errors.posisi && (
@@ -200,23 +199,29 @@ function PekerjaAdd() {
               )}
             </div>
 
-            {/* Submit Button */}
-            <div className="flex justify-end pt-6">
-              <Button 
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button
+                  variant="outline"
+                  className="border-border cursor-pointer hover:border-accent"
+                >
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button
                 type="submit"
-                className="bg-[#194AC2] text-white hover:bg-[#0f3499] rounded-[10px] px-8 py-3 font-bold text-[16px] disabled:opacity-50"
+                className="cursor-pointer"
                 disabled={processing}
               >
-                {processing ? "Menyimpan..." : "Simpan"}
+                <Save className="w-4 h-4" />
+                {processing ? "Menyimpan..." : "Save"}
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </Card>
-      </div>
-    </>
+      </DialogContent>
+    </Dialog>
   );
 }
-
-PekerjaAdd.layout = (page) => <Dashboard children={page} />;
 
 export default PekerjaAdd;

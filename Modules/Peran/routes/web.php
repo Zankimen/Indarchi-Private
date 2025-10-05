@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Peran\Http\Controllers\PeranController;
 
-Route::middleware(['web', 'auth'])->prefix('role')->group(function () {
+Route::middleware(['auth'])->prefix('role')->group(function () {
     Route::get('/', [PeranController::class, 'index'])->name('role.index');
     Route::get('/add', [PeranController::class, 'addPage'])->name('role.add.page');
     Route::post('/add', [PeranController::class, 'create'])->name('role.create');

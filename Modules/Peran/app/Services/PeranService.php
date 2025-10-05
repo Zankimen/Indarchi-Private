@@ -29,6 +29,11 @@ class PeranService
         return Permission::orderBy('name', 'asc')->get();
     }
 
+    public function getAllPeran()
+    {
+        return Peran::orderBy('name', 'asc')->get();
+    }
+
     public function createRole(array $data)
     {
         $role = Peran::create([
