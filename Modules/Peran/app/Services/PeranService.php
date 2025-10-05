@@ -5,6 +5,7 @@ namespace Modules\Peran\Services;
 use Spatie\Permission\Models\Permission;
 use Modules\Peran\Models\Peran;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class PeranService
 {
@@ -71,12 +72,14 @@ class PeranService
             throw new \Exception('Tidak dapat menghapus peran yang sedang digunakan oleh pengguna.');
         }
 
-        $workersCount = DB::table('workers')
-            ->where('role_id', $role->id)
-            ->count();
+        if (Schema::hasTable('workers')) {
+            $workersCount = DB::table('workers')
+                ->where('role_id', $role->id)
+                ->count();
 
-        if ($workersCount > 0) {
-            throw new \Exception('Tidak dapat menghapus peran yang sedang digunakan oleh pekerja.');
+            if ($workersCount > 0) {
+                throw new \Exception('Tidak dapat menghapus peran yang sedang digunakan oleh pekerja.');
+            }
         }
 
         return $role->delete();
