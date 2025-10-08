@@ -3,8 +3,14 @@
 return [
     [
         'title' => 'Project',
-        'icon' => 'PackageIcon',
-        'route' => '/projects'
-        
+        'icon' => 'FolderKanbanIcon',
+        'route' => '/dashboard/projects',
+        'type' => 'dashboard',
+    ],
+    [
+        'title' => 'Informasi',
+        'icon' => 'FolderKanbanIcon',
+        'route' => '/informasi',
+        'type' => 'project',
     ],
 ];

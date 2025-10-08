@@ -26,8 +26,11 @@ function CustomTableFilterButton({
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button variant="outline" className="cursor-pointer">
-                    <Filter />
+                <Button 
+                variant="outline" 
+                className="cursor-pointer focus:ring-2 focus:ring-[#194AC2] focus:ring-offset-1"
+                >
+                <Filter />
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-80">
@@ -53,11 +56,9 @@ function CustomTableFilterButton({
                                         }))
                                     }
                                 >
-                                    <SelectTrigger className="col-span-2 h-8 w-full cursor-pointer">
-                                        <SelectValue
-                                            placeholder={`Select ${key}`}
-                                        />
-                                    </SelectTrigger>
+                                    <SelectTrigger className="col-span-2 h-8 w-full cursor-pointer focus:ring-2 focus:ring-[#194AC2] focus:ring-offset-1">
+                                <SelectValue placeholder={`Select ${key}`} />
+                                </SelectTrigger>
                                     <SelectContent>
                                         {values.map((value) => (
                                             <SelectItem

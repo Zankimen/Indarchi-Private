@@ -1,5 +1,7 @@
 {
     "MySQL": true,
     "Project": true,
-    "Pekerja": true
+    "Pekerja": true,
+    "Peran": true,
+    "Presensi": true
 }

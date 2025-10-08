@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { usePage, Head, router, Link } from "@inertiajs/react";
+import { usePage, Head, router } from "@inertiajs/react";
 
 import Dashboard from "@/layout/Dashboard";
-import CustomDataTable from "@components/custom/CustomDataTable";
+import DataTable from "@/components/custom/NewCustomDataTable";
 import CustomPagination from "@components/custom/CustomPagination";
 import CustomTableSearch from "@components/custom/CustomTableSearch";
 
+<<<<<<< HEAD
 import { Plus, ClipboardList } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -64,6 +65,9 @@ const columns = [
 const onRowClick = (item) => {
   router.visit(`/projects/${item.id}`);
 };
+=======
+import ProjectCreate from "./ProjectCreate";
+>>>>>>> 0b4510b5b6d2f77a40014e199c92c41bf6580c11
 
 function ProjectIndex() {
   const { projects, filters } = usePage().props;
@@ -72,6 +76,10 @@ function ProjectIndex() {
   const sortBy = filters.sort_by || "";
   const sortDirection = filters.sort_direction || "";
 
+  const onRowClick = (item) => {
+    router.visit(`/projects/${item.id}/informasi`);
+  };
+
   const handleSort = (column) => {
     let direction = "asc";
     if (sortBy === column && sortDirection === "asc") {
@@ -79,7 +87,7 @@ function ProjectIndex() {
     }
 
     router.get(
-      "/projects",
+      "/dashboard/projects",
       {
         per_page: projects.per_page,
         search,
@@ -92,7 +100,7 @@ function ProjectIndex() {
 
   const onPaginationChange = (value) => {
     router.get(
-      "/projects",
+      "/dashboard/projects",
       {
         per_page: value,
         search,
@@ -105,7 +113,7 @@ function ProjectIndex() {
 
   const onSearch = () => {
     router.get(
-      "/projects",
+      "/dashboard/projects",
       {
         per_page: projects.per_page,
         search,
@@ -119,9 +127,10 @@ function ProjectIndex() {
 
   return (
     <>
-      <Head title="Assets" />
-      <div className="w-full mx-auto">
+      <Head title="Projects" />
+      <div className="">
         <div className="space-y-4">
+<<<<<<< HEAD
           {/* <Card className="border-border">
             <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">
               <h1 className="flex items-center justify-center sm:justify-start font-bold text-2xl md:text-2xl m-0 p-0">
@@ -146,23 +155,66 @@ function ProjectIndex() {
                 <Plus className="w-4 h-4" />
               </Button>
             </Link>
+=======
+          <div className="flex justify-between items-center gap-2">
+            <ProjectCreate />
+>>>>>>> 0b4510b5b6d2f77a40014e199c92c41bf6580c11
 
             <CustomTableSearch
               search={search}
               setSearch={setSearch}
               onSearch={onSearch}
-              placeholder="Search Projects"
+              placeholder="Cari Project"
             />
           </div>
-          <div className="px-4 space-y-4">
-            <CustomDataTable
-              columns={columns}
+          <div className="space-y-4">
+            <DataTable
               data={projects.data}
-              onRowClick={onRowClick}
-              onSort={handleSort}
               filters={filters}
+              onSort={handleSort}
+              onRowClick={onRowClick}
               noItem="Project"
-            />
+            >
+              <DataTable.Column accessor="nama" label="Nama" type="text" sort />
+              <DataTable.Column
+                accessor="deskripsi"
+                label="Deskripsi"
+                type="text"
+                sort
+              />
+              <DataTable.Column
+                accessor="lokasi"
+                label="Lokasi"
+                type="text"
+                sort
+              />
+              <DataTable.Column
+                accessor="tanggal_mulai"
+                label="Tanggal Mulai"
+                type="date"
+                sort
+              />
+              <DataTable.Column
+                accessor="tanggal_selesai"
+                label="Tanggal Selesai"
+                type="date"
+                sort
+              />
+              <DataTable.Column
+                accessor="radius"
+                label="Radius"
+                type="text"
+                sort
+              />
+
+              <DataTable.Column
+                accessor="created_at"
+                label="Created At"
+                type="time"
+                sort
+              />
+            </DataTable>
+
             <CustomPagination
               data={projects}
               onPaginationChange={onPaginationChange}
@@ -177,4 +229,5 @@ function ProjectIndex() {
 ProjectIndex.layout = (page) => (
   <Dashboard children={page} title={"Projects"} />
 );
+
 export default ProjectIndex;
