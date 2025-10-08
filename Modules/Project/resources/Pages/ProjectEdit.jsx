@@ -12,12 +12,10 @@ function ProjectEdit({ project }) {
   const { data, setData, put, processing, errors } = useForm({
     nama: project.nama || "",
     deskripsi: project.deskripsi || "",
-    client: project.client || "",
-    lokasi: project.lokasi || "", // format "lat,lon"
+    lokasi: project.lokasi || "",
     tanggal_mulai: project.tanggal_mulai || "",
     tanggal_selesai: project.tanggal_selesai || "",
     radius: project.radius || "",
-    status: project.status || "",
   });
 
   const handleSubmit = (e) => {
@@ -66,24 +64,9 @@ function ProjectEdit({ project }) {
                 )}
               </div>
 
-              {/* Client */}
-              <div className="space-y-2">
-                <Label htmlFor="client">Client</Label>
-                <Input
-                  type="text"
-                  id="client"
-                  value={data.client}
-                  className="border-border"
-                  onChange={(e) => setData("client", e.target.value)}
-                />
-                {errors.client && (
-                  <p className="text-sm text-red-500">{errors.client}</p>
-                )}
-              </div>
-
               {/* Lokasi */}
               <div className="space-y-2">
-                <Label htmlFor="lokasi">Lokasi (lat,lon)</Label>
+                <Label htmlFor="lokasi">Lokasi</Label>
                 <Input
                   type="text"
                   id="lokasi"
@@ -140,21 +123,6 @@ function ProjectEdit({ project }) {
                 />
                 {errors.radius && (
                   <p className="text-sm text-red-500">{errors.radius}</p>
-                )}
-              </div>
-
-              {/* Status */}
-              <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
-                <Input
-                  type="text"
-                  id="status"
-                  value={data.status}
-                  className="border-border"
-                  onChange={(e) => setData("status", e.target.value)}
-                />
-                {errors.status && (
-                  <p className="text-sm text-red-500">{errors.status}</p>
                 )}
               </div>
 

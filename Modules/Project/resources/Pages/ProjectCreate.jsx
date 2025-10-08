@@ -1,59 +1,37 @@
 import React from "react";
-import { useForm } from "@inertiajs/react";
+import { Head, useForm, Link } from "@inertiajs/react";
+import Dashboard from "@/layout/Dashboard";
 
-import { Save, ChevronLeft, FolderKanban, Plus } from "lucide-react";
+import { Save, ChevronLeft, FolderKanban } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-<<<<<<< HEAD
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-=======
-  DialogTrigger,
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
->>>>>>> 0b4510b5b6d2f77a40014e199c92c41bf6580c11
 
 function ProjectCreate() {
   const { data, setData, post, processing, errors, reset } = useForm({
     nama: "",
     deskripsi: "",
-    client: "",
-    status: "draft",
+    lokasi: "",
     tanggal_mulai: "",
     tanggal_selesai: "",
     radius: "",
-    lokasi: "",
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    post("/dashboard/projects", {
+    post("/projects", {
       onSuccess: () => reset(),
     });
   };
 
   return (
-<<<<<<< HEAD
     <>
       <Head title="Tambah Project" />
       <div className="space-y-4">
-        {/* Header */}
+        {/* Header Card */}
         <Card className="border-border">
           <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">
             <h1 className="flex items-center justify-center sm:justify-start font-bold text-2xl md:text-2xl m-0 p-0">
@@ -71,94 +49,60 @@ function ProjectCreate() {
           </div>
         </Card>
 
-        {/* Form */}
+        {/* Form Card */}
         <Card className="px-6 py-8 space-y-4 border-border">
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Nama */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="nama">Nama</Label>
                 <Input
                   type="text"
                   id="nama"
                   value={data.nama}
-                  onChange={(e) => setData("nama", e.target.value)}
                   className="border-border"
+                  onChange={(e) => setData("nama", e.target.value)}
                 />
                 {errors.nama && (
                   <p className="text-sm text-red-500">{errors.nama}</p>
                 )}
               </div>
 
-              {/* Client */}
-              <div className="space-y-2">
-                <Label htmlFor="client">Client</Label>
-                <Input
-                  type="text"
-                  id="client"
-                  value={data.client}
-                  onChange={(e) => setData("client", e.target.value)}
-                  className="border-border"
-                />
-                {errors.client && (
-                  <p className="text-sm text-red-500">{errors.client}</p>
-                )}
-              </div>
-
-              {/* Lokasi */}
               <div className="space-y-2">
                 <Label htmlFor="lokasi">Lokasi</Label>
                 <Input
                   type="text"
                   id="lokasi"
                   value={data.lokasi}
-                  onChange={(e) => setData("lokasi", e.target.value)}
                   className="border-border"
+                  onChange={(e) => setData("lokasi", e.target.value)}
                 />
                 {errors.lokasi && (
                   <p className="text-sm text-red-500">{errors.lokasi}</p>
                 )}
               </div>
 
-              {/* Radius */}
-              <div className="space-y-2">
-                <Label htmlFor="radius">Radius</Label>
-                <Input
-                  type="number"
-                  id="radius"
-                  value={data.radius}
-                  onChange={(e) => setData("radius", e.target.value)}
-                  className="border-border"
-                />
-                {errors.radius && (
-                  <p className="text-sm text-red-500">{errors.radius}</p>
-                )}
-              </div>
-
-              {/* Tanggal Mulai */}
               <div className="space-y-2">
                 <Label htmlFor="tanggal_mulai">Tanggal Mulai</Label>
                 <Input
                   type="date"
                   id="tanggal_mulai"
                   value={data.tanggal_mulai}
-                  onChange={(e) => setData("tanggal_mulai", e.target.value)}
                   className="border-border"
+                  onChange={(e) => setData("tanggal_mulai", e.target.value)}
                 />
                 {errors.tanggal_mulai && (
                   <p className="text-sm text-red-500">{errors.tanggal_mulai}</p>
                 )}
               </div>
 
-              {/* Tanggal Selesai */}
               <div className="space-y-2">
                 <Label htmlFor="tanggal_selesai">Tanggal Selesai</Label>
                 <Input
                   type="date"
                   id="tanggal_selesai"
                   value={data.tanggal_selesai}
-                  onChange={(e) => setData("tanggal_selesai", e.target.value)}
                   className="border-border"
+                  onChange={(e) => setData("tanggal_selesai", e.target.value)}
                 />
                 {errors.tanggal_selesai && (
                   <p className="text-sm text-red-500">
@@ -167,35 +111,27 @@ function ProjectCreate() {
                 )}
               </div>
 
-              {/* Status */}
               <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
-                <Select
-                  value={data.status}
-                  onValueChange={(value) => setData("status", value)}
-                >
-                  <SelectTrigger className="border-border">
-                    <SelectValue placeholder="Pilih status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="draft">Draft</SelectItem>
-                    <SelectItem value="ongoing">Ongoing</SelectItem>
-                    <SelectItem value="selesai">Selesai</SelectItem>
-                  </SelectContent>
-                </Select>
-                {errors.status && (
-                  <p className="text-sm text-red-500">{errors.status}</p>
+                <Label htmlFor="radius">Radius</Label>
+                <Input
+                  type="number"
+                  id="radius"
+                  value={data.radius}
+                  className="border-border"
+                  onChange={(e) => setData("radius", e.target.value)}
+                />
+                {errors.radius && (
+                  <p className="text-sm text-red-500">{errors.radius}</p>
                 )}
               </div>
 
-              {/* Deskripsi */}
               <div className="sm:col-span-2 space-y-2">
                 <Label htmlFor="deskripsi">Deskripsi</Label>
                 <Textarea
                   id="deskripsi"
                   value={data.deskripsi}
-                  onChange={(e) => setData("deskripsi", e.target.value)}
                   className="border-border"
+                  onChange={(e) => setData("deskripsi", e.target.value)}
                 />
                 {errors.deskripsi && (
                   <p className="text-sm text-red-500">{errors.deskripsi}</p>
@@ -217,181 +153,8 @@ function ProjectCreate() {
         </Card>
       </div>
     </>
-=======
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button className="cursor-pointer">
-          Tambah Project <Plus />
-        </Button>
-      </DialogTrigger>
-      <DialogContent
-        className="sm:max-w-[800px] border-border"
-        aria-describedby={undefined}
-      >
-        <DialogHeader>
-          <Card className="border-border">
-            <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">
-              <DialogTitle>
-                <div className="flex items-center justify-center sm:justify-start font-bold text-2xl md:text-2xl m-0 p-0">
-                  <FolderKanban className="w-10 h-10 bg-accent text-background rounded-2xl mr-4 p-2" />
-                  Tambah Project
-                </div>
-              </DialogTitle>
-              <DialogDescription className="sr-only">
-                Form untuk membuat project baru.
-              </DialogDescription>
-              <div className="grid grid-cols-1 gap-2 sm:flex">
-                <DialogPrimitive.Close asChild>
-                  <Button className="cursor-pointer">
-                    <ChevronLeft className="w-4 h-4" />
-                    Back
-                  </Button>
-                </DialogPrimitive.Close>
-              </div>
-            </div>
-          </Card>
-        </DialogHeader>
-        <div className="space-y-4">
-          <Card className="px-6 py-8 space-y-4 border-border">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="nama"
-                    className="text-foreground text-base block"
-                  >
-                    Nama
-                  </Label>
-                  <Input
-                    type="text"
-                    id="nama"
-                    value={data.nama}
-                    onChange={(e) => setData("nama", e.target.value)}
-                  />
-                  {errors.nama && (
-                    <p className="text-sm text-red-500">{errors.nama}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="lokasi"
-                    className="text-foreground text-base block"
-                  >
-                    Lokasi
-                  </Label>
-                  <Input
-                    type="text"
-                    id="lokasi"
-                    value={data.lokasi}
-                    onChange={(e) => setData("lokasi", e.target.value)}
-                  />
-                  {errors.lokasi && (
-                    <p className="text-sm text-red-500">{errors.lokasi}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="tanggal_mulai"
-                    className="text-foreground text-base block"
-                  >
-                    Tanggal Mulai
-                  </Label>
-                  <Input
-                    type="date"
-                    id="tanggal_mulai"
-                    value={data.tanggal_mulai}
-                    onChange={(e) => setData("tanggal_mulai", e.target.value)}
-                  />
-                  {errors.tanggal_mulai && (
-                    <p className="text-sm text-red-500">
-                      {errors.tanggal_mulai}
-                    </p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="tanggal_selesai"
-                    className="text-foreground text-base block"
-                  >
-                    Tanggal Selesai
-                  </Label>
-                  <Input
-                    type="date"
-                    id="tanggal_selesai"
-                    value={data.tanggal_selesai}
-                    onChange={(e) => setData("tanggal_selesai", e.target.value)}
-                  />
-                  {errors.tanggal_selesai && (
-                    <p className="text-sm text-red-500">
-                      {errors.tanggal_selesai}
-                    </p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="radius"
-                    className="text-foreground text-base block"
-                  >
-                    Radius
-                  </Label>
-                  <Input
-                    type="number"
-                    id="radius"
-                    value={data.radius}
-                    onChange={(e) => setData("radius", e.target.value)}
-                  />
-                  {errors.radius && (
-                    <p className="text-sm text-red-500">{errors.radius}</p>
-                  )}
-                </div>
-
-                <div className="sm:col-span-2 space-y-2">
-                  <Label
-                    htmlFor="deskripsi"
-                    className="text-foreground text-base block"
-                  >
-                    Deskripsi
-                  </Label>
-                  <Textarea
-                    id="deskripsi"
-                    value={data.deskripsi}
-                    onChange={(e) => setData("deskripsi", e.target.value)}
-                  />
-                  {errors.deskripsi && (
-                    <p className="text-sm text-red-500">{errors.deskripsi}</p>
-                  )}
-                </div>
-              </div>
-
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button
-                    variant="outline"
-                    className="border-border cursor-pointer hover:border-accent"
-                  >
-                    Cancel
-                  </Button>
-                </DialogClose>
-                <Button
-                  type="submit"
-                  className="cursor-pointer"
-                  disabled={processing}
-                >
-                  <Save className="w-4 h-4" />
-                  {processing ? "Menyimpan..." : "Save"}
-                </Button>
-              </DialogFooter>
-            </form>
-          </Card>
-        </div>
-      </DialogContent>
-    </Dialog>
->>>>>>> 0b4510b5b6d2f77a40014e199c92c41bf6580c11
   );
 }
 
+ProjectCreate.layout = (page) => <Dashboard children={page} />;
 export default ProjectCreate;

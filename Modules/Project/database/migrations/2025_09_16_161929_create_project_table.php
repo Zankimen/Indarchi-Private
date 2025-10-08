@@ -6,18 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id(); 
             $table->string('nama'); 
-            $table->string('deskripsi'); // ubah dari text -> string
-            $table->string('client'); 
-            $table->string('lokasi'); // geometry point dengan SRID 4326
+            $table->text('deskripsi'); 
             $table->date('tanggal_mulai'); 
             $table->date('tanggal_selesai'); 
+            $table->string('lokasi'); 
             $table->float('radius'); 
-            $table->string('status'); // tambahan kolom status
+            $table->timestamps(); 
         });
     }
 
