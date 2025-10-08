@@ -24,6 +24,18 @@ const columns = [
     sort: true,
   },
   {
+    key: "client",
+    label: "Client",
+    type: "text",
+    sort: true,
+  },
+  {
+    key: "status",
+    label: "Status",
+    type: "text",
+    sort: true,
+  },
+  {
     key: "lokasi",
     label: "Lokasi",
     type: "text",
@@ -47,16 +59,10 @@ const columns = [
     type: "text",
     sort: true,
   },
-  {
-    key: "created_at",
-    label: "Created At",
-    type: "time",
-    sort: true,
-  },
 ];
 
 const onRowClick = (item) => {
-  router.visit(`/projects/${item.id}/show`);
+  router.visit(`/projects/${item.id}`);
 };
 
 function ProjectIndex() {
@@ -110,6 +116,7 @@ function ProjectIndex() {
     );
   };
 
+
   return (
     <>
       <Head title="Assets" />
@@ -135,7 +142,7 @@ function ProjectIndex() {
           <div className="flex justify-between items-center gap-2 px-4">
             <Link href="/projects/create">
               <Button className="cursor-pointer">
-                Add Project
+                Tambah Project
                 <Plus className="w-4 h-4" />
               </Button>
             </Link>

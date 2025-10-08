@@ -11,12 +11,12 @@ class ProjectController extends Controller
 {
     public function index(Request $request)
     {
-        // Ambil data project dengan pagination
         $projects = Project::query()
             ->when($request->search, function ($query, $search) {
                 $query->where('nama', 'like', "%{$search}%")
                     ->orWhere('deskripsi', 'like', "%{$search}%")
-                    ->orWhere('lokasi', 'like', "%{$search}%");
+                    ->orWhere('client', 'like', "%{$search}%")
+                    ->orWhere('status', 'like', "%{$search}%");
             })
             ->orderBy($request->get('sort_by', 'created_at'), $request->get('sort_direction', 'desc'))
             ->paginate(10)
@@ -38,10 +38,12 @@ class ProjectController extends Controller
         $request->validate([
             'nama'            => 'required|string|max:255',
             'deskripsi'       => 'nullable|string',
-            'lokasi'          => 'required|string|max:255',
+            'client'          => 'required|string|max:255',
+            'status'          => 'required|string|max:100',
             'tanggal_mulai'   => 'required|date',
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
             'radius'          => 'required|numeric',
+            'lokasi'          => 'required|string', // sementara string, nanti bisa ubah ke POINT
         ]);
 
         Project::create($request->all());
@@ -61,10 +63,12 @@ class ProjectController extends Controller
         $request->validate([
             'nama'            => 'required|string|max:255',
             'deskripsi'       => 'nullable|string',
-            'lokasi'          => 'required|string|max:255',
+            'client'          => 'required|string|max:255',
+            'status'          => 'required|string|max:100',
             'tanggal_mulai'   => 'required|date',
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
             'radius'          => 'required|numeric',
+            'lokasi'          => 'required|string',
         ]);
 
         $project->update($request->all());
@@ -78,6 +82,7 @@ class ProjectController extends Controller
 
         return redirect()->route('projects.index')->with('success', 'Project berhasil dihapus.');
     }
+
     public function show(Project $project)
     {
         return Inertia::render('Project/ProjectDetail', [
@@ -93,6 +98,8 @@ class ProjectController extends Controller
             'sort_direction'  => $request->sort_direction,
             'nama'            => $request->nama,
             'deskripsi'       => $request->deskripsi,
+            'client'          => $request->client,
+            'status'          => $request->status,
             'tanggal_mulai'   => $request->tanggal_mulai,
             'tanggal_selesai' => $request->tanggal_selesai,
             'lokasi'          => $request->lokasi,

@@ -68,8 +68,10 @@ function ProjectDetail() {
         <Card className="p-6 px-8 border-border">
           <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-2">
             <Detail label="Nama" value={project.nama} />
+            <Detail label="Client" value={project.client} />
             <Detail label="Deskripsi" value={project.deskripsi} />
             <Detail label="Lokasi" value={project.lokasi} />
+            <Detail label="Status" value={project.status} />
             <Detail
               label="Tanggal Mulai"
               value={formatDateNoHour(project.tanggal_mulai)}
@@ -79,14 +81,6 @@ function ProjectDetail() {
               value={formatDateNoHour(project.tanggal_selesai)}
             />
             <Detail label="Radius" value={project.radius} />
-            <Detail
-              label="Created At"
-              value={formatDateNoHour(project.created_at)}
-            />
-            <Detail
-              label="Last Updated At"
-              value={formatDateNoHour(project.updated_at)}
-            />
           </div>
         </Card>
       </div>

@@ -16,10 +16,12 @@ class Project extends Model
     protected $fillable = [
         'nama',
         'deskripsi',
+        'client',
+        'status',
         'tanggal_mulai',
         'tanggal_selesai',
-        'lokasi',
         'radius',
+        'lokasi'
     ];
 
     // protected static function newFactory(): ProjectFactory
