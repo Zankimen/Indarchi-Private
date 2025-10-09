@@ -7,7 +7,6 @@ use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use Modules\Project\Repositories\Eloquent\ProjectRepository;
 
 class ProjectServiceProvider extends ServiceProvider
 {
@@ -37,8 +36,6 @@ class ProjectServiceProvider extends ServiceProvider
     {
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
-
-        $this->app->bind(ProjectRepository::class, ProjectRepository::class);
     }
 
     /**

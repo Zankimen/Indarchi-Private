@@ -1,0 +1,19 @@
+<?php return array (
+  'providers' => 
+  array (
+    0 => 'Modules\\MySQL\\Providers\\MySQLServiceProvider',
+    1 => 'Modules\\Peran\\Providers\\PeranServiceProvider',
+    2 => 'Modules\\Presensi\\Providers\\PresensiServiceProvider',
+    3 => 'Modules\\Project\\Providers\\ProjectServiceProvider',
+  ),
+  'eager' => 
+  array (
+    0 => 'Modules\\MySQL\\Providers\\MySQLServiceProvider',
+    1 => 'Modules\\Peran\\Providers\\PeranServiceProvider',
+    2 => 'Modules\\Presensi\\Providers\\PresensiServiceProvider',
+    3 => 'Modules\\Project\\Providers\\ProjectServiceProvider',
+  ),
+  'deferred' => 
+  array (
+  ),
+);
