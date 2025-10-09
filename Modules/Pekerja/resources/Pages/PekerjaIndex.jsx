@@ -1,23 +1,24 @@
 import React, { useState } from "react";
-import { usePage, Head, router } from "@inertiajs/react";
+
+import { Head, router} from "@inertiajs/react";
 
 import Dashboard from "@/layout/Dashboard";
 import DataTable from "@/components/custom/NewCustomDataTable";
 import CustomPagination from "@components/custom/CustomPagination";
 import CustomTableSearch from "@components/custom/CustomTableSearch";
 
-import ProjectCreate from "./ProjectCreate";
+import PekerjaAdd from "./PekerjaAdd";
 
-function ProjectIndex() {
-  const { projects, filters } = usePage().props;
+const onRowClick = (item) => {
+  router.visit(`/dashboard/pekerja/${item.user_id ?? item.id}`);
+};
+
+function PekerjaIndex({ pekerja, peran, filters }) {
 
   const [search, setSearch] = useState(filters.search || "");
+
   const sortBy = filters.sort_by || "";
   const sortDirection = filters.sort_direction || "";
-
-  const onRowClick = (item) => {
-    router.visit(`/projects/${item.id}/informasi`);
-  };
 
   const handleSort = (column) => {
     let direction = "asc";
@@ -26,9 +27,9 @@ function ProjectIndex() {
     }
 
     router.get(
-      "/dashboard/projects",
+      "/dashboard/pekerja",
       {
-        per_page: projects.per_page,
+        per_page: pekerja.per_page,
         search,
         sort_by: column,
         sort_direction: direction,
@@ -39,22 +40,24 @@ function ProjectIndex() {
 
   const onPaginationChange = (value) => {
     router.get(
-      "/dashboard/projects",
+      `/dashboard/pekerja`,
       {
         per_page: value,
         search,
         sort_by: sortBy,
         sort_direction: sortDirection,
       },
-      { preserveScroll: true }
+      {
+        preserveScroll: true,
+      }
     );
   };
 
   const onSearch = () => {
     router.get(
-      "/dashboard/projects",
+      "/dashboard/pekerja",
       {
-        per_page: projects.per_page,
+        per_page: pekerja.per_page,
         search,
         sort_by: sortBy,
         sort_direction: sortDirection,
@@ -65,59 +68,30 @@ function ProjectIndex() {
 
   return (
     <>
-      <Head title="Projects" />
+      <Head title="Pekerja" />
       <div className="">
         <div className="space-y-4">
           <div className="flex justify-between items-center gap-2">
-            <ProjectCreate />
+            <PekerjaAdd peran={peran} />
 
             <CustomTableSearch
               search={search}
               setSearch={setSearch}
               onSearch={onSearch}
-              placeholder="Cari Project"
+              placeholder="Cari Pekerja"
             />
           </div>
           <div className="space-y-4">
             <DataTable
-              data={projects.data}
+              data={pekerja.data}
               filters={filters}
               onSort={handleSort}
               onRowClick={onRowClick}
-              noItem="Project"
+              noItem="Pekerja"
             >
-              <DataTable.Column accessor="nama" label="Nama" type="text" sort />
-              <DataTable.Column
-                accessor="deskripsi"
-                label="Deskripsi"
-                type="text"
-                sort
-              />
-              <DataTable.Column
-                accessor="lokasi"
-                label="Lokasi"
-                type="text"
-                sort
-              />
-              <DataTable.Column
-                accessor="tanggal_mulai"
-                label="Tanggal Mulai"
-                type="date"
-                sort
-              />
-              <DataTable.Column
-                accessor="tanggal_selesai"
-                label="Tanggal Selesai"
-                type="date"
-                sort
-              />
-              <DataTable.Column
-                accessor="radius"
-                label="Radius"
-                type="text"
-                sort
-              />
-
+              <DataTable.Column accessor="name" label="Nama" type="text" sort />
+              <DataTable.Column accessor="email" label="Email" type="text" sort />
+              <DataTable.Column accessor="role" label="Role" type="text" sort />
               <DataTable.Column
                 accessor="created_at"
                 label="Created At"
@@ -127,7 +101,7 @@ function ProjectIndex() {
             </DataTable>
 
             <CustomPagination
-              data={projects}
+              data={pekerja}
               onPaginationChange={onPaginationChange}
             />
           </div>
@@ -137,8 +111,8 @@ function ProjectIndex() {
   );
 }
 
-ProjectIndex.layout = (page) => (
-  <Dashboard children={page} title={"Projects"} />
+PekerjaIndex.layout = (page) => (
+  <Dashboard children={page} title={"Pekerja"} />
 );
 
-export default ProjectIndex;
+export default PekerjaIndex;
