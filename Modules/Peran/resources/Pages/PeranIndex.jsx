@@ -1,18 +1,17 @@
 import React, { useState } from "react";
-import { usePage, Head, router, Link } from "@inertiajs/react";
+import { usePage, Head, router } from "@inertiajs/react";
 import Dashboard from "@/layout/Dashboard";
 import DataTable from "@/components/custom/NewCustomDataTable";
 import CustomPagination from "@components/custom/CustomPagination";
 import CustomTableSearch from "@components/custom/CustomTableSearch";
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import PeranAddDialog from "./PeranAddDialog";
 
 const onRowClick = (item) => {
   router.visit(`/role/${item.id}`);
 };
 
 function PeranIndex() {
-  const { roles, filters } = usePage().props;
+  const { roles, filters, permissions } = usePage().props;
 
   const [search, setSearch] = useState(filters.search || "");
 
@@ -67,16 +66,11 @@ function PeranIndex() {
 
   return (
     <>
-      <Head title="Pekerja" />
+      <Head title="Peran" />
       <div className="">
         <div className="space-y-4">
           <div className="flex justify-between items-center gap-2">
-            <Link href="/role/add">
-              <Button className="cursor-pointer">
-                Tambah Peran
-                <Plus className="w-4 h-4" />
-              </Button>
-            </Link>
+            <PeranAddDialog permissions={permissions} />
 
             <CustomTableSearch
               search={search}
@@ -94,7 +88,12 @@ function PeranIndex() {
               noItem="Peran"
             >
               <DataTable.Column accessor="name" label="Nama" type="text" sort />
-              <DataTable.Column accessor="deskripsi" label="Deskripsi" type="text" sort />
+              <DataTable.Column
+                accessor="deskripsi"
+                label="Deskripsi"
+                type="text"
+                sort
+              />
               <DataTable.Column
                 accessor="created_at"
                 label="Created At"
@@ -114,7 +113,5 @@ function PeranIndex() {
   );
 }
 
-PeranIndex.layout = (page) => (
-  <Dashboard children={page} title={"Peran"} />
-);
+PeranIndex.layout = (page) => <Dashboard children={page} title={"Peran"} />;
 export default PeranIndex;

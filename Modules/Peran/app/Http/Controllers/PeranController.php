@@ -25,6 +25,7 @@ class PeranController extends Controller
             return Inertia::render('Peran/PeranIndex', [
                 'roles' => $this->peranService->getPeransPaginated($request),
                 'filters' => $this->peranService->getAllPeranFilter($request),
+                'permissions' => $this->peranService->getAllPermissions(), // Tambahkan ini
             ]);
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
@@ -35,13 +36,6 @@ class PeranController extends Controller
     {
         return Inertia::render('Peran/PeranDetails', [
             'role' => $role->load('permissions'),
-        ]);
-    }
-
-    public function addPage()
-    {
-        return Inertia::render('Peran/PeranAdd', [
-            'permissions' => $this->peranService->getAllPermissions(),
         ]);
     }
 
