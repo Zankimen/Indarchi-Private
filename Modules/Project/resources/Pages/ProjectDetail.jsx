@@ -44,21 +44,7 @@ function ProjectDetail({ project }) {
                     >
                       <Pencil className="w-4 h-4 mr-2" /> Edit Proyek
                     </Button>
-                  </Link>
-
-                  <Button
-                    variant="destructive"
-                    className="w-full"
-                    onClick={() => {
-                      if (
-                        confirm("Apakah kamu yakin ingin menghapus proyek ini?")
-                      ) {
-                        router.delete(`/dashboard/projects/${project.id}`);
-                      }
-                    }}
-                  >
-                    <Trash className="w-4 h-4 mr-2" /> Hapus
-                  </Button>
+                  </Link>               
                 </div>
               </div>
             </div>
@@ -75,7 +61,7 @@ function ProjectDetail({ project }) {
                 <div>
                   <p className="font-medium text-muted-foreground">Client</p>
                   <p className="font-semibold text-foreground">
-                    {project.nama ?? "PT. Indofood"}
+                    {project.nama ?? "PT. Indarchi"}
                   </p>
                 </div>
               </div>
@@ -84,7 +70,7 @@ function ProjectDetail({ project }) {
                 <div>
                   <p className="font-medium text-muted-foreground">Lokasi</p>
                   <p className="font-semibold text-foreground">
-                    {project.lokasi ?? "Dusun, Desa, Kecamatan, Kabupaten"}
+                    {project.lokasi ?? "Klaten"}
                   </p>
                 </div>
               </div>
@@ -92,7 +78,8 @@ function ProjectDetail({ project }) {
           </Card>
 
           {/* WAKTU */}
-          <Card className="bg-gray-100 border border-gray-300 rounded-2xl shadow-sm p-6">            <h2 className="font-semibold text-center mb-4 text-lg">WAKTU</h2>
+          <Card className="bg-gray-100 border border-gray-300 rounded-2xl shadow-sm p-6">            
+            <h2 className="font-semibold text-center mb-4 text-lg">WAKTU</h2>
             <div className="space-y-3 text-sm">
               <div className="flex items-center gap-3">
                 <Calendar className="w-4 h-4 text-muted-foreground" />
@@ -116,7 +103,8 @@ function ProjectDetail({ project }) {
           </Card>
 
           {/* STATUS */}
-          <Card className="bg-gray-100 border border-gray-300 rounded-2xl shadow-sm p-6">            <h2 className="font-semibold text-center mb-4 text-lg">STATUS</h2>
+          <Card className="bg-gray-100 border border-gray-300 rounded-2xl shadow-sm p-6">            
+            <h2 className="font-semibold text-center mb-4 text-lg">STATUS</h2>
             <div className="flex justify-center items-center">
               <Button 
                 variant="outline"

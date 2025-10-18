@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-
+import { Calendar, MapPin, User, Pencil, Trash } from "lucide-react";
 function ProjectEdit({ project }) {
   const { data, setData, put, processing, errors } = useForm({
     nama: project.nama || "",
@@ -35,7 +35,7 @@ function ProjectEdit({ project }) {
               Edit Project
             </h1>
             <div className="grid grid-cols-1 gap-2 sm:flex">
-              <Link href="/projects">
+              <Link href={`/projects/${project.id}/informasi`}>
                 <Button className="cursor-pointer">
                   <ChevronLeft className="w-4 h-4" />
                   Back
@@ -142,7 +142,21 @@ function ProjectEdit({ project }) {
             </div>
 
             {/* Submit */}
-            <div className="flex justify-end items-center">
+            <div className="flex justify-end space-x-2 items-center">
+              <Button
+                variant="destructive"
+                className="cursor-pointer"
+                onClick={() => {
+                  if (
+                    confirm("Apakah kamu yakin ingin menghapus proyek ini?")
+                  ) {
+                    router.delete(`/projects/${project.id}`);
+                  }
+                }}
+              >
+                <Trash className="w-4 h-4 ml-2" /> 
+                Hapus
+              </Button>
               <Button
                 type="submit"
                 className="cursor-pointer"
@@ -158,6 +172,5 @@ function ProjectEdit({ project }) {
     </>
   );
 }
-
 
 export default ProjectEdit;
