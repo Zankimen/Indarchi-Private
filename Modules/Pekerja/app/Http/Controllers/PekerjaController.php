@@ -13,7 +13,6 @@ use Modules\Peran\Services\PeranService;
 class PekerjaController extends Controller
 {
     protected PekerjaService $pekerjaService;
-
     protected PeranService $peranService;
 
     public function __construct(PekerjaService $pekerjaService, PeranService $peranService)
@@ -40,8 +39,6 @@ class PekerjaController extends Controller
                 ->route('pekerja.index')
                 ->with('success', 'Karyawan berhasil ditambahkan.');
         } catch (\Exception $e) {
-            dd($e->getMessage());
-
             return redirect()
                 ->back()
                 ->withErrors(['error' => $e->getMessage()])
@@ -51,18 +48,15 @@ class PekerjaController extends Controller
 
     public function details($id)
     {
+        $pekerja = $this->pekerjaService->findPekerjaById($id);
+        
+        // Load relationships
+        $pekerja->load(['roles', 'permissions']);
+
         return Inertia::render('Pekerja/PekerjaDetails', [
-            'pekerja' => $this->pekerjaService->findPekerjaById($id),
+            'pekerja' => $pekerja,
+            'peran' => $this->peranService->getAllPeran(),
         ]);
-    }
-
-    public function edit($user_id)
-    {
-        // $user = $this->pekerjaService->findUserById((int) $user_id);
-
-        // return Inertia::render('Pekerja/PekerjaEdit', [
-        //     'karyawan' => $this->pekerjaService->getKaryawanPayload($user),
-        // ]);
     }
 
     public function update(UpdatePekerjaRequest $request, $id)
@@ -72,7 +66,7 @@ class PekerjaController extends Controller
             $this->pekerjaService->updatePekerja($user, $request->validated());
 
             return redirect()
-                ->route('pekerja.index')
+                ->route('pekerja.details', $id)
                 ->with('success', 'Data karyawan berhasil diperbarui.');
         } catch (\Exception $e) {
             return redirect()
@@ -102,8 +96,6 @@ class PekerjaController extends Controller
     {
         return Inertia::render('Pekerja/PekerjaProject', [
             'pekerja' => $this->pekerjaService->getPekerjaPaginated($request),
-            // 'peran' => $this->peranService->getAllPeran(),
-            // 'filters' => $this->pekerjaService->getAllPekerjaFilter($request),
         ]);
     }
 }
