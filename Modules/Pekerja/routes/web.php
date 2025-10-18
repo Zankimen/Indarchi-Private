@@ -16,10 +16,15 @@ Route::middleware(['auth'])
                 Route::get('/{id}', [PekerjaController::class, 'details'])->name('details');
             });
 
-        Route::prefix('projects')
-            ->name('pekerja.projects.')
-            ->group(function () {
-                Route::get('/{project_id}/pekerja', [PekerjaController::class, 'project'])
-                    ->name('pekerja');
-            });
+       Route::prefix('projects')
+    ->name('pekerja.projects.')
+    ->middleware(['auth'])
+    ->group(function () {
+        Route::get('/{project_id}/pekerja', [PekerjaController::class, 'project'])
+            ->name('pekerja');
+
+        Route::post('/{project_id}/pekerja/add', [PekerjaController::class, 'addToProject'])
+            ->name('addToProject');
+    });
+
     });

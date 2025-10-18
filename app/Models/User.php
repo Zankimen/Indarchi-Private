@@ -48,4 +48,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function projects()
+{
+    return $this->belongsToMany(
+        \Modules\Project\Models\Project::class, // arahkan ke model Project
+        'project_user', // nama tabel pivot
+        'user_id',      // foreign key untuk user
+        'project_id'    // foreign key untuk project
+    )->withTimestamps();
+}
+
 }

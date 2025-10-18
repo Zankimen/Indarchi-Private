@@ -98,4 +98,33 @@ class PekerjaService
             'role' => $request->role,
         ];
     }
+
+    public function getPekerjaByProject($projectId)
+    {
+        $users = User::whereHas('projects', function ($q) use ($projectId) {
+            $q->where('project_id', $projectId);
+        })->with('roles')->get();
+
+        // Tambahkan atribut posisi secara langsung
+        $users->transform(function ($user) {
+            $user->posisi = $user->roles->first()->name ?? '-';
+            return $user;
+        });
+
+        return $users;
+    }
+
+    public function getAvailablePekerjaForProject($projectId)
+    {
+        return User::whereDoesntHave('projects', function ($q) use ($projectId) {
+            $q->where('project_id', $projectId);
+        })->orderBy('name')->get(['id', 'name']);
+    }
+
+    public function assignPekerjaToProject($pekerjaId, $projectId)
+    {
+        $user = User::findOrFail($pekerjaId);
+        $user->projects()->attach($projectId);
+    }
+
 }

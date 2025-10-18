@@ -92,10 +92,29 @@ class PekerjaController extends Controller
         }
     }
 
-    public function project(Request $request)
-    {
-        return Inertia::render('Pekerja/PekerjaProject', [
-            'pekerja' => $this->pekerjaService->getPekerjaPaginated($request),
-        ]);
-    }
+    public function project(Request $request, $project_id)
+{
+    $pekerja = $this->pekerjaService->getPekerjaByProject($project_id);
+    
+    $availableWorkers = $this->pekerjaService->getAvailablePekerjaForProject($project_id);
+
+    return Inertia::render('Pekerja/PekerjaProject', [
+        'pekerja' => $pekerja,
+        'availableWorkers' => $availableWorkers,
+        'project_id' => $project_id,
+    ]);
+}
+
+public function addToProject(Request $request, $project_id)
+{
+    $validated = $request->validate([
+        'pekerja_id' => 'required|exists:users,id',
+    ]);
+
+    $this->pekerjaService->assignPekerjaToProject($validated['pekerja_id'], $project_id);
+
+    return redirect()
+        ->back()
+        ->with('success', 'Pekerja berhasil ditambahkan ke project.');
+}
 }
