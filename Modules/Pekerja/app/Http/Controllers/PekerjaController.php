@@ -9,6 +9,8 @@ use Modules\Pekerja\Http\Request\Pekerja\CreatePekerjaRequest;
 use Modules\Pekerja\Http\Request\Pekerja\UpdatePekerjaRequest;
 use Modules\Pekerja\Services\PekerjaService;
 use Modules\Peran\Services\PeranService;
+use Spatie\Permission\Models\Role;
+
 
 class PekerjaController extends Controller
 {
@@ -92,16 +94,17 @@ class PekerjaController extends Controller
         }
     }
 
-    public function project(Request $request, $project_id)
+   public function project(Request $request, $project_id)
 {
     $pekerja = $this->pekerjaService->getPekerjaByProject($project_id);
-    
     $availableWorkers = $this->pekerjaService->getAvailablePekerjaForProject($project_id);
+    $roles = Role::orderBy('name')->get(['id', 'name']);
 
     return Inertia::render('Pekerja/PekerjaProject', [
         'pekerja' => $pekerja,
         'availableWorkers' => $availableWorkers,
         'project_id' => $project_id,
+        'roles' => $roles,
     ]);
 }
 
@@ -117,4 +120,27 @@ public function addToProject(Request $request, $project_id)
         ->back()
         ->with('success', 'Pekerja berhasil ditambahkan ke project.');
 }
+
+public function createAndAssign(Request $request, $project_id)
+{
+    $validated = $request->validate([
+        'nama_karyawan' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|min:6',
+        'posisi' => 'required|string',
+    ]);
+
+    // Buat pekerja baru
+    $user = $this->pekerjaService->createNewPekerja($validated);
+
+    // Assign pekerja ke project
+    $this->pekerjaService->assignPekerjaToProject($user->id, $project_id);
+
+    return redirect()
+        ->back()
+        ->with('success', 'Pekerja baru berhasil dibuat dan ditambahkan ke project.');
 }
+
+
+}
+

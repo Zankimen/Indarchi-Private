@@ -4,6 +4,8 @@ namespace Modules\Pekerja\Services;
 
 use App\Models\User;
 use Modules\Pekerja\Repositories\Eloquent\PekerjaRepository;
+use Illuminate\Support\Facades\Hash;
+
 
 class PekerjaService
 {
@@ -126,5 +128,28 @@ class PekerjaService
         $user = User::findOrFail($pekerjaId);
         $user->projects()->attach($projectId);
     }
+
+    public function createNewPekerja(array $data)
+{
+    $userData = [
+        'name' => $data['nama_karyawan'] ?? $data['name'] ?? '',
+        'email' => $data['email'],
+        'alamat' => $data['alamat'] ?? null,
+    ];
+
+    if (!empty($data['password'])) {
+        $userData['password'] = bcrypt($data['password']);
+    }
+
+    $user = User::create($userData);
+
+    // assign role (cek key 'posisi' atau 'role')
+    $roleName = $data['posisi'] ?? $data['role'] ?? null;
+    if ($roleName) {
+        $user->assignRole($roleName);
+    }
+
+    return $user;
+}
 
 }
