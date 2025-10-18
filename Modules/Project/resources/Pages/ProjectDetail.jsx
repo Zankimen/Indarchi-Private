@@ -54,7 +54,8 @@ function ProjectDetail({ project }) {
         {/* Detail Proyek */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* DETAIL PROYEK */}
-          <Card className="bg-gray-100 border border-gray-300 rounded-2xl shadow-sm p-6">            <h2 className="font-semibold text-center mb-4 text-lg">DETAIL PROYEK</h2>
+          <Card className="bg-gray-100 border border-gray-300 rounded-2xl shadow-sm p-6">            
+            <h2 className="font-semibold text-center mb-4 text-lg">DETAIL PROYEK</h2>
             <div className="space-y-3 text-sm">
               <div className="flex items-center gap-3">
                 <User className="w-4 h-4 text-muted-foreground" />
