@@ -1,6 +1,6 @@
 import React from "react";
 import { Head, useForm, Link } from "@inertiajs/react";
-import Dashboard from "@/layout/Dashboard";
+// import Dashboard from "@/layout/Dashboard";
 import { Save, ChevronLeft, ClipboardList } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -159,6 +159,5 @@ function ProjectEdit({ project }) {
   );
 }
 
-ProjectEdit.layout = (page) => <Dashboard children={page} />;
 
 export default ProjectEdit;
