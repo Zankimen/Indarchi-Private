@@ -12,19 +12,18 @@ import { Plus, Save, ChevronLeft, Users } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 
 
-function PekerjaProject({ pekerja, availableWorkers, project_id, roles }) {
+function PekerjaProject({ pekerja, availableWorkers, project, roles }) {
   return (
     <>
-      <Head title={`Pekerja Project ${project_id}`} />
-        <div className="space-y-6">
+      <Head title={`Pekerja di Project ${project?.nama ?? project?.name ?? project?.id}`} />
+      <div className="space-y-6">
         <Card className="p-6 border-border flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Pekerja di Project #{project_id}</h1>
-        <div className="flex gap-2">
-        <AddWorkerModal availableWorkers={availableWorkers} project_id={project_id} />
-        <AddNewWorker project_id={project_id} roles={roles} />
-        </div>
+          <h1 className="text-2xl font-bold">Pekerja di Project {project?.nama ?? project?.name ?? `#${project?.id}`}</h1>
+          <div className="flex gap-2">
+            <AddWorkerModal availableWorkers={availableWorkers} project_id={project?.id} />
+            <AddNewWorker project_id={project?.id} roles={roles} />
+          </div>
         </Card>
-
 
         <Card className="p-4 border-border">
           {pekerja.length === 0 ? (
@@ -32,13 +31,13 @@ function PekerjaProject({ pekerja, availableWorkers, project_id, roles }) {
           ) : (
             <DataTable
               data={pekerja}
-              onRowClick={(row) => router.visit(`/projects/${project_id}/pekerja/${row.id}`)}
+              onRowClick={(row) => router.visit(`/projects/${project?.id}/pekerja/${row.id}`)}
             >
               <DataTable.Column
                 accessor="name"
                 label="Nama"
                 render={(row) => (
-                  <span className="text-blue-600">{row.name}</span> // hapus <a> supaya row click bekerja
+                  <span className="text-blue-600">{row.name}</span> 
                 )}
               />
               <DataTable.Column accessor="email" label="Email" />

@@ -32,6 +32,9 @@ Route::middleware(['auth'])
         Route::get('/{project_id}/pekerja/{pekerja_id}', [PekerjaController::class, 'showInProject'])
         ->name('showInProject');
 
+        Route::put('/{project_id}/pekerja/{pekerja_id}/update', [PekerjaController::class, 'updateRoleInProject'])
+        ->name('updateRoleInProject');
+
     });
 
     });

@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use Modules\Pekerja\Http\Request\Pekerja\CreatePekerjaRequest;
 use Modules\Pekerja\Http\Request\Pekerja\UpdatePekerjaRequest;
 use Modules\Pekerja\Services\PekerjaService;
+use Modules\Project\Models\Project;
 use Modules\Peran\Services\PeranService;
 use Spatie\Permission\Models\Role;
 
@@ -94,16 +95,18 @@ class PekerjaController extends Controller
         }
     }
 
-   public function project(Request $request, $project_id)
+    public function project($project_id)
     {
+        $project = Project::findOrFail($project_id);
+
         $pekerja = $this->pekerjaService->getPekerjaByProject($project_id);
         $availableWorkers = $this->pekerjaService->getAvailablePekerjaForProject($project_id);
-        $roles = Role::orderBy('name')->get(['id', 'name']);
+        $roles = Role::all();
 
-        return Inertia::render('Pekerja/PekerjaProject', [
+        return Inertia::render('Pekerja/PekerjaProject', [ 
+            'project' => $project,
             'pekerja' => $pekerja,
             'availableWorkers' => $availableWorkers,
-            'project_id' => $project_id,
             'roles' => $roles,
         ]);
     }
@@ -145,16 +148,34 @@ class PekerjaController extends Controller
     {
         $project = \Modules\Project\Models\Project::findOrFail($project_id);
         $pekerja = \App\Models\User::with('roles')->findOrFail($pekerja_id);
-
-        // Ambil role/posisi pekerja
+        $roles = \Spatie\Permission\Models\Role::orderBy('name')->get(['id', 'name']);
         $posisi = $pekerja->roles->first()->name ?? '-';
 
         return inertia('Pekerja/PekerjaProjectDetail', [
             'project' => $project,
             'pekerja' => $pekerja,
             'posisi' => $posisi,
+            'roles' => $roles,
         ]);
     }
+
+
+    public function updateRoleInProject(Request $request, $project_id, $pekerja_id)
+    {
+        $validated = $request->validate([
+            'posisi' => 'required|string|exists:roles,name',
+        ]);
+
+        $pekerja = \App\Models\User::findOrFail($pekerja_id);
+
+        // Hapus role lama dan tambahkan role baru
+        $pekerja->syncRoles([$validated['posisi']]);
+
+        return redirect()
+            ->route('pekerja.projects.showInProject', ['project_id' => $project_id, 'pekerja_id' => $pekerja_id])
+            ->with('success', 'Posisi pekerja berhasil diperbarui.');
+    }
+
 
 
 }
