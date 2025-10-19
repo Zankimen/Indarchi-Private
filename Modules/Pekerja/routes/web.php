@@ -27,7 +27,10 @@ Route::middleware(['auth'])
             ->name('addToProject');
 
         Route::post('/{project_id}/pekerja/create', [PekerjaController::class, 'createAndAssign'])
-            ->name('createAndAssign');
+        ->name('createAndAssign');
+
+        Route::get('/{project_id}/pekerja/{pekerja_id}', [PekerjaController::class, 'showInProject'])
+        ->name('showInProject');
 
     });
 

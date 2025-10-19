@@ -1,5 +1,5 @@
 import React from "react";
-import { Head, useForm } from "@inertiajs/react";
+import { Head, useForm, router } from "@inertiajs/react";
 import Navbar from "@/layout/NavBar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -30,8 +30,17 @@ function PekerjaProject({ pekerja, availableWorkers, project_id, roles }) {
           {pekerja.length === 0 ? (
             <p className="text-muted-foreground text-center py-8">Belum ada pekerja di project ini.</p>
           ) : (
-            <DataTable data={pekerja}>
-              <DataTable.Column accessor="name" label="Nama" />
+            <DataTable
+              data={pekerja}
+              onRowClick={(row) => router.visit(`/projects/${project_id}/pekerja/${row.id}`)}
+            >
+              <DataTable.Column
+                accessor="name"
+                label="Nama"
+                render={(row) => (
+                  <span className="text-blue-600">{row.name}</span> // hapus <a> supaya row click bekerja
+                )}
+              />
               <DataTable.Column accessor="email" label="Email" />
               <DataTable.Column accessor="posisi" label="Posisi" />
             </DataTable>
