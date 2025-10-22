@@ -1,7 +1,8 @@
 import React from "react";
-import { Head, usePage } from "@inertiajs/react";
-
+import { Head, Link, router } from "@inertiajs/react";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Calendar, MapPin, User, Pencil, Trash } from "lucide-react";
 import { formatDateNoHour } from "@/components/lib/utils";
 import Navbar from "@/layout/NavBar";
 
@@ -9,42 +10,116 @@ function ProjectDetail({ project }) {
   return (
     <>
       <Head title={project.nama} />
-      <div className="space-y-4">
-        <Card className="p-6 px-8 border-border">
-          <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-2">
-            <Detail label="Nama" value={project.nama} />
-            <Detail label="Deskripsi" value={project.deskripsi} />
-            <Detail label="Lokasi" value={project.lokasi} />
-            <Detail
-              label="Tanggal Mulai"
-              value={formatDateNoHour(project.tanggal_mulai)}
-            />
-            <Detail
-              label="Tanggal Selesai"
-              value={formatDateNoHour(project.tanggal_selesai)}
-            />
-            <Detail label="Radius" value={project.radius} />
-            <Detail
-              label="Created At"
-              value={formatDateNoHour(project.created_at)}
-            />
-            <Detail
-              label="Last Updated At"
-              value={formatDateNoHour(project.updated_at)}
-            />
+      <div className="max-w-6xl mx-auto py-8 px-6 space-y-8">
+        {/* Header Proyek */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          {/* Gambar proyek */}
+          <img
+            src={project.foto_url ?? "/foto.jpg"}
+            alt={project.nama}
+            className="rounded-2xl w-full h-[300px] object-cover"
+          />
+
+          {/* Informasi proyek */}
+          <div className="flex flex-col justify-between space-y-4">
+            <div>
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <h1 className="text-2xl font-bold text-foreground uppercase">
+                    {project.nama}
+                  </h1>
+                  <p className="text-base font-semibold mt-1">Deskripsi</p>
+                  <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
+                    {project.deskripsi ??
+                      "Belum ada deskripsi proyek untuk saat ini."}
+                  </p>
+                </div>
+
+                {/* Tombol aksi */}
+                <div className="flex flex-col gap-2 items-end">
+                  <Link href={`/projects/${project.id}/edit`}>
+                    <Button
+                      variant="default"
+                      className="bg-blue-600 hover:bg-blue-700 text-white w-full"
+                    >
+                      <Pencil className="w-4 h-4 mr-2" /> Edit Proyek
+                    </Button>
+                  </Link>               
+                </div>
+              </div>
+            </div>
           </div>
-        </Card>
+        </div>
+
+        {/* Detail Proyek */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* DETAIL PROYEK */}
+          <Card className="bg-gray-100 border border-gray-300 rounded-2xl shadow-sm p-6">            
+            <h2 className="font-semibold text-center mb-4 text-lg">DETAIL PROYEK</h2>
+            <div className="space-y-3 text-sm">
+              <div className="flex items-center gap-3">
+                <User className="w-4 h-4 text-muted-foreground" />
+                <div>
+                  <p className="font-medium text-muted-foreground">Client</p>
+                  <p className="font-semibold text-foreground">
+                    {project.nama ?? "PT. Indarchi"}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <MapPin className="w-4 h-4 text-muted-foreground" />
+                <div>
+                  <p className="font-medium text-muted-foreground">Lokasi</p>
+                  <p className="font-semibold text-foreground">
+                    {project.lokasi ?? "Klaten"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* WAKTU */}
+          <Card className="bg-gray-100 border border-gray-300 rounded-2xl shadow-sm p-6">            
+            <h2 className="font-semibold text-center mb-4 text-lg">WAKTU</h2>
+            <div className="space-y-3 text-sm">
+              <div className="flex items-center gap-3">
+                <Calendar className="w-4 h-4 text-muted-foreground" />
+                <div>
+                  <p className="font-medium text-muted-foreground">Mulai</p>
+                  <p className="font-semibold text-foreground">
+                    {formatDateNoHour(project.tanggal_mulai) ?? "-"}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Calendar className="w-4 h-4 text-muted-foreground" />
+                <div>
+                  <p className="font-medium text-muted-foreground">Selesai</p>
+                  <p className="font-semibold text-foreground">
+                    {formatDateNoHour(project.tanggal_selesai) ?? "-"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* STATUS */}
+          <Card className="bg-gray-100 border border-gray-300 rounded-2xl shadow-sm p-6">            
+            <h2 className="font-semibold text-center mb-4 text-lg">STATUS</h2>
+            <div className="flex justify-center items-center">
+              <Button 
+                variant="outline"
+                className="bg-blue-600 text-white hover:bg-blue-700"
+              >
+                {project.status ?? "Dalam Proses"}
+              </Button>
+            </div>
+          </Card>
+        </div>
       </div>
     </>
   );
 }
-
-const Detail = ({ label, value }) => (
-  <div className="space-y-2">
-    <p className="text-sm font-medium text-muted-foreground">{label}</p>
-    <p className="text-base font-semibold text-foreground">{value ?? "-"}</p>
-  </div>
-);
 
 ProjectDetail.layout = (page) => <Navbar children={page} />;
 

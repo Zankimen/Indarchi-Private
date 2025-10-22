@@ -46,6 +46,14 @@ class ProjectController extends Controller
         }
     }
 
+    public function create()
+    {
+        try {
+            return Inertia::render('Project/ProjectCreate');
+        } catch (Exception $e) {
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }
+    }
     public function edit(Project $project)
     {
         return Inertia::render('Project/ProjectEdit', [
@@ -70,15 +78,18 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         try {
-            $this->projectService->deleteProject($project);
+            $project->delete();
 
-            return redirect()->route('projects.index')->with('success', 'Project berhasil dihapus.');
+            return redirect()
+                ->route('projects.index')
+                ->with('success', 'Project berhasil dihapus.');
         } catch (Exception $e) {
             return redirect()
                 ->back()
                 ->withErrors(['error' => $e->getMessage()]);
         }
     }
+
 
     public function show(Project $project)
     {

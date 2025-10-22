@@ -1,7 +1,6 @@
 import React from "react";
-import { Head, useForm, Link } from "@inertiajs/react";
-import Dashboard from "@/layout/Dashboard";
-import { Save, ChevronLeft, ClipboardList } from "lucide-react";
+import { Head, useForm, Link, router } from "@inertiajs/react";
+import { Save, ChevronLeft, ClipboardList, Trash } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -23,32 +22,35 @@ function ProjectEdit({ project }) {
     put(`/projects/${project.id}`);
   };
 
+  const handleDelete = () => {
+    if (confirm("Apakah kamu yakin ingin menghapus proyek ini?")) {
+      router.delete(`/projects/${project.id}`); 
+    }
+  };
+
   return (
     <>
       <Head title="Edit Project" />
       <div className="space-y-4">
         {/* Header Card */}
         <Card className="border-border">
-          <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">
-            <h1 className="flex items-center justify-center sm:justify-start font-bold text-2xl md:text-2xl m-0 p-0">
+          <div className="flex justify-between items-center px-6 py-2 gap-4">
+            <h1 className="flex items-center font-bold text-2xl">
               <ClipboardList className="w-10 h-10 bg-accent text-primary rounded-2xl mr-4 p-2" />
               Edit Project
             </h1>
-            <div className="grid grid-cols-1 gap-2 sm:flex">
-              <Link href="/projects">
-                <Button className="cursor-pointer">
-                  <ChevronLeft className="w-4 h-4" />
-                  Back
-                </Button>
-              </Link>
-            </div>
+            <Link href={`/projects/${project.id}/informasi`}>
+              <Button>
+                <ChevronLeft className="w-4 h-4 mr-2" /> Back
+              </Button>
+            </Link>
           </div>
         </Card>
 
         {/* Form Card */}
         <Card className="px-6 py-8 space-y-2 border-border">
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Nama */}
               <div className="space-y-2">
                 <Label htmlFor="nama">Nama</Label>
@@ -126,7 +128,7 @@ function ProjectEdit({ project }) {
                 )}
               </div>
 
-              {/* Deskripsi (full span) */}
+              {/* Deskripsi */}
               <div className="sm:col-span-2 space-y-2">
                 <Label htmlFor="deskripsi">Deskripsi</Label>
                 <Textarea
@@ -141,13 +143,16 @@ function ProjectEdit({ project }) {
               </div>
             </div>
 
-            {/* Submit */}
-            <div className="flex justify-end items-center">
+            {/* Buttons */}
+            <div className="flex justify-end space-x-2 items-center">
               <Button
-                type="submit"
-                className="cursor-pointer"
-                disabled={processing}
+                type="button"
+                variant="destructive"
+                onClick={handleDelete}
               >
+                <Trash className="w-4 h-4 mr-2" /> Hapus
+              </Button>
+              <Button type="submit" disabled={processing}>
                 Save
                 <Save className="w-4 h-4 ml-2" />
               </Button>
@@ -158,7 +163,5 @@ function ProjectEdit({ project }) {
     </>
   );
 }
-
-ProjectEdit.layout = (page) => <Dashboard children={page} />;
 
 export default ProjectEdit;
