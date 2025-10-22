@@ -4,6 +4,8 @@ namespace Modules\Pekerja\Services;
 
 use App\Models\User;
 use Modules\Pekerja\Repositories\Eloquent\PekerjaRepository;
+use Illuminate\Support\Facades\Hash;
+
 
 class PekerjaService
 {
@@ -21,7 +23,6 @@ class PekerjaService
             'email' => $data['email'],
             'password' => $data['password'] ?? null,
             'alamat' => $data['alamat'] ?? null,
-
         ];
 
         if (empty($userData['password'])) {
@@ -56,14 +57,23 @@ class PekerjaService
             'name' => $data['nama_karyawan'] ?? $user->name,
             'email' => $data['email'] ?? $user->email,
             'alamat' => $data['alamat'] ?? $user->alamat,
-            'posisi' => $data['posisi'] ?? $user->posisi,
         ];
 
-        if (! empty($data['password'])) {
-            $updateData['password'] = $data['password'];
+        // Only update password if provided
+        if (!empty($data['password'])) {
+            $updateData['password'] = bcrypt($data['password']);
         }
 
-        return $this->pekerjaRepository->update($user, $updateData);
+        // Update user data
+        $this->pekerjaRepository->update($user, $updateData);
+
+        // Update role if provided
+        if (isset($data['posisi'])) {
+            // Sync roles (remove old roles and assign new one)
+            $user->syncRoles([$data['posisi']]);
+        }
+
+        return $user;
     }
 
     public function getKaryawanPayload(User $user): array
@@ -72,7 +82,7 @@ class PekerjaService
             'user_id' => $user->id,
             'nama_karyawan' => $user->name,
             'alamat' => $user->alamat,
-            'posisi' => $user->posisi,
+            'posisi' => $user->roles->first()?->name,
             'user' => [
                 'email' => $user->email,
             ],
@@ -90,4 +100,56 @@ class PekerjaService
             'role' => $request->role,
         ];
     }
+
+    public function getPekerjaByProject($projectId)
+    {
+        $users = User::whereHas('projects', function ($q) use ($projectId) {
+            $q->where('project_id', $projectId);
+        })->with('roles')->get();
+
+        // Tambahkan atribut posisi secara langsung
+        $users->transform(function ($user) {
+            $user->posisi = $user->roles->first()->name ?? '-';
+            return $user;
+        });
+
+        return $users;
+    }
+
+    public function getAvailablePekerjaForProject($projectId)
+    {
+        return User::whereDoesntHave('projects', function ($q) use ($projectId) {
+            $q->where('project_id', $projectId);
+        })->orderBy('name')->get(['id', 'name']);
+    }
+
+    public function assignPekerjaToProject($pekerjaId, $projectId)
+    {
+        $user = User::findOrFail($pekerjaId);
+        $user->projects()->attach($projectId);
+    }
+
+    public function createNewPekerja(array $data)
+{
+    $userData = [
+        'name' => $data['nama_karyawan'] ?? $data['name'] ?? '',
+        'email' => $data['email'],
+        'alamat' => $data['alamat'] ?? null,
+    ];
+
+    if (!empty($data['password'])) {
+        $userData['password'] = bcrypt($data['password']);
+    }
+
+    $user = User::create($userData);
+
+    // assign role (cek key 'posisi' atau 'role')
+    $roleName = $data['posisi'] ?? $data['role'] ?? null;
+    if ($roleName) {
+        $user->assignRole($roleName);
+    }
+
+    return $user;
+}
+
 }
