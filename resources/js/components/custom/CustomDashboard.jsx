@@ -203,7 +203,7 @@ Dashboard.LogoutButton = function DashboardLogoutButton() {
   return (
     <Button
       onClick={handleLogout}
-      className="flex items-center gap-4 h-9 px-4 w-full text-left text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-sm transition-all duration-200"
+      className="flex items-center bg-background gap-4 px-2 cursor-pointer w-full text-left text-sm text-foreground hover:bg-primary hover:text-background rounded-sm transition-all duration-200"
     >
       <LogOut className="h-4 w-4" />
       Logout

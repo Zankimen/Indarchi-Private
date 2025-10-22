@@ -73,9 +73,9 @@ export default function DashboardPage({ title, children }) {
             })}
           </Dashboard.MenuGroup>
         </Dashboard.SidebarContent>
-        {/* <Dashboard.SidebarFooter>
+        <Dashboard.SidebarFooter>
           <Dashboard.LogoutButton />
-        </Dashboard.SidebarFooter> */}
+        </Dashboard.SidebarFooter>
       </Dashboard.Sidebar>
 
       <Dashboard.Content>
