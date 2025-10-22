@@ -1,16 +1,27 @@
 import React from "react";
-import { useForm, Link, Head } from "@inertiajs/react";
+import { useForm } from "@inertiajs/react";
 
-import Dashboard from "@/layout/Dashboard";
+import { Save, ChevronLeft, FolderKanban, Plus } from "lucide-react";
+
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Save, ChevronLeft, FolderKanban } from "lucide-react";
+import {
+  DialogTrigger,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 
 function ProjectCreate() {
-  const { data, setData, post, processing, errors } = useForm({
+  const { data, setData, post, processing, errors, reset } = useForm({
     nama: "",
     deskripsi: "",
     lokasi: "",
@@ -21,141 +32,185 @@ function ProjectCreate() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    post("/dashboard/projects");
+    post("/dashboard/projects", {
+      onSuccess: () => reset(),
+    });
   };
 
   return (
-    <>
-      <Head title="Tambah Project" />
-      <div className="space-y-6">
-        {/* Header Section */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <FolderKanban className="w-10 h-10 bg-accent text-background rounded-2xl p-2" />
-            <h1 className="text-2xl font-bold">Tambah Project</h1>
-          </div>
-
-          <Link href="/dashboard/projects">
-            <Button variant="outline" className="flex items-center gap-1">
-              <ChevronLeft className="w-4 h-4" /> Kembali
-            </Button>
-          </Link>
-        </div>
-
-        {/* Form Section */}
-        <Card className="p-6 space-y-6">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div>
-                <Label htmlFor="nama">Nama</Label>
-                <Input
-                  id="nama"
-                  value={data.nama}
-                  onChange={(e) => setData("nama", e.target.value)}
-                />
-                {errors.nama && (
-                  <p className="text-sm text-red-500 mt-1">{errors.nama}</p>
-                )}
-              </div>
-
-              <div>
-                <Label htmlFor="lokasi">Lokasi</Label>
-                <Input
-                  id="lokasi"
-                  value={data.lokasi}
-                  onChange={(e) => setData("lokasi", e.target.value)}
-                />
-                {errors.lokasi && (
-                  <p className="text-sm text-red-500 mt-1">{errors.lokasi}</p>
-                )}
-              </div>
-
-              <div>
-                <Label htmlFor="tanggal_mulai">Tanggal Mulai</Label>
-                <Input
-                  id="tanggal_mulai"
-                  type="date"
-                  value={data.tanggal_mulai}
-                  onChange={(e) => setData("tanggal_mulai", e.target.value)}
-                />
-                {errors.tanggal_mulai && (
-                  <p className="text-sm text-red-500 mt-1">
-                    {errors.tanggal_mulai}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <Label htmlFor="tanggal_selesai">Tanggal Selesai</Label>
-                <Input
-                  id="tanggal_selesai"
-                  type="date"
-                  value={data.tanggal_selesai}
-                  onChange={(e) => setData("tanggal_selesai", e.target.value)}
-                />
-                {errors.tanggal_selesai && (
-                  <p className="text-sm text-red-500 mt-1">
-                    {errors.tanggal_selesai}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <Label htmlFor="radius">Radius</Label>
-                <Input
-                  id="radius"
-                  type="number"
-                  value={data.radius}
-                  onChange={(e) => setData("radius", e.target.value)}
-                />
-                {errors.radius && (
-                  <p className="text-sm text-red-500 mt-1">{errors.radius}</p>
-                )}
-              </div>
-
-              <div className="sm:col-span-2">
-                <Label htmlFor="deskripsi">Deskripsi</Label>
-                <Textarea
-                  id="deskripsi"
-                  value={data.deskripsi}
-                  onChange={(e) => setData("deskripsi", e.target.value)}
-                />
-                {errors.deskripsi && (
-                  <p className="text-sm text-red-500 mt-1">
-                    {errors.deskripsi}
-                  </p>
-                )}
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button className="cursor-pointer">
+          Tambah Project <Plus />
+        </Button>
+      </DialogTrigger>
+      <DialogContent
+        className="sm:max-w-[800px] border-border"
+        aria-describedby={undefined}
+      >
+        <DialogHeader>
+          <Card className="border-border">
+            <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">
+              <DialogTitle>
+                <div className="flex items-center justify-center sm:justify-start font-bold text-2xl md:text-2xl m-0 p-0">
+                  <FolderKanban className="w-10 h-10 bg-accent text-background rounded-2xl mr-4 p-2" />
+                  Tambah Project
+                </div>
+              </DialogTitle>
+              <DialogDescription className="sr-only">
+                Form untuk membuat project baru.
+              </DialogDescription>
+              <div className="grid grid-cols-1 gap-2 sm:flex">
+                <DialogPrimitive.Close asChild>
+                  <Button className="cursor-pointer">
+                    <ChevronLeft className="w-4 h-4" />
+                    Back
+                  </Button>
+                </DialogPrimitive.Close>
               </div>
             </div>
+          </Card>
+        </DialogHeader>
+        <div className="space-y-4">
+          <Card className="px-6 py-8 space-y-4 border-border">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="nama"
+                    className="text-foreground text-base block"
+                  >
+                    Nama
+                  </Label>
+                  <Input
+                    type="text"
+                    id="nama"
+                    value={data.nama}
+                    onChange={(e) => setData("nama", e.target.value)}
+                  />
+                  {errors.nama && (
+                    <p className="text-sm text-red-500">{errors.nama}</p>
+                  )}
+                </div>
 
-            <div className="flex justify-end gap-3">
-              <Link href="/dashboard/projects">
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="lokasi"
+                    className="text-foreground text-base block"
+                  >
+                    Lokasi
+                  </Label>
+                  <Input
+                    type="text"
+                    id="lokasi"
+                    value={data.lokasi}
+                    onChange={(e) => setData("lokasi", e.target.value)}
+                  />
+                  {errors.lokasi && (
+                    <p className="text-sm text-red-500">{errors.lokasi}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="tanggal_mulai"
+                    className="text-foreground text-base block"
+                  >
+                    Tanggal Mulai
+                  </Label>
+                  <Input
+                    type="date"
+                    id="tanggal_mulai"
+                    value={data.tanggal_mulai}
+                    onChange={(e) => setData("tanggal_mulai", e.target.value)}
+                  />
+                  {errors.tanggal_mulai && (
+                    <p className="text-sm text-red-500">
+                      {errors.tanggal_mulai}
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="tanggal_selesai"
+                    className="text-foreground text-base block"
+                  >
+                    Tanggal Selesai
+                  </Label>
+                  <Input
+                    type="date"
+                    id="tanggal_selesai"
+                    value={data.tanggal_selesai}
+                    onChange={(e) => setData("tanggal_selesai", e.target.value)}
+                  />
+                  {errors.tanggal_selesai && (
+                    <p className="text-sm text-red-500">
+                      {errors.tanggal_selesai}
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="radius"
+                    className="text-foreground text-base block"
+                  >
+                    Radius
+                  </Label>
+                  <Input
+                    type="number"
+                    id="radius"
+                    value={data.radius}
+                    onChange={(e) => setData("radius", e.target.value)}
+                  />
+                  {errors.radius && (
+                    <p className="text-sm text-red-500">{errors.radius}</p>
+                  )}
+                </div>
+
+                <div className="sm:col-span-2 space-y-2">
+                  <Label
+                    htmlFor="deskripsi"
+                    className="text-foreground text-base block"
+                  >
+                    Deskripsi
+                  </Label>
+                  <Textarea
+                    id="deskripsi"
+                    value={data.deskripsi}
+                    onChange={(e) => setData("deskripsi", e.target.value)}
+                  />
+                  {errors.deskripsi && (
+                    <p className="text-sm text-red-500">{errors.deskripsi}</p>
+                  )}
+                </div>
+              </div>
+
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button
+                    variant="outline"
+                    className="border-border cursor-pointer hover:border-accent"
+                  >
+                    Cancel
+                  </Button>
+                </DialogClose>
                 <Button
-                  type="button"
-                  variant="outline"
+                  type="submit"
                   className="cursor-pointer"
+                  disabled={processing}
                 >
-                  Batal
+                  <Save className="w-4 h-4" />
+                  {processing ? "Menyimpan..." : "Save"}
                 </Button>
-              </Link>
-              <Button
-                type="submit"
-                disabled={processing}
-                className="cursor-pointer flex items-center gap-2"
-              >
-                <Save className="w-4 h-4" />
-                {processing ? "Menyimpan..." : "Simpan"}
-              </Button>
-            </div>
-          </form>
-        </Card>
-      </div>
-    </>
+              </DialogFooter>
+            </form>
+          </Card>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
-
-ProjectCreate.layout = (page) => (
-  <Dashboard children={page} title="Tambah Project" />
-);
 
 export default ProjectCreate;
