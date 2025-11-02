@@ -16,10 +16,25 @@ Route::middleware(['auth'])
                 Route::get('/{id}', [PekerjaController::class, 'details'])->name('details');
             });
 
-        Route::prefix('projects')
-            ->name('pekerja.projects.')
-            ->group(function () {
-                Route::get('/{project_id}/pekerja', [PekerjaController::class, 'project'])
-                    ->name('pekerja');
-            });
+       Route::prefix('projects')
+    ->name('pekerja.projects.')
+    ->middleware(['auth'])
+    ->group(function () {
+        Route::get('/{project_id}/pekerja', [PekerjaController::class, 'project'])
+            ->name('pekerja');
+
+        Route::post('/{project_id}/pekerja/add', [PekerjaController::class, 'addToProject'])
+            ->name('addToProject');
+
+        Route::post('/{project_id}/pekerja/create', [PekerjaController::class, 'createAndAssign'])
+        ->name('createAndAssign');
+
+        Route::get('/{project_id}/pekerja/{pekerja_id}', [PekerjaController::class, 'showInProject'])
+        ->name('showInProject');
+
+        Route::put('/{project_id}/pekerja/{pekerja_id}/update', [PekerjaController::class, 'updateRoleInProject'])
+        ->name('updateRoleInProject');
+
+    });
+
     });

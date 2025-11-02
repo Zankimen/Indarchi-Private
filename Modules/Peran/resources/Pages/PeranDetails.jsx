@@ -5,9 +5,10 @@ import { Pencil, ChevronLeft, Trash, Shield, CheckCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatDateNoHour } from "@/components/lib/utils";
+import PeranEditDialog from "./PeranEditDialog";
 
 function PeranDetails() {
-  const { role } = usePage().props;
+  const { role, permissions } = usePage().props;
 
   const handleDelete = () => {
     if (confirm("Apakah Anda yakin ingin menghapus peran ini?")) {
@@ -54,15 +55,19 @@ function PeranDetails() {
                   Kembali
                 </Button>
               </Link>
-              <Link href={`/role/edit/${role.id}`}>
-                <Button
-                  variant="outline"
-                  className="cursor-pointer border-border"
-                >
-                  <Pencil className="w-4 h-4" />
-                  Edit
-                </Button>
-              </Link>
+              <PeranEditDialog
+                role={role}
+                permissions={permissions}
+                trigger={
+                  <Button
+                    variant="outline"
+                    className="cursor-pointer border-border"
+                  >
+                    <Pencil className="w-4 h-4" />
+                    Edit
+                  </Button>
+                }
+              />
               <Button
                 variant="destructive"
                 className="cursor-pointer"
@@ -121,14 +126,15 @@ function PeranDetails() {
                   <p className="text-sm">
                     Peran ini belum memiliki permission yang diberikan
                   </p>
-                  <Link
-                    href={`/role/edit/${role.id}`}
-                    className="inline-block mt-4"
-                  >
-                    <Button variant="outline" size="sm">
-                      Tambah Permission
-                    </Button>
-                  </Link>
+                  <PeranEditDialog
+                    role={role}
+                    permissions={permissions}
+                    trigger={
+                      <Button variant="outline" size="sm" className="mt-4">
+                        Tambah Permission
+                      </Button>
+                    }
+                  />
                 </div>
               )}
             </div>
