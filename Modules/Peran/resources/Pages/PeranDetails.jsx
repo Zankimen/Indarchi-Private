@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatDateNoHour } from "@/components/lib/utils";
 import PeranEditDialog from "./PeranEditDialog";
+import PeranEditDialog from "./PeranEditDialog";
 
 function PeranDetails({ peran, permissions }) {
   const {

@@ -5,6 +5,7 @@ import DataTable from "@/components/custom/NewCustomDataTable";
 import CustomPagination from "@components/custom/CustomPagination";
 import CustomTableSearch from "@components/custom/CustomTableSearch";
 import PeranAddDialog from "./PeranAddDialog";
+import PeranAddDialog from "./PeranAddDialog";
 
 function PeranIndex({ perans, filters, permissions }) {
 
@@ -69,6 +70,7 @@ function PeranIndex({ perans, filters, permissions }) {
 
   return (
     <>
+      <Head title="Peran" />
       <Head title="Peran" />
       <div className="">
         <div className="space-y-4">

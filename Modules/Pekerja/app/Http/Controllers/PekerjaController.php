@@ -15,7 +15,6 @@ use Modules\Project\Services\ProjectService;
 class PekerjaController extends Controller
 {
     protected PekerjaService $pekerjaService;
-
     protected PeranService $peranService;
 
     protected ProjectService $projectService;
@@ -96,6 +95,7 @@ class PekerjaController extends Controller
         }
     }
 
+    public function project($project_id)
     public function project($project_id)
     {
         try {

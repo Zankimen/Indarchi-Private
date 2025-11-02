@@ -5,6 +5,8 @@ namespace Modules\Pekerja\Services;
 use App\Models\User;
 use DB;
 use Modules\Pekerja\Repositories\Eloquent\PekerjaRepository;
+use Illuminate\Support\Facades\Hash;
+
 
 class PekerjaService
 {

@@ -29,6 +29,7 @@ class PeranController extends Controller
                 'perans' => $this->peranService->getPeransPaginated($request),
                 'filters' => $this->peranService->getAllPeranFilter($request),
                 'permissions' => $this->peranService->getAllPermissions(),
+                'permissions' => $this->peranService->getAllPermissions(),
             ]);
         } catch (Exception $e) {
             return back($this->SEE_OTHER)->withErrors(['error' => $e->getMessage()]);

@@ -1,5 +1,6 @@
 import React from "react";
 import { Head, useForm, router } from "@inertiajs/react";
+import { Head, useForm, router } from "@inertiajs/react";
 import Navbar from "@/layout/NavBar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -238,5 +239,151 @@ function AddNewWorker({ project_id, roles }) {
 }
 
 
+function AddNewWorker({ project_id, roles }) {
+  const { data, setData, post, processing, reset } = useForm({
+    email: "",
+    password: "",
+    nama_karyawan: "",
+    alamat: "",
+    posisi: "",
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    post(`/projects/${project_id}/pekerja/create`, {
+      onSuccess: () => reset(),
+    });
+  };
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="default">
+          Tambah Pekerja Baru <Plus className="ml-2" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[800px] border-border">
+        <DialogHeader>
+          <Card className="border-border">
+            <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">
+              <DialogTitle>
+                <div className="flex items-center font-bold text-2xl md:text-2xl m-0 p-0">
+                  <Users className="w-10 h-10 bg-accent text-background rounded-2xl mr-4 p-2" />
+                  Tambah Pekerja Baru
+                </div>
+              </DialogTitle>
+              <DialogDescription className="sr-only">
+                Form untuk membuat Pekerja baru di project.
+              </DialogDescription>
+              <DialogClose asChild>
+                <Button className="cursor-pointer">
+                  <ChevronLeft className="w-4 h-4" />
+                  Kembali
+                </Button>
+              </DialogClose>
+            </div>
+          </Card>
+        </DialogHeader>
+        <Card className="px-6 py-8 space-y-2 border-border">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-foreground text-base block">
+                Email
+              </Label>
+              <Input
+                type="email"
+                id="email"
+                name="email"
+                value={data.email}
+                placeholder="Masukkan email"
+                onChange={(e) => setData("email", e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-foreground text-base block">
+                Password
+              </Label>
+              <Input
+                type="password"
+                id="password"
+                name="password"
+                value={data.password}
+                placeholder="Masukkan password"
+                onChange={(e) => setData("password", e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="nama_karyawan" className="text-foreground text-base block">
+                Nama Karyawan
+              </Label>
+              <Input
+                type="text"
+                id="nama_karyawan"
+                name="nama_karyawan"
+                value={data.nama_karyawan}
+                placeholder="Masukkan nama karyawan"
+                onChange={(e) => setData("nama_karyawan", e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="alamat" className="text-foreground text-base block">
+                Alamat
+              </Label>
+              <Textarea
+                id="alamat"
+                name="alamat"
+                value={data.alamat}
+                className="border-border"
+                placeholder="Masukkan alamat lengkap"
+                onChange={(e) => setData("alamat", e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="posisi" className="text-foreground text-base block">
+                Posisi
+              </Label>
+              <Select
+                name="posisi"
+                value={data.posisi}
+                onValueChange={(value) => setData("posisi", value)}
+              >
+                <SelectTrigger
+                  id="posisi"
+                  className="w-full border-border rounded-lg cursor-pointer text-foreground placeholder:text-border focus:ring-2 focus:ring-muted active:ring-2 active:ring-muted"
+                >
+                  <SelectValue placeholder="Pilih Posisi" className="text-border" />
+                </SelectTrigger>
+                <SelectContent className="rounded-lg border-border bg-background shadow">
+                  {roles.map((role) => (
+                    <SelectItem key={role.id} value={role.name} className="text-foreground text-base hover:bg-border cursor-pointer">
+                      {role.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="outline" className="border-border cursor-pointer hover:border-accent">
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button type="submit" className="cursor-pointer" disabled={processing}>
+                <Save className="w-4 h-4" />
+                {processing ? "Menyimpan..." : "Save"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Card>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+
 PekerjaProject.layout = (page) => <Navbar>{page}</Navbar>;
 export default PekerjaProject;
+

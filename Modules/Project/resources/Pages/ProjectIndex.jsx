@@ -1,6 +1,6 @@
 import { Link } from "@inertiajs/react";
 import React, { useState } from "react";
-import { Head, router, usePage } from "@inertiajs/react";
+import { usePage, Head, router } from "@inertiajs/react";
 
 import { Button } from "@/components/ui/button";
 import Dashboard from "@/layout/Dashboard";
@@ -9,7 +9,7 @@ import DataTable from "@/components/custom/NewCustomDataTable";
 import CustomPagination from "@components/custom/CustomPagination";
 import CustomTableSearch from "@components/custom/CustomTableSearch";
 
-import ProjectCreateDialog from "./ProjectCreateDialog";
+import ProjectCreate from "./ProjectCreate";
 
 function ProjectIndex({ projects, filters }) {
   const {
@@ -99,21 +99,49 @@ function ProjectIndex({ projects, filters }) {
               noItem="Project"
             >
               <DataTable.Column accessor="nama" label="Nama" type="text" sort />
-              <DataTable.Column accessor="deskripsi" label="Deskripsi" type="text" sort />
-              <DataTable.Column accessor="lokasi" label="Lokasi" type="text" sort />
-              <DataTable.Column accessor="tanggal_mulai" label="Tanggal Mulai" type="date" sort />
+              <DataTable.Column
+                accessor="deskripsi"
+                label="Deskripsi"
+                type="text"
+                sort
+              />
+              <DataTable.Column
+                accessor="lokasi"
+                label="Lokasi"
+                type="text"
+                sort
+              />
+              <DataTable.Column
+                accessor="tanggal_mulai"
+                label="Tanggal Mulai"
+                type="date"
+                sort
+              />
               <DataTable.Column
                 accessor="tanggal_selesai"
                 label="Tanggal Selesai"
                 type="date"
                 sort
               />
-              <DataTable.Column accessor="radius" label="Radius" type="text" sort />
+              <DataTable.Column
+                accessor="radius"
+                label="Radius"
+                type="text"
+                sort
+              />
 
-              <DataTable.Column accessor="created_at" label="Created At" type="time" sort />
+              <DataTable.Column
+                accessor="created_at"
+                label="Created At"
+                type="time"
+                sort
+              />
             </DataTable>
 
-            <CustomPagination data={projects} onPaginationChange={onPaginationChange} />
+            <CustomPagination
+              data={projects}
+              onPaginationChange={onPaginationChange}
+            />
           </div>
         </div>
       </div>
