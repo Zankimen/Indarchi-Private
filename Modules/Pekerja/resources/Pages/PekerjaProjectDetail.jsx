@@ -87,5 +87,5 @@ function PekerjaProjectDetail({ project, pekerja, posisi, roles }) {
   );
 }
 
-PekerjaProjectDetail.layout = (page) => <Navbar children={page} />;
+PekerjaProjectDetail.layout = (page) => <Navbar>{page}</Navbar>;
 export default PekerjaProjectDetail;

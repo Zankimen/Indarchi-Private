@@ -13,14 +13,13 @@ class UpdatePekerjaRequest extends FormRequest
 
     public function rules(): array
     {
-        // Get the user ID from the route parameter
         $userId = $this->route('id');
 
         return [
-            'nama_karyawan' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'alamat' => 'required|string',
             'posisi' => 'required|string|max:50',
-            'email' => 'required|email|unique:users,email,' . $userId,
+            'email' => 'required|email|unique:users,email,'.$userId,
             'password' => 'nullable|min:8',
         ];
     }

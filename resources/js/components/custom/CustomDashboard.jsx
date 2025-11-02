@@ -1,8 +1,7 @@
-import React, { useState, useEffect, createContext, useContext } from "react";
+import React, { createContext, useContext } from "react";
 import { Link, router } from "@inertiajs/react";
 import { ChevronDown, Sun, Moon, LogOut } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@components/ui/avatar";
-import { Toaster } from "@components/ui/sonner";
 import { Button } from "@components/ui/button";
 import {
   Sidebar,
@@ -19,11 +18,7 @@ import {
   SidebarMenuSubButton,
   SidebarFooter,
 } from "@/components/ui/sidebar";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@components/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@components/ui/collapsible";
 import useDarkMode from "../hooks/useDarkMode";
 
 const DashboardContext = createContext(null);
@@ -44,14 +39,9 @@ function Dashboard({ children, currentPath }) {
   }
 
   return (
-    <DashboardContext.Provider
-      value={{ currentPath, isDarkMode, toggleDarkMode, handleLogout }}
-    >
+    <DashboardContext.Provider value={{ currentPath, isDarkMode, toggleDarkMode, handleLogout }}>
       {/* className="max-w-[1920px]" */}
-      <SidebarProvider>
-        {children}
-        <Toaster />
-      </SidebarProvider>
+      <SidebarProvider>{children}</SidebarProvider>
     </DashboardContext.Provider>
   );
 }
@@ -61,17 +51,11 @@ Dashboard.Sidebar = function DashboardSidebar({ children }) {
 };
 
 Dashboard.SidebarHeader = function DashboardSidebarHeader({ children }) {
-  return (
-    <SidebarHeader className="py-8 bg-sidebar-background">{children}</SidebarHeader>
-  );
+  return <SidebarHeader className="py-8 bg-sidebar-background">{children}</SidebarHeader>;
 };
 
 Dashboard.SidebarContent = function DashboardSidebarContent({ children }) {
-  return (
-    <SidebarContent className="px-6 bg-sidebar-background">
-      {children}
-    </SidebarContent>
-  );
+  return <SidebarContent className="px-6 bg-sidebar-background">{children}</SidebarContent>;
 };
 
 Dashboard.SidebarFooter = function DashboardSidebarFooter({ children }) {
@@ -86,12 +70,7 @@ Dashboard.MenuGroup = function DashboardMenuGroup({ children }) {
   );
 };
 
-Dashboard.MenuItem = function DashboardMenuItem({
-  href,
-  icon: Icon,
-  children,
-  exact = false,
-}) {
+Dashboard.MenuItem = function DashboardMenuItem({ href, icon: Icon, children, exact = false }) {
   const { currentPath } = useDashboard();
   const isActive = exact
     ? currentPath === href
@@ -109,7 +88,13 @@ Dashboard.MenuItem = function DashboardMenuItem({
   );
 };
 
-Dashboard.SubMenu = function DashboardSubMenu({ title, icon: Icon, children, defaultOpen = false, active = false }) {
+Dashboard.SubMenu = function DashboardSubMenu({
+  title,
+  icon: Icon,
+  children,
+  defaultOpen = false,
+  active = false,
+}) {
   return (
     <Collapsible defaultOpen={defaultOpen}>
       <SidebarMenuItem>
@@ -130,11 +115,7 @@ Dashboard.SubMenu = function DashboardSubMenu({ title, icon: Icon, children, def
   );
 };
 
-Dashboard.SubMenuItem = function DashboardSubMenuItem({
-  href,
-  icon: Icon,
-  children,
-}) {
+Dashboard.SubMenuItem = function DashboardSubMenuItem({ href, icon: Icon, children }) {
   const { currentPath } = useDashboard();
   const isActive = currentPath === href || (href !== "/" && currentPath.startsWith(href + "/"));
 
@@ -150,7 +131,7 @@ Dashboard.SubMenuItem = function DashboardSubMenuItem({
   );
 };
 
-Dashboard.Header = function DashboardHeader({ children }) {
+Dashboard.Header = function DashboardHeader({ children, user }) {
   const { isDarkMode, toggleDarkMode } = useDashboard();
 
   return (
@@ -161,7 +142,7 @@ Dashboard.Header = function DashboardHeader({ children }) {
         </div>
 
         <div className="flex items-center gap-4 h-full">
-          <div className="font-medium text-2xl text-foreground">Joko</div>
+          <div className="font-medium text-2xl text-foreground">{user.name}</div>
           <Avatar className="h-10 w-10">
             <AvatarImage src="https://github.com/shadcn.png" />
             <AvatarFallback>CN</AvatarFallback>
@@ -169,7 +150,7 @@ Dashboard.Header = function DashboardHeader({ children }) {
           <Button
             variant="outline"
             onClick={toggleDarkMode}
-            className="h-10 w-10 cursor-pointer border-border rounded-4xl shadow hover:bg-background hover:border-accent"
+            className="h-10 w-10 rounded-3xl shadow hover:bg-background hover:border-accent"
           >
             {isDarkMode ? (
               <Sun className="h-4 w-4 text-foreground" />
@@ -203,7 +184,7 @@ Dashboard.LogoutButton = function DashboardLogoutButton() {
   return (
     <Button
       onClick={handleLogout}
-      className="flex items-center bg-background gap-4 px-2 cursor-pointer w-full text-left text-sm text-foreground hover:bg-primary hover:text-background rounded-sm transition-all duration-200"
+      className="bg-background hover:bg-background text-foreground hover:text-accent w-full"
     >
       <LogOut className="h-4 w-4" />
       Logout

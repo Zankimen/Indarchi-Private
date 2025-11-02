@@ -1,19 +1,24 @@
 import React, { useState } from "react";
 
-import { Head, router} from "@inertiajs/react";
+import { Head, router, usePage } from "@inertiajs/react";
 
 import Dashboard from "@/layout/Dashboard";
 import DataTable from "@/components/custom/NewCustomDataTable";
 import CustomPagination from "@components/custom/CustomPagination";
 import CustomTableSearch from "@components/custom/CustomTableSearch";
 
-import PekerjaAdd from "./PekerjaAdd";
+import PekerjaAddDialog from "./PekerjaAddDialog";
 
 const onRowClick = (item) => {
   router.visit(`/dashboard/pekerja/${item.user_id ?? item.id}`);
 };
 
-function PekerjaIndex({ pekerja, peran, filters }) {
+function PekerjaIndex({ pekerjas, perans, filters }) {
+  const {
+    props: { auth },
+  } = usePage();
+
+  const hasPermission = (permission) => auth.permissions.includes(permission);
 
   const [search, setSearch] = useState(filters.search || "");
 
@@ -29,7 +34,7 @@ function PekerjaIndex({ pekerja, peran, filters }) {
     router.get(
       "/dashboard/pekerja",
       {
-        per_page: pekerja.per_page,
+        per_page: pekerjas.per_page,
         search,
         sort_by: column,
         sort_direction: direction,
@@ -57,7 +62,7 @@ function PekerjaIndex({ pekerja, peran, filters }) {
     router.get(
       "/dashboard/pekerja",
       {
-        per_page: pekerja.per_page,
+        per_page: pekerjas.per_page,
         search,
         sort_by: sortBy,
         sort_direction: sortDirection,
@@ -72,7 +77,7 @@ function PekerjaIndex({ pekerja, peran, filters }) {
       <div className="">
         <div className="space-y-4">
           <div className="flex justify-between items-center gap-2">
-            <PekerjaAdd peran={peran} />
+            {hasPermission("dashboard.worker.manage") && <PekerjaAddDialog perans={perans} />}
 
             <CustomTableSearch
               search={search}
@@ -83,7 +88,7 @@ function PekerjaIndex({ pekerja, peran, filters }) {
           </div>
           <div className="space-y-4">
             <DataTable
-              data={pekerja.data}
+              data={pekerjas.data}
               filters={filters}
               onSort={handleSort}
               onRowClick={onRowClick}
@@ -92,18 +97,10 @@ function PekerjaIndex({ pekerja, peran, filters }) {
               <DataTable.Column accessor="name" label="Nama" type="text" sort />
               <DataTable.Column accessor="email" label="Email" type="text" sort />
               <DataTable.Column accessor="role" label="Role" type="text" sort />
-              <DataTable.Column
-                accessor="created_at"
-                label="Created At"
-                type="time"
-                sort
-              />
+              <DataTable.Column accessor="created_at" label="Created At" type="time" sort />
             </DataTable>
 
-            <CustomPagination
-              data={pekerja}
-              onPaginationChange={onPaginationChange}
-            />
+            <CustomPagination data={pekerjas} onPaginationChange={onPaginationChange} />
           </div>
         </div>
       </div>
@@ -111,8 +108,6 @@ function PekerjaIndex({ pekerja, peran, filters }) {
   );
 }
 
-PekerjaIndex.layout = (page) => (
-  <Dashboard children={page} title={"Pekerja"} />
-);
+PekerjaIndex.layout = (page) => <Dashboard title={"Pekerja"}>{page}</Dashboard>;
 
 export default PekerjaIndex;

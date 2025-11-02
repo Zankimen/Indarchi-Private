@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
-use App\Http\Requests\RegisterRequest;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -25,16 +24,16 @@ class AuthController extends Controller
     }
 
     public function login(LoginRequest $request)
-    {        
+    {
         $this->authService->redirectToDashboardIfAlreadyAuthenticated();
 
-        if ($this->authService->login( $request)) {
+        if ($this->authService->login($request)) {
             return redirect()->intended('/dashboard');
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials are incorrect.',
-        ])->onlyInput('email');
+            'errors' => 'The provided credentials are incorrect.',
+        ])->withInput();
     }
 
     public function logout(Request $request)

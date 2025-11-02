@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Modules\Pekerja\Providers;
 
 use Illuminate\Support\ServiceProvider;

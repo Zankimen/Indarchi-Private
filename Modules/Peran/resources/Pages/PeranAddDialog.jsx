@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "@inertiajs/react";
 import { Save, ChevronLeft, Shield, Plus } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -20,6 +20,8 @@ import {
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 
 function PeranAddDialog({ permissions }) {
+  const [open, setOpen] = useState(false);
+
   const { data, setData, post, processing, errors, reset } = useForm({
     name: "",
     deskripsi: "",
@@ -39,13 +41,16 @@ function PeranAddDialog({ permissions }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    post("/role/add", {
-      onSuccess: () => reset(),
+    post("/dashboard/peran/add", {
+      onSuccess: () => {
+        reset();
+        setOpen(false);
+      },
     });
   };
 
   return (
-    <Dialog className="z-50">
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="cursor-pointer">
           Tambah Peran <Plus />
@@ -60,7 +65,7 @@ function PeranAddDialog({ permissions }) {
             <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">
               <DialogTitle>
                 <div className="flex items-center justify-center sm:justify-start font-bold text-2xl md:text-2xl m-0 p-0">
-                  <Shield className="w-10 h-10 bg-accent text-primary rounded-2xl mr-4 p-2" />
+                  <Shield className="w-10 h-10 bg-accent text-background rounded-2xl mr-4 p-2" />
                   Tambah Peran
                 </div>
               </DialogTitle>
@@ -71,7 +76,7 @@ function PeranAddDialog({ permissions }) {
                 <DialogPrimitive.Close asChild>
                   <Button className="cursor-pointer">
                     <ChevronLeft className="w-4 h-4" />
-                    Back
+                    Kembali
                   </Button>
                 </DialogPrimitive.Close>
               </div>
@@ -154,18 +159,16 @@ function PeranAddDialog({ permissions }) {
               <DialogClose asChild>
                 <Button
                   variant="outline"
-                  className="border-border cursor-pointer hover:border-accent"
                 >
                   Cancel
                 </Button>
               </DialogClose>
               <Button
                 type="submit"
-                className="cursor-pointer"
                 disabled={processing}
               >
                 <Save className="w-4 h-4" />
-                {processing ? "Menyimpan..." : "Save"}
+                {processing ? "Menyimpan..." : "Simpan"}
               </Button>
             </DialogFooter>
           </form>

@@ -20,11 +20,7 @@ import {
 } from "@components/ui/pagination";
 
 import { Button } from "@components/ui/button";
-import {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from "@components/ui/tooltip";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@components/ui/tooltip";
 
 function generatePaginationItems(currentPage, totalPages) {
   const items = [];
@@ -95,30 +91,18 @@ function CustomPagination({ data, onPaginationChange }) {
           </TooltipContent>
         </Tooltip>
 
-        <Select
-          defaultValue={String(data.per_page)}
-          onValueChange={onPaginationChange}
-        >
-          <SelectTrigger className=" cursor-pointer border-border transition-all dark:bg-card dark:hover:bg-accent dark:hover:text-card hover:bg-accent hover:text-background text-foreground shadow hover:border-accent dark:hover:border-secondary hover:decoration-accent">
+        <Select defaultValue={String(data.per_page)} onValueChange={onPaginationChange}>
+          <SelectTrigger className="cursor-pointer border-border transition-all dark:bg-card dark:hover:bg-accent dark:hover:text-card hover:bg-accent hover:text-background text-foreground shadow hover:border-accent dark:hover:border-secondary hover:decoration-accent">
             <SelectValue placeholder="Select a value" />
           </SelectTrigger>
           <SelectContent className="border-border text-foreground dark:bg-card">
-            <SelectItem
-              value="10"
-              className="cursor-pointer dark:hover:text-card"
-            >
+            <SelectItem value="10" className="cursor-pointer dark:hover:text-card">
               10
             </SelectItem>
-            <SelectItem
-              value="25"
-              className="cursor-pointer dark:hover:text-card"
-            >
+            <SelectItem value="25" className="cursor-pointer dark:hover:text-card">
               25
             </SelectItem>
-            <SelectItem
-              value="50"
-              className="cursor-pointer dark:hover:text-card"
-            >
+            <SelectItem value="50" className="cursor-pointer dark:hover:text-card">
               50
             </SelectItem>
           </SelectContent>
@@ -128,7 +112,7 @@ function CustomPagination({ data, onPaginationChange }) {
       <Pagination className="justify-end items-center">
         <PaginationContent>
           {data.prev_page_url && (
-            <PaginationItem className="bg-background shadow rounded-lg border-border dark:bg-card dark:hover:bg-accent dark:border-border text-foreground dark:hover:text-card hover:border-accent dark:hover:border-accent">
+            <PaginationItem>
               <PaginationPrevious
                 href={data.prev_page_url}
                 onClick={(e) => {
@@ -142,7 +126,6 @@ function CustomPagination({ data, onPaginationChange }) {
           {paginationItems.map((item, index) => (
             <PaginationItem
               key={index}
-              className="bg-background shadow rounded-lg border-border dark:bg-card dark:hover:bg-accent dark:border-border text-foreground dark:hover:text-card hover:border-accent dark:hover:border-accent"
             >
               {item === "ellipsis" ? (
                 <PaginationEllipsis />
@@ -151,7 +134,6 @@ function CustomPagination({ data, onPaginationChange }) {
                   href="#"
                   isActive={item === currentPage}
                   onClick={(e) => handlePageClick(item, e)}
-                  className="cursor-pointer bg-background shadow rounded-lg border-border dark:bg-card dark:hover:bg-accent dark:border-border text-foreground dark:hover:text-card hover:border-accent dark:hover:border-accent"
                 >
                   {item}
                 </PaginationLink>
@@ -160,7 +142,7 @@ function CustomPagination({ data, onPaginationChange }) {
           ))}
 
           {data.next_page_url && (
-            <PaginationItem className="bg-background shadow rounded-lg border-border dark:bg-card dark:hover:bg-accent dark:border-border text-foreground dark:hover:text-card hover:border-accent dark:hover:border-accent">
+            <PaginationItem>
               <PaginationNext
                 href={data.next_page_url}
                 onClick={(e) => {

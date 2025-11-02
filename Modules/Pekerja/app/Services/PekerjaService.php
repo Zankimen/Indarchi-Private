@@ -3,9 +3,8 @@
 namespace Modules\Pekerja\Services;
 
 use App\Models\User;
+use DB;
 use Modules\Pekerja\Repositories\Eloquent\PekerjaRepository;
-use Illuminate\Support\Facades\Hash;
-
 
 class PekerjaService
 {
@@ -16,27 +15,17 @@ class PekerjaService
         $this->pekerjaRepository = $pekerjaRepository;
     }
 
-    public function createPekerja(array $data)
+    public function createPekerja($data)
     {
-        $userData = [
-            'name' => $data['nama_karyawan'] ?? $data['name'] ?? '',
-            'email' => $data['email'],
-            'password' => $data['password'] ?? null,
-            'alamat' => $data['alamat'] ?? null,
-        ];
+        return DB::transaction(function () use ($data) {
+            $user = $this->pekerjaRepository->create($data);
+            $user->assignRole($data['posisi']);
 
-        if (empty($userData['password'])) {
-            unset($userData['password']);
-        }
-
-        $user = $this->pekerjaRepository->create($userData);
-
-        $user->assignRole($data['posisi']);
-
-        return $user;
+            return $user;
+        });
     }
 
-    public function getPekerjaPaginated($request)
+    public function getPekerjasPaginated($request)
     {
         return $this->pekerjaRepository->getFilteredSortedAndSearched($request);
     }
@@ -51,44 +40,33 @@ class PekerjaService
         return $this->pekerjaRepository->find($id);
     }
 
-    public function updatePekerja(User $user, array $data)
+    public function findPekerjaByIdWithPeran(int $id)
     {
-        $updateData = [
-            'name' => $data['nama_karyawan'] ?? $user->name,
-            'email' => $data['email'] ?? $user->email,
-            'alamat' => $data['alamat'] ?? $user->alamat,
-        ];
-
-        // Only update password if provided
-        if (!empty($data['password'])) {
-            $updateData['password'] = bcrypt($data['password']);
-        }
-
-        // Update user data
-        $this->pekerjaRepository->update($user, $updateData);
-
-        // Update role if provided
-        if (isset($data['posisi'])) {
-            // Sync roles (remove old roles and assign new one)
-            $user->syncRoles([$data['posisi']]);
-        }
-
-        return $user;
+        return $this->pekerjaRepository->findWithPeran($id);
     }
 
-    public function getKaryawanPayload(User $user): array
+    public function updatePekerja(User $user, array $data)
     {
-        return [
-            'user_id' => $user->id,
-            'nama_karyawan' => $user->name,
-            'alamat' => $user->alamat,
-            'posisi' => $user->roles->first()?->name,
-            'user' => [
-                'email' => $user->email,
-            ],
-            'created_at' => $user->created_at,
-            'updated_at' => $user->updated_at,
-        ];
+        return DB::transaction(function () use ($user, $data) {
+            $updateData = [
+                'name' => $data['name'] ?? $user->name,
+                'email' => $data['email'] ?? $user->email,
+                'alamat' => $data['alamat'] ?? $user->alamat,
+            ];
+
+            if (! empty($data['password'])) {
+                $updateData['password'] = bcrypt($data['password']);
+            }
+
+            $this->pekerjaRepository->update($user, $updateData);
+
+            if (isset($data['posisi'])) {
+                $user->syncRoles([$data['posisi']]);
+                cache()->forget('menus_for_user_'.$user->id);
+            }
+
+            return $user;
+        });
     }
 
     public function getAllPekerjaFilter($request)
@@ -107,9 +85,9 @@ class PekerjaService
             $q->where('project_id', $projectId);
         })->with('roles')->get();
 
-        // Tambahkan atribut posisi secara langsung
         $users->transform(function ($user) {
             $user->posisi = $user->roles->first()->name ?? '-';
+
             return $user;
         });
 
@@ -128,28 +106,4 @@ class PekerjaService
         $user = User::findOrFail($pekerjaId);
         $user->projects()->attach($projectId);
     }
-
-    public function createNewPekerja(array $data)
-{
-    $userData = [
-        'name' => $data['nama_karyawan'] ?? $data['name'] ?? '',
-        'email' => $data['email'],
-        'alamat' => $data['alamat'] ?? null,
-    ];
-
-    if (!empty($data['password'])) {
-        $userData['password'] = bcrypt($data['password']);
-    }
-
-    $user = User::create($userData);
-
-    // assign role (cek key 'posisi' atau 'role')
-    $roleName = $data['posisi'] ?? $data['role'] ?? null;
-    if ($roleName) {
-        $user->assignRole($roleName);
-    }
-
-    return $user;
-}
-
 }

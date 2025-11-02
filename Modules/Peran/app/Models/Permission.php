@@ -8,7 +8,7 @@ class Permission extends SpatiePermission
 {
     protected $fillable = [
         'name',
-        'guard_name'
+        'guard_name',
     ];
 
     /**
@@ -16,7 +16,7 @@ class Permission extends SpatiePermission
      */
     public function scopeSearch($query, $search)
     {
-        return $query->where('name', 'like', '%' . $search . '%');
+        return $query->where('name', 'like', '%'.$search.'%');
     }
 
     /**

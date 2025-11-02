@@ -2,74 +2,48 @@
 
 namespace Modules\Peran\Services;
 
-use Spatie\Permission\Models\Permission;
-use Modules\Peran\Models\Peran;
+use Auth;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Modules\Peran\Models\Peran;
+use Modules\Peran\Repositories\PeranRepository;
 
 class PeranService
 {
+    public function __construct(private PeranRepository $peranRepository)
+    {
+    }
+
     public function getPeransPaginated($request)
     {
-        $query = Peran::with('permissions')
-            ->withCount('permissions')
-            ->when($request->search, function ($q, $search) {
-                $q->search($search);
-            })
-            ->when($request->sort_by, function ($q, $sortBy) use ($request) {
-                $q->orderBy($sortBy, $request->sort_direction ?? 'asc');
-            }, function ($q) {
-                $q->orderBy('created_at', 'desc');
-            });
-
-        return $query->paginate($request->per_page ?? 10);
+        return $this->peranRepository->getPeransPaginated($request);
     }
 
     public function getAllPermissions()
     {
-        return Permission::orderBy('name', 'asc')->get();
+        return $this->peranRepository->getAllPermissions();
     }
 
-    public function getAllPeran()
+    public function getAllPerans()
     {
-        return Peran::orderBy('name', 'asc')->get();
+        return $this->peranRepository->getAllPerans();
     }
 
-    public function createRole(array $data)
+    public function createRole(array $data): Peran
     {
-        $role = Peran::create([
-            'name' => $data['name'],
-            'deskripsi' => $data['deskripsi'] ?? null,
-            'guard_name' => 'web'
-        ]);
-
-        if (isset($data['permissions']) && !empty($data['permissions'])) {
-            $role->syncPermissions($data['permissions']);
-        }
-
-        return $role;
+        return $this->peranRepository->create($data);
     }
 
-    public function updateRole($role, array $data)
+    public function updateRole(Peran $role, array $data): Peran
     {
-        $role->update([
-            'name' => $data['name'],
-            'deskripsi' => $data['deskripsi'] ?? null,
-        ]);
-
-        if (isset($data['permissions'])) {
-            $role->syncPermissions($data['permissions']);
-        } else {
-            $role->syncPermissions([]);
-        }
-
-        return $role;
+        return $this->peranRepository->update($role, $data);
     }
 
-    public function deleteRole($role)
+    public function deleteRole(Peran $role): bool
     {
         if (method_exists($role, 'users') && $role->users()->count() > 0) {
-            throw new \Exception('Tidak dapat menghapus peran yang sedang digunakan oleh pengguna.');
+            throw new Exception('Tidak dapat menghapus peran yang sedang digunakan oleh pengguna.');
         }
 
         if (Schema::hasTable('workers')) {
@@ -78,11 +52,11 @@ class PeranService
                 ->count();
 
             if ($workersCount > 0) {
-                throw new \Exception('Tidak dapat menghapus peran yang sedang digunakan oleh pekerja.');
+                throw new Exception('Tidak dapat menghapus peran yang sedang digunakan oleh pekerja.');
             }
         }
 
-        return $role->delete();
+        return $this->peranRepository->delete($role);
     }
 
     public function getAllPeranFilter($request)
@@ -91,7 +65,7 @@ class PeranService
             'search' => $request->search ?? '',
             'sort_by' => $request->sort_by ?? 'created_at',
             'sort_direction' => $request->sort_direction ?? 'desc',
-            'per_page' => $request->per_page ?? 10
+            'per_page' => $request->per_page ?? 10,
         ];
     }
 }

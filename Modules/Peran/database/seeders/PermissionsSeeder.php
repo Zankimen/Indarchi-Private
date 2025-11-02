@@ -13,49 +13,26 @@ class PermissionsSeeder extends Seeder
     public function run(): void
     {
         $permissions = [
-            // User Management
-            'user.view',
-            'user.create',
-            'user.edit',
-            'user.delete',
+            'dashboard.view',
 
-            // Role Management
-            'role.view',
-            'role.create',
-            'role.edit',
-            'role.delete',
+            'dashboard.role.view',
+            'dashboard.role.manage',
 
-            // Worker Management
-            'worker.view',
-            'worker.create',
-            'worker.edit',
-            'worker.delete',
+            'dashboard.worker.view',
+            'dashboard.worker.manage',
 
-            // Project Management
+            'dashboard.project.view',
+            'dashboard.project.fullview',
+            'dashboard.project.manage',
+
+            'project.attend',
             'project.view',
-            'project.create',
-            'project.edit',
-            'project.delete',
-
-            // Attendance Management
-            'attendance.view',
-            'attendance.create',
-            'attendance.edit',
-            'attendance.delete',
-
-            // Reports
-            'report.view',
-            'report.export',
-
-            // Settings
-            'settings.view',
-            'settings.edit',
         ];
 
         foreach ($permissions as $permission) {
             Permission::firstOrCreate([
                 'name' => $permission,
-                'guard_name' => 'web'
+                'guard_name' => 'web',
             ]);
         }
     }

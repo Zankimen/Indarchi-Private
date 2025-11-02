@@ -17,15 +17,15 @@ function PekerjaProject({ pekerja, availableWorkers, project, roles }) {
     <>
       <Head title={`Pekerja di Project ${project?.nama ?? project?.name ?? project?.id}`} />
       <div className="space-y-6">
-        <Card className="p-6 border-border flex items-center justify-between">
+        <Card className="p-6 border-border">
+          <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold">Pekerja di Project {project?.nama ?? project?.name ?? `#${project?.id}`}</h1>
           <div className="flex gap-2">
             <AddWorkerModal availableWorkers={availableWorkers} project_id={project?.id} />
             <AddNewWorker project_id={project?.id} roles={roles} />
           </div>
-        </Card>
-
-        <Card className="p-4 border-border">
+          </div>
+        
           {pekerja.length === 0 ? (
             <p className="text-muted-foreground text-center py-8">Belum ada pekerja di project ini.</p>
           ) : (
@@ -238,5 +238,5 @@ function AddNewWorker({ project_id, roles }) {
 }
 
 
-PekerjaProject.layout = (page) => <Navbar children={page} />;
+PekerjaProject.layout = (page) => <Navbar>{page}</Navbar>;
 export default PekerjaProject;

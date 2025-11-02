@@ -3,16 +3,19 @@
 namespace Modules\Peran\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Peran\Http\Requests\Peran\CreatePeranRequest;
 use Modules\Peran\Http\Requests\Peran\UpdatePeranRequest;
-use Modules\Peran\Services\PeranService;
 use Modules\Peran\Models\Peran;
+use Modules\Peran\Services\PeranService;
 
 class PeranController extends Controller
 {
-    protected $peranService;
+    protected PeranService $peranService;
+
+    protected $SEE_OTHER = 303;
 
     public function __construct(PeranService $peranService)
     {
@@ -23,21 +26,25 @@ class PeranController extends Controller
     {
         try {
             return Inertia::render('Peran/PeranIndex', [
-                'roles' => $this->peranService->getPeransPaginated($request),
+                'perans' => $this->peranService->getPeransPaginated($request),
                 'filters' => $this->peranService->getAllPeranFilter($request),
                 'permissions' => $this->peranService->getAllPermissions(),
             ]);
-        } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        } catch (Exception $e) {
+            return back($this->SEE_OTHER)->withErrors(['error' => $e->getMessage()]);
         }
     }
 
-    public function details(Peran $role)
+    public function details(Peran $peran)
     {
-        return Inertia::render('Peran/PeranDetails', [
-            'role' => $role->load('permissions'),
-            'permissions' => $this->peranService->getAllPermissions(), // Tambahkan ini untuk EditDialog
-        ]);
+        try {
+            return Inertia::render('Peran/PeranDetails', [
+                'peran' => $peran->load('permissions'),
+                'permissions' => $this->peranService->getAllPermissions(),
+            ]);
+        } catch (Exception $e) {
+            return back($this->SEE_OTHER)->withErrors(['error' => $e->getMessage()]);
+        }
     }
 
     public function create(CreatePeranRequest $request)
@@ -45,36 +52,25 @@ class PeranController extends Controller
         try {
             $this->peranService->createRole($request->validated());
 
-            return redirect()
-                ->route('role.index')
+            return back($this->SEE_OTHER)
                 ->with('success', 'Peran berhasil ditambahkan.');
-        } catch (\Exception $e) {
-            return redirect()
-                ->back()
-                ->withErrors(['error' => $e->getMessage()])
-                ->withInput();
+        } catch (Exception $e) {
+            return
+                back($this->SEE_OTHER)
+                    ->withErrors(['error' => $e->getMessage()])
+                    ->withInput();
         }
     }
 
-    public function editPage(Peran $role)
-    {
-        return Inertia::render('Peran/PeranEdit', [
-            'role' => $role->load('permissions'),
-            'permissions' => $this->peranService->getAllPermissions(),
-        ]);
-    }
-
-    public function update(UpdatePeranRequest $request, Peran $role)
+    public function update(UpdatePeranRequest $request, Peran $peran)
     {
         try {
-            $this->peranService->updateRole($role, $request->validated());
+            $this->peranService->updateRole($peran, $request->validated());
 
-            return redirect()
-                ->route('role.index')
+            return back($this->SEE_OTHER)
                 ->with('success', 'Peran berhasil diperbarui.');
-        } catch (\Exception $e) {
-            return redirect()
-                ->back()
+        } catch (Exception $e) {
+            return back($this->SEE_OTHER)
                 ->withErrors(['error' => $e->getMessage()])
                 ->withInput();
         }
@@ -85,12 +81,10 @@ class PeranController extends Controller
         try {
             $this->peranService->deleteRole($role);
 
-            return redirect()
-                ->route('role.index')
+            return back($this->SEE_OTHER)
                 ->with('success', 'Peran berhasil dihapus.');
-        } catch (\Exception $e) {
-            return redirect()
-                ->back()
+        } catch (Exception $e) {
+            return back($this->SEE_OTHER)
                 ->withErrors(['error' => $e->getMessage()]);
         }
     }

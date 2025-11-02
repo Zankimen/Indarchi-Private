@@ -31,9 +31,7 @@ export default function Navbar({ children }) {
             </Link>
           </Button>
           <img src="/storage/logo.png" alt="Indarchi Logo" className="h-10" />
-          <span className="text-2xl font-semibold text-muted-foreground">
-            Indarchi
-          </span>
+          <span className="text-2xl font-semibold text-muted-foreground">Indarchi</span>
         </StickyNavbar.Brand>
 
         <StickyNavbar.Nav>

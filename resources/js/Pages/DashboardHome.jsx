@@ -12,6 +12,6 @@ function Welcome() {
   );
 }
 
-Welcome.layout = (page) => <Dashboard children={page} title={"Indarchi"} />;
+Welcome.layout = (page) => <Dashboard title={"Indarchi"}>{page}</Dashboard>;
 
 export default Welcome;

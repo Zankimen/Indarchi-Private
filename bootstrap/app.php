@@ -14,6 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\HandleInertiaRequests::class,
         ]);
+
+        $middleware->alias([
+            'require.permission' => \App\Http\Middleware\RequirePermission::class,
+            'share.menu' => \App\Http\Middleware\ShareModuleMenus::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

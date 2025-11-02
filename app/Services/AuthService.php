@@ -12,8 +12,7 @@ class AuthService
 {
     public function __construct(
         protected UserService $userService,
-    ) {
-    }
+    ) {}
 
     public function redirectToDashboardIfAlreadyAuthenticated()
     {

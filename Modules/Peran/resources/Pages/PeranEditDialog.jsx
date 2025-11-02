@@ -19,12 +19,12 @@ import {
 } from "@/components/ui/dialog";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 
-function PeranEditDialog({ role, permissions, trigger }) {
+function PeranEditDialog({ peran, permissions }) {
   const [open, setOpen] = useState(false);
-  const { data, setData, put, processing, errors, reset } = useForm({
-    name: role.name || "",
-    deskripsi: role.deskripsi || "",
-    permissions: role.permissions?.map((p) => p.id) || [],
+  const { data, setData, put, processing, errors } = useForm({
+    name: peran.name || "",
+    deskripsi: peran.deskripsi || "",
+    permissions: peran.permissions?.map((p) => p.id) || [],
   });
 
   const handlePermissionChange = (permissionId, checked) => {
@@ -40,22 +40,20 @@ function PeranEditDialog({ role, permissions, trigger }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    put(`/role/edit/${role.id}`, {
+    put(`/dashboard/peran/edit/${peran.id}`, {
       onSuccess: () => {
-        // Dialog akan tertutup otomatis setelah sukses
+        setOpen(false);
       },
     });
   };
 
   return (
-    <Dialog className="z-50">
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        {trigger || (
-          <Button className="cursor-pointer">
-            <Edit className="w-4 h-4" />
-            Edit
-          </Button>
-        )}
+        <Button variant="outline">
+          <Edit className="w-4 h-4" />
+          Edit
+        </Button>
       </DialogTrigger>
       <DialogContent
         className="sm:max-w-[800px] border-border max-h-[90vh] overflow-y-auto"
@@ -66,18 +64,16 @@ function PeranEditDialog({ role, permissions, trigger }) {
             <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">
               <DialogTitle>
                 <div className="flex items-center justify-center sm:justify-start font-bold text-2xl md:text-2xl m-0 p-0">
-                  <Shield className="w-10 h-10 bg-accent text-primary rounded-2xl mr-4 p-2" />
+                  <Shield className="w-10 h-10 bg-accent text-background rounded-2xl mr-4 p-2" />
                   Edit Peran
                 </div>
               </DialogTitle>
-              <DialogDescription className="sr-only">
-                Form untuk mengedit Peran.
-              </DialogDescription>
+              <DialogDescription className="sr-only">Form untuk mengedit Peran.</DialogDescription>
               <div className="grid grid-cols-1 gap-2 sm:flex">
                 <DialogPrimitive.Close asChild>
-                  <Button className="cursor-pointer">
+                  <Button>
                     <ChevronLeft className="w-4 h-4" />
-                    Back
+                    Kembali
                   </Button>
                 </DialogPrimitive.Close>
               </div>
@@ -100,16 +96,11 @@ function PeranEditDialog({ role, permissions, trigger }) {
                 placeholder="Masukkan nama peran"
                 onChange={(e) => setData("name", e.target.value)}
               />
-              {errors.name && (
-                <p className="text-sm text-red-500">{errors.name}</p>
-              )}
+              {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
             </div>
 
             <div className="space-y-2">
-              <Label
-                htmlFor="deskripsi"
-                className="text-foreground text-base block"
-              >
+              <Label htmlFor="deskripsi" className="text-foreground text-base block">
                 Deskripsi
               </Label>
               <Textarea
@@ -120,27 +111,18 @@ function PeranEditDialog({ role, permissions, trigger }) {
                 placeholder="Masukkan deskripsi peran"
                 onChange={(e) => setData("deskripsi", e.target.value)}
               />
-              {errors.deskripsi && (
-                <p className="text-sm text-red-500">{errors.deskripsi}</p>
-              )}
+              {errors.deskripsi && <p className="text-sm text-red-500">{errors.deskripsi}</p>}
             </div>
 
             <div className="space-y-4">
-              <Label className="text-foreground text-base block">
-                Permissions
-              </Label>
+              <Label className="text-foreground text-base block">Permissions</Label>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 max-h-[300px] overflow-y-auto border border-border rounded-lg p-4">
                 {permissions.map((permission) => (
-                  <div
-                    key={permission.id}
-                    className="flex items-center space-x-2"
-                  >
+                  <div key={permission.id} className="flex items-center space-x-2">
                     <Checkbox
                       id={`permission-${permission.id}`}
                       checked={data.permissions.includes(permission.id)}
-                      onCheckedChange={(checked) =>
-                        handlePermissionChange(permission.id, checked)
-                      }
+                      onCheckedChange={(checked) => handlePermissionChange(permission.id, checked)}
                     />
                     <Label
                       htmlFor={`permission-${permission.id}`}
@@ -151,27 +133,16 @@ function PeranEditDialog({ role, permissions, trigger }) {
                   </div>
                 ))}
               </div>
-              {errors.permissions && (
-                <p className="text-sm text-red-500">{errors.permissions}</p>
-              )}
+              {errors.permissions && <p className="text-sm text-red-500">{errors.permissions}</p>}
             </div>
 
             <DialogFooter>
               <DialogClose asChild>
-                <Button
-                  variant="outline"
-                  className="border-border cursor-pointer hover:border-accent"
-                >
-                  Cancel
-                </Button>
+                <Button variant="outline">Cancel</Button>
               </DialogClose>
-              <Button
-                type="submit"
-                className="cursor-pointer"
-                disabled={processing}
-              >
+              <Button type="submit" disabled={processing}>
                 <Save className="w-4 h-4" />
-                {processing ? "Menyimpan..." : "Save"}
+                {processing ? "Menyimpan..." : "Simpan"}
               </Button>
             </DialogFooter>
           </form>

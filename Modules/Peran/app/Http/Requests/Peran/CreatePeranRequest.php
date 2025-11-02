@@ -17,7 +17,7 @@ class CreatePeranRequest extends FormRequest
             'name' => 'required|string|max:255|unique:roles,name',
             'deskripsi' => 'nullable|string',
             'permissions' => 'nullable|array',
-            'permissions.*' => 'exists:permissions,id'
+            'permissions.*' => 'exists:permissions,id',
         ];
     }
 
@@ -26,7 +26,7 @@ class CreatePeranRequest extends FormRequest
         return [
             'name.required' => 'Nama peran harus diisi.',
             'name.unique' => 'Nama peran sudah ada.',
-            'permissions.*.exists' => 'Permission yang dipilih tidak valid.'
+            'permissions.*.exists' => 'Permission yang dipilih tidak valid.',
         ];
     }
 }

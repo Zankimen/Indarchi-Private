@@ -1,19 +1,23 @@
 import React, { useState } from "react";
-import { usePage, Head, router } from "@inertiajs/react";
+import { Head, router, usePage } from "@inertiajs/react";
 
 import Dashboard from "@/layout/Dashboard";
 import DataTable from "@/components/custom/NewCustomDataTable";
 import CustomPagination from "@components/custom/CustomPagination";
 import CustomTableSearch from "@components/custom/CustomTableSearch";
 
-import ProjectCreate from "./ProjectCreate";
+import ProjectCreateDialog from "./ProjectCreateDialog";
 
-function ProjectIndex() {
-  const { projects, filters } = usePage().props;
+function ProjectIndex({ projects, filters }) {
+  const {
+    props: { auth },
+  } = usePage();
 
   const [search, setSearch] = useState(filters.search || "");
   const sortBy = filters.sort_by || "";
   const sortDirection = filters.sort_direction || "";
+
+  const hasPermission = (permission) => auth.permissions.includes(permission);
 
   const onRowClick = (item) => {
     router.visit(`/projects/${item.id}/informasi`);
@@ -69,7 +73,7 @@ function ProjectIndex() {
       <div className="">
         <div className="space-y-4">
           <div className="flex justify-between items-center gap-2">
-            <ProjectCreate />
+            {hasPermission("dashboard.project.manage") && <ProjectCreateDialog />}
 
             <CustomTableSearch
               search={search}
@@ -87,49 +91,21 @@ function ProjectIndex() {
               noItem="Project"
             >
               <DataTable.Column accessor="nama" label="Nama" type="text" sort />
-              <DataTable.Column
-                accessor="deskripsi"
-                label="Deskripsi"
-                type="text"
-                sort
-              />
-              <DataTable.Column
-                accessor="lokasi"
-                label="Lokasi"
-                type="text"
-                sort
-              />
-              <DataTable.Column
-                accessor="tanggal_mulai"
-                label="Tanggal Mulai"
-                type="date"
-                sort
-              />
+              <DataTable.Column accessor="deskripsi" label="Deskripsi" type="text" sort />
+              <DataTable.Column accessor="lokasi" label="Lokasi" type="text" sort />
+              <DataTable.Column accessor="tanggal_mulai" label="Tanggal Mulai" type="date" sort />
               <DataTable.Column
                 accessor="tanggal_selesai"
                 label="Tanggal Selesai"
                 type="date"
                 sort
               />
-              <DataTable.Column
-                accessor="radius"
-                label="Radius"
-                type="text"
-                sort
-              />
+              <DataTable.Column accessor="radius" label="Radius" type="text" sort />
 
-              <DataTable.Column
-                accessor="created_at"
-                label="Created At"
-                type="time"
-                sort
-              />
+              <DataTable.Column accessor="created_at" label="Created At" type="time" sort />
             </DataTable>
 
-            <CustomPagination
-              data={projects}
-              onPaginationChange={onPaginationChange}
-            />
+            <CustomPagination data={projects} onPaginationChange={onPaginationChange} />
           </div>
         </div>
       </div>
@@ -137,8 +113,6 @@ function ProjectIndex() {
   );
 }
 
-ProjectIndex.layout = (page) => (
-  <Dashboard children={page} title={"Projects"} />
-);
+ProjectIndex.layout = (page) => <Dashboard title={"Projects"}>{page}</Dashboard>;
 
 export default ProjectIndex;
