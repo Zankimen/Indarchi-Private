@@ -3,8 +3,11 @@
 namespace Modules\Presensi\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Presensi\Models\Attendance;
+use Modules\Presensi\Models\Presensi;
+use Modules\Pekerja\Services\PekerjaService;
 
 class PresensiController extends Controller
 {
@@ -101,6 +104,85 @@ class PresensiController extends Controller
             return response()->json(['message' => 'Presensi berhasil dihapus.']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Gagal menghapus presensi: ' . $e->getMessage()], 500);
+        }
+    }
+
+    // Get pekerja untuk project tertentu
+    public function getPekerja($projectId)
+    {
+        try {
+            $pekerjaService = app(PekerjaService::class);
+            $pekerja = $pekerjaService->getPekerjaByProject($projectId);
+            
+            return response()->json($pekerja);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Gagal mengambil data pekerja: ' . $e->getMessage()], 500);
+        }
+    }
+
+    // Get presensi pekerja untuk tanggal tertentu
+    public function getPresensiPekerja($projectId, Request $request)
+    {
+        try {
+            $date = $request->query('date');
+            
+            $presensi = Presensi::where('project_id', $projectId)
+                ->where('tanggal', $date)
+                ->with('user:id,name')
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'user_id' => $item->user_id,
+                        'nama' => $item->user->name,
+                        'status' => $item->status,
+                        'jam_masuk' => $item->jam_masuk,
+                        'jam_keluar' => $item->jam_keluar,
+                        'keterangan' => $item->keterangan,
+                    ];
+                });
+
+            return response()->json($presensi);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Gagal mengambil presensi: ' . $e->getMessage()], 500);
+        }
+    }
+
+    // Mark kehadiran pekerja
+    public function markPresensi(Request $request, $projectId)
+    {
+        try {
+            $data = $request->validate([
+                'user_id' => 'required|exists:users,id',
+                'tanggal' => 'required|date',
+                'status' => 'required|in:hadir,izin,sakit,alpha',
+                'jam_masuk' => 'nullable',
+                'jam_keluar' => 'nullable',
+                'keterangan' => 'nullable|string',
+            ]);
+
+            $presensi = Presensi::updateOrCreate(
+                [
+                    'user_id' => $data['user_id'],
+                    'project_id' => $projectId,
+                    'tanggal' => $data['tanggal'],
+                ],
+                [
+                    'status' => $data['status'],
+                    'jam_masuk' => $data['jam_masuk'] ?? null,
+                    'jam_keluar' => $data['jam_keluar'] ?? null,
+                    'keterangan' => $data['keterangan'] ?? null,
+                ]
+            );
+
+            return response()->json([
+                'message' => 'Presensi berhasil disimpan.',
+                'data' => $presensi->load('user:id,name'),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Gagal menyimpan presensi: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

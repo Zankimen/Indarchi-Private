@@ -7,7 +7,7 @@ import { ArrowLeft } from "lucide-react";
 export default function Navbar({ children }) {
   const {
     url: currentPath,
-    props: { moduleMenus },
+    props: { moduleMenus = {} },
   } = usePage();
   const [activeItem, setActiveItem] = useState("Informasi");
 
@@ -35,7 +35,7 @@ export default function Navbar({ children }) {
         </StickyNavbar.Brand>
 
         <StickyNavbar.Nav>
-          {moduleMenus.project?.map((item, idx) => (
+          {moduleMenus?.project?.map((item, idx) => (
             <StickyNavbar.Item
               key={idx}
               asChild
