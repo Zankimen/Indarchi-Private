@@ -7,11 +7,15 @@ Route::middleware(['auth'])
     ->group(function () {
         Route::prefix('dashboard/projects')
             ->middleware(['share.menu:dashboard', 'require.permission:dashboard.project.view'])
-            ->name('projects.')
             ->group(function () {
                 Route::get('/', [ProjectController::class, 'index'])->name('index');
+            })
+            ->middleware(['require.permission:dashboard.project.manage'])
+            ->group(function()  {
+                Route::get('/create', [ProjectController::class, ''])->name('create');
                 Route::post('/', [ProjectController::class, 'store'])->middleware(['require.permission:dashboard.project.manage'])->name('store');
-            });
+            })
+            ->name('projects.');
     })
     ->group(function () {
         Route::prefix('projects')

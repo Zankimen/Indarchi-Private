@@ -1,7 +1,10 @@
+import { Link } from "@inertiajs/react";
 import React, { useState } from "react";
 import { Head, router, usePage } from "@inertiajs/react";
 
+import { Button } from "@/components/ui/button";
 import Dashboard from "@/layout/Dashboard";
+import { FolderKanban } from "lucide-react";
 import DataTable from "@/components/custom/NewCustomDataTable";
 import CustomPagination from "@components/custom/CustomPagination";
 import CustomTableSearch from "@components/custom/CustomTableSearch";
@@ -73,8 +76,13 @@ function ProjectIndex({ projects, filters }) {
       <div className="">
         <div className="space-y-4">
           <div className="flex justify-between items-center gap-2">
-            {hasPermission("dashboard.project.manage") && <ProjectCreateDialog />}
-
+            <Link href="/dashboard/projects/create">
+              <Button className="flex items-center gap-2">
+                <FolderKanban className="w-4 h-4" />
+                Tambah Project
+              </Button>
+            </Link>
+            
             <CustomTableSearch
               search={search}
               setSearch={setSearch}
