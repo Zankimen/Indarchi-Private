@@ -5,7 +5,6 @@ import DataTable from "@/components/custom/NewCustomDataTable";
 import CustomPagination from "@components/custom/CustomPagination";
 import CustomTableSearch from "@components/custom/CustomTableSearch";
 import PeranAddDialog from "./PeranAddDialog";
-import PeranAddDialog from "./PeranAddDialog";
 
 function PeranIndex({ perans, filters, permissions }) {
 

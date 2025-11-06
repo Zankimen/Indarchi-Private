@@ -54,7 +54,7 @@ class User extends Authenticatable
     public function projects()
     {
         return $this->belongsToMany(
-            \Modules\Project\Models\Project::class, // arahkan ke model Project
+            Project::class, // arahkan ke model Project
             'project_user', // nama tabel pivot
             'user_id',      // foreign key untuk user
             'project_id'    // foreign key untuk project

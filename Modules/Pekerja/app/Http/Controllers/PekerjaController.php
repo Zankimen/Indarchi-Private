@@ -96,7 +96,6 @@ class PekerjaController extends Controller
     }
 
     public function project($project_id)
-    public function project($project_id)
     {
         try {
             return Inertia::render('Pekerja/PekerjaProject', [

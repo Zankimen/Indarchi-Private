@@ -2,7 +2,6 @@ import React from "react";
 import { Head, Link, usePage } from "@inertiajs/react";
 import Dashboard from "@/layout/Dashboard";
 import { Card } from "@/components/ui/card";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Users } from "lucide-react";
 import { formatDateNoHour } from "@/components/lib/utils";
