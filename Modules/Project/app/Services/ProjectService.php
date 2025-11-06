@@ -4,7 +4,7 @@ namespace Modules\Project\Services;
 
 use Illuminate\Http\Request;
 use Modules\Project\Models\Project;
-use Modules\Project\Repositories\Eloquent\ProjectRepository;
+use Modules\Project\Repositories\ProjectRepository;
 
 class ProjectService
 {
@@ -18,6 +18,10 @@ class ProjectService
     public function getProjectsPaginated(Request $request)
     {
         return $this->projectRepository->getFilteredSortedAndSearched($request);
+    }
+
+    public function getProjectById($id) {
+        return $this->projectRepository->find($id);
     }
 
     public function createProject(array $data)
@@ -38,16 +42,16 @@ class ProjectService
     public function getAllProjectFilter(Request $request)
     {
         return [
-            'search'          => $request->search,
-            'sort_by'         => $request->sort_by,
-            'sort_direction'  => $request->sort_direction,
-            'nama'            => $request->nama,
-            'deskripsi'       => $request->deskripsi,
-            'tanggal_mulai'   => $request->tanggal_mulai,
+            'search' => $request->search,
+            'sort_by' => $request->sort_by,
+            'sort_direction' => $request->sort_direction,
+            'nama' => $request->nama,
+            'deskripsi' => $request->deskripsi,
+            'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_selesai' => $request->tanggal_selesai,
-            'lokasi'          => $request->lokasi,
-            'radius'          => $request->radius,
-            'per_page'        => $request->per_page,
+            'lokasi' => $request->lokasi,
+            'radius' => $request->radius,
+            'per_page' => $request->per_page,
         ];
     }
 }

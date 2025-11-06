@@ -4,7 +4,8 @@ return [
     [
         'title' => 'Peran',
         'icon' => 'ShieldIcon',
-        'route' => '/role',
+        'route' => '/dashboard/peran',
+        'permission' => 'dashboard.role.view',
         'type' => 'dashboard',
     ],
 ];

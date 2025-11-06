@@ -3,17 +3,19 @@
 namespace Modules\Project\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Exception;
-use Modules\Project\Models\Project;
-use Modules\Project\Services\ProjectService;
 use Modules\Project\Http\Requests\Project\CreateProjectRequest;
 use Modules\Project\Http\Requests\Project\UpdateProjectRequest;
+use Modules\Project\Models\Project;
+use Modules\Project\Services\ProjectService;
 
 class ProjectController extends Controller
 {
     protected ProjectService $projectService;
+
+    protected $SEE_OTHER = 303;
 
     public function __construct(ProjectService $projectService)
     {
@@ -25,10 +27,11 @@ class ProjectController extends Controller
         try {
             return Inertia::render('Project/ProjectIndex', [
                 'projects' => $this->projectService->getProjectsPaginated($request),
-                'filters'  => $this->projectService->getAllProjectFilter($request),
+                'filters' => $this->projectService->getAllProjectFilter($request),
             ]);
         } catch (Exception $e) {
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            return back($this->SEE_OTHER)
+                ->withErrors(['error' => $e->getMessage()]);
         }
     }
 
@@ -37,10 +40,9 @@ class ProjectController extends Controller
         try {
             $this->projectService->createProject($request->validated());
 
-            return redirect()->route('projects.index')->with('success', 'Project berhasil ditambahkan.');
+            return back($this->SEE_OTHER)->with('success', 'Project berhasil ditambahkan.');
         } catch (Exception $e) {
-            return redirect()
-                ->back()
+            return back()
                 ->withErrors(['error' => $e->getMessage()])
                 ->withInput();
         }
@@ -58,10 +60,9 @@ class ProjectController extends Controller
         try {
             $this->projectService->updateProject($project, $request->validated());
 
-            return redirect()->route('projects.index')->with('success', 'Project berhasil diperbarui.');
+            return back($this->SEE_OTHER)->with('success', 'Project berhasil diperbarui.');
         } catch (Exception $e) {
-            return redirect()
-                ->back()
+            return back($this->SEE_OTHER)
                 ->withErrors(['error' => $e->getMessage()])
                 ->withInput();
         }
@@ -70,20 +71,25 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         try {
-            $this->projectService->deleteProject($project);
+            $project->delete();
 
-            return redirect()->route('projects.index')->with('success', 'Project berhasil dihapus.');
+            return back($this->SEE_OTHER)
+                ->with('success', 'Project berhasil dihapus.');
         } catch (Exception $e) {
-            return redirect()
-                ->back()
+            return back($this->SEE_OTHER)
                 ->withErrors(['error' => $e->getMessage()]);
         }
     }
 
     public function show(Project $project)
     {
-        return Inertia::render('Project/ProjectDetail', [
-            'project' => $project,
-        ]);
+        try {
+            return Inertia::render('Project/ProjectDetail', [
+                'project' => $project,
+            ]);
+        } catch (Exception $e) {
+            return back($this->SEE_OTHER)
+                ->withErrors(['error' => $e->getMessage()]);
+        }
     }
 }

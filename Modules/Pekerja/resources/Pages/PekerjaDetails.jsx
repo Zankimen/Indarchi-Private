@@ -1,16 +1,22 @@
 import React from "react";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import Dashboard from "@/layout/Dashboard";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Pencil, Users } from "lucide-react";
-
+import { ChevronLeft, Users } from "lucide-react";
 import { formatDateNoHour } from "@/components/lib/utils";
+import PekerjaEditDialog from "./PekerjaEditDialog";
 
-function ProjectDetail({ pekerja }) {
+function PekerjaDetails({ pekerja, perans }) {
+  const {
+    props: { auth },
+  } = usePage();
+
+  const hasPermission = (permission) => auth.permissions.includes(permission);
+
   return (
     <>
-      <Head title={pekerja.nama} />
+      <Head title={pekerja.name} />
       <div className="space-y-4">
         <Card className="border-border">
           <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">
@@ -19,31 +25,27 @@ function ProjectDetail({ pekerja }) {
               {pekerja.name}
             </div>
             <div className="grid grid-cols-1 gap-2 sm:flex">
-              <Button variant="outline" className="cursor-pointer">
-                Edit
-                <Pencil className="w-4 h-4" />
-              </Button>
               <Link href="/dashboard/pekerja">
-                <Button className="cursor-pointer">
+                <Button>
                   <ChevronLeft className="w-4 h-4" />
-                  Back
+                  Kembali
                 </Button>
               </Link>
+              {hasPermission("dashboard.worker.manage") && (
+                <PekerjaEditDialog pekerja={pekerja} perans={perans} />
+              )}
             </div>
           </div>
         </Card>
+
         <Card className="p-6 px-8 border-border">
           <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-2">
-            <Detail label="Alamat" value={pekerja.alamat} />
+            <Detail label="Nama" value={pekerja.name} />
             <Detail label="Email" value={pekerja.email} />
-            <Detail
-              label="Terakhir Di-Update"
-              value={formatDateNoHour(pekerja.created_at)}
-            />
-            <Detail
-              label="Dibuat Pada"
-              value={formatDateNoHour(pekerja.updated_at)}
-            />
+            <Detail label="Alamat" value={pekerja.alamat} />
+            <Detail label="Posisi/Role" value={pekerja.roles?.[0]?.name || "-"} />
+            <Detail label="Dibuat Pada" value={formatDateNoHour(pekerja.created_at)} />
+            <Detail label="Terakhir Di-Update" value={formatDateNoHour(pekerja.updated_at)} />
           </div>
         </Card>
       </div>
@@ -58,6 +60,6 @@ const Detail = ({ label, value }) => (
   </div>
 );
 
-ProjectDetail.layout = (page) => <Dashboard children={page} />;
+PekerjaDetails.layout = (page) => <Dashboard title={"Detail Pekerja"}>{page}</Dashboard>;
 
-export default ProjectDetail;
+export default PekerjaDetails;

@@ -2,14 +2,7 @@ import React from "react";
 
 import { ArrowUpDown, Edit, Trash2, FolderIcon } from "lucide-react";
 
-import {
-  Empty,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyDescription,
-  EmptyTitle,
-  EmptyContent,
-} from "../ui/empty";
+import { Empty, EmptyHeader, EmptyMedia, EmptyDescription, EmptyTitle } from "../ui/empty";
 
 import { createContext, useContext, useMemo } from "react";
 import { formatDate, cn } from "../lib/utils";
@@ -28,25 +21,13 @@ const DataTableContext = createContext();
 
 function useDataTable() {
   const ctx = useContext(DataTableContext);
-  if (!ctx)
-    throw new Error("DataTable components must be used inside <DataTable>");
+  if (!ctx) throw new Error("DataTable components must be used inside <DataTable>");
   return ctx;
 }
 
-function DataTable({
-  data = [],
-  filters,
-  onSort,
-  onRowClick,
-  onEdit,
-  onDelete,
-  noItem,
-  children,
-}) {
+function DataTable({ data = [], filters, onSort, onRowClick, onEdit, onDelete, noItem, children }) {
   const columns = useMemo(() => {
-    return children.filter(
-      (child) => child.type.displayName === "DataTableColumn"
-    );
+    return children.filter((child) => child.type.displayName === "DataTableColumn");
   }, [children]);
 
   return (
@@ -77,7 +58,7 @@ function Header() {
 
   return (
     <TableHeader>
-      <TableRow className="bg-muted dark:bg-card border-b border-border">
+      <TableRow className="bg-muted hover:bg-muted dark:bg-card border-b border-border">
         {columns.map((col, index) => {
           const isFirst = index === 0;
           const isLast = index === columns.length - 1;
@@ -96,10 +77,6 @@ function Header() {
               {sortable ? (
                 <Button
                   variant={filters?.sort_by === accessor ? "default" : "ghost"}
-                  className={cn(
-                    "cursor-pointer h-auto p-2 font-medium hover:text-card hover:bg-accent dark:hover:bg-accent",
-                    filters?.sort_by === accessor && "text-primary-foreground"
-                  )}
                   onClick={() => onSort?.(accessor)}
                 >
                   {col.props.label}
@@ -117,17 +94,13 @@ function Header() {
 }
 
 function Body() {
-  const { data, columns, onRowClick, onEdit, onDelete, noItem } =
-    useDataTable();
+  const { data, columns, onRowClick, onEdit, onDelete, noItem } = useDataTable();
 
   if (data.length === 0) {
     return (
       <TableBody>
         <TableRow>
-          <TableCell
-            colSpan={columns.length}
-            className="text-center px-4"
-          >
+          <TableCell colSpan={columns.length} className="text-center px-4">
             {React.isValidElement(noItem) ? (
               noItem
             ) : (
@@ -188,22 +161,15 @@ function Body() {
 function renderCell(column, value, item, onEdit, onDelete) {
   if (column.type === "badge") {
     const badgeClasses = {
-      selesai:
-        "bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium",
-      "on process":
-        "bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium",
-      completed:
-        "bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium",
-      pending:
-        "bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium",
-      active:
-        "bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium",
-      inactive:
-        "bg-gray-500 text-white px-3 py-1 rounded-full text-sm font-medium",
+      selesai: "bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium",
+      "on process": "bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium",
+      completed: "bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium",
+      pending: "bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium",
+      active: "bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium",
+      inactive: "bg-gray-500 text-white px-3 py-1 rounded-full text-sm font-medium",
     };
 
-    const className =
-      badgeClasses[value?.toLowerCase()] || badgeClasses.pending;
+    const className = badgeClasses[value?.toLowerCase()] || badgeClasses.pending;
     return <span className={className}>{value}</span>;
   }
 

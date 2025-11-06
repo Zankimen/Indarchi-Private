@@ -16,6 +16,12 @@ class PekerjaRepository
         return User::findOrFail($id);
     }
 
+    public function findWithPeran($id)
+    {
+        return User::with('roles')->findOrFail($id);
+    }
+
+
     public function create(array $data)
     {
         return User::create($data);

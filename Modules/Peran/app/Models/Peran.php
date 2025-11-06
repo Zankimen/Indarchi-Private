@@ -2,8 +2,8 @@
 
 namespace Modules\Peran\Models;
 
-use Spatie\Permission\Models\Role;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Spatie\Permission\Models\Role;
 
 class Peran extends Role
 {

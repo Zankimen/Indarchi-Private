@@ -3,26 +3,22 @@ import { createRoot } from "react-dom/client";
 import "./bootstrap";
 
 createInertiaApp({
-    title: title => `${title} - Indarchi`,
-    resolve: async (name) => {
-        try {
-            return (await import(`./Pages/${name}.jsx`)).default;
-        } catch (e) {
-            const [moduleName, ...pageParts] = name.split("/");
-            const pageName = pageParts.join("/");
+  title: (title) => `${title} - Indarchi`,
+  resolve: async (name) => {
+    try {
+      return (await import(`./Pages/${name}.jsx`)).default;
+    } catch (e) {
+      const [moduleName, ...pageParts] = name.split("/");
+      const pageName = pageParts.join("/");
 
-            if (!pageName) {
-                throw e;
-            }
+      if (!pageName) {
+        throw e;
+      }
 
-            return (
-                await import(
-                    `../../Modules/${moduleName}/resources/Pages/${pageName}.jsx`
-                )
-            ).default;
-        }
-    },
-    setup({ el, App, props }) {
-        createRoot(el).render(<App {...props} />);
-    },
+      return (await import(`../../Modules/${moduleName}/resources/Pages/${pageName}.jsx`)).default;
+    }
+  },
+  setup({ el, App, props }) {
+    createRoot(el).render(<App {...props} />);
+  },
 });

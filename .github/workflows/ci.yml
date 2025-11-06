@@ -1,0 +1,36 @@
+name: Code Quality
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - name: Install PHP dependencies
+        run: composer install --no-progress --no-suggest --prefer-dist
+
+      - name: Run Laravel Pint
+        run: ./vendor/bin/pint --test
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install JS dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npx eslint "resources/js" "Modules/**/resources/Pages"
+
+
+      - name: Run Prettier check
+        run: npx prettier --check resources/js

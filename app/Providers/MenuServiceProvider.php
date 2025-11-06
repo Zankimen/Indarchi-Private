@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
-use Nwidart\Modules\Facades\Module;
 
 class MenuServiceProvider extends ServiceProvider
 {
@@ -29,25 +28,21 @@ class MenuServiceProvider extends ServiceProvider
                 ];
             },
 
-            // Dynamic module menus
-            'moduleMenus' => function () {
-                $menus = collect();
+            'auth' => function () {
+                $user = auth()->user();
 
-                foreach (Module::allEnabled() as $module) {
-                    $path = $module->getPath().'/config/menu.php';
-
-                    if (file_exists($path)) {
-                        $configMenus = require $path;
-                        foreach ($configMenus as $menu) {
-                            $menus->push($menu);
-                        }
-                    }
+                if (! $user) {
+                    return null;
                 }
 
                 return [
-                    'dashboard' => $menus->where('type', 'dashboard')->values(),
-                    'project' => $menus->where('type', 'project')->values(),
-                    'landing' => $menus->where('type', 'landing')->values(),
+                    'user' => [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'email' => $user->email,
+                    ],
+                    'roles' => $user->getRoleNames(),
+                    'permissions' => $user->getAllPermissions()->pluck('name'),
                 ];
             },
 

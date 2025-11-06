@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\File;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
         // "Please provide a valid cache path." during package:discover.
         $compiledPath = config('view.compiled');
 
-        if ($compiledPath && !is_dir($compiledPath)) {
+        if ($compiledPath && ! is_dir($compiledPath)) {
             @mkdir($compiledPath, 0755, true);
         }
 
@@ -40,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
         ];
 
         foreach ($frameworkDirs as $dir) {
-            if (!is_dir($dir)) {
+            if (! is_dir($dir)) {
                 @mkdir($dir, 0755, true);
             }
         }

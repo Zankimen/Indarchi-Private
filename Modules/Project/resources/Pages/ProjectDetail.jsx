@@ -1,8 +1,8 @@
 import React from "react";
-import { Head, Link, router } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, MapPin, User, Pencil, Trash } from "lucide-react";
+import { Calendar, MapPin, User, Pencil } from "lucide-react";
 import { formatDateNoHour } from "@/components/lib/utils";
 import Navbar from "@/layout/NavBar";
 
@@ -25,40 +25,20 @@ function ProjectDetail({ project }) {
             <div>
               <div className="flex justify-between items-start gap-3">
                 <div className="flex-1">
-                  <h1 className="text-2xl font-bold text-foreground uppercase">
-                    {project.nama}
-                  </h1>
+                  <h1 className="text-2xl font-bold text-foreground uppercase">{project.nama}</h1>
                   <p className="text-base font-semibold mt-1">Deskripsi</p>
                   <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-                    {project.deskripsi ??
-                      "Belum ada deskripsi proyek untuk saat ini."}
+                    {project.deskripsi ?? "Belum ada deskripsi proyek untuk saat ini."}
                   </p>
                 </div>
 
                 {/* Tombol aksi */}
                 <div className="flex flex-col gap-2 items-end">
                   <Link href={`/projects/${project.id}/edit`}>
-                    <Button
-                      variant="default"
-                      className="bg-blue-600 hover:bg-blue-700 text-white w-full"
-                    >
+                    <Button variant="default">
                       <Pencil className="w-4 h-4 mr-2" /> Edit Proyek
                     </Button>
                   </Link>
-
-                  <Button
-                    variant="destructive"
-                    className="w-full"
-                    onClick={() => {
-                      if (
-                        confirm("Apakah kamu yakin ingin menghapus proyek ini?")
-                      ) {
-                        router.delete(`/dashboard/projects/${project.id}`);
-                      }
-                    }}
-                  >
-                    <Trash className="w-4 h-4 mr-2" /> Hapus
-                  </Button>
                 </div>
               </div>
             </div>
@@ -68,31 +48,29 @@ function ProjectDetail({ project }) {
         {/* Detail Proyek */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* DETAIL PROYEK */}
-          <Card className="bg-gray-100 border border-gray-300 rounded-2xl shadow-sm p-6">            <h2 className="font-semibold text-center mb-4 text-lg">DETAIL PROYEK</h2>
+          <Card className="bg-secondary border border-border rounded-2xl shadow-sm p-6">
+            <h2 className="font-semibold text-center mb-4 text-lg">DETAIL PROYEK</h2>
             <div className="space-y-3 text-sm">
               <div className="flex items-center gap-3">
                 <User className="w-4 h-4 text-muted-foreground" />
                 <div>
                   <p className="font-medium text-muted-foreground">Client</p>
-                  <p className="font-semibold text-foreground">
-                    {project.client ?? "PT. Indofood"}
-                  </p>
+                  <p className="font-semibold text-foreground">{project.nama ?? "PT. Indarchi"}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <MapPin className="w-4 h-4 text-muted-foreground" />
                 <div>
                   <p className="font-medium text-muted-foreground">Lokasi</p>
-                  <p className="font-semibold text-foreground">
-                    {project.lokasi ?? "Dusun, Desa, Kecamatan, Kabupaten"}
-                  </p>
+                  <p className="font-semibold text-foreground">{project.lokasi ?? "Klaten"}</p>
                 </div>
               </div>
             </div>
           </Card>
 
           {/* WAKTU */}
-          <Card className="bg-gray-100 border border-gray-300 rounded-2xl shadow-sm p-6">            <h2 className="font-semibold text-center mb-4 text-lg">WAKTU</h2>
+          <Card className="bg-secondary border border-border rounded-2xl shadow-sm p-6">
+            <h2 className="font-semibold text-center mb-4 text-lg">WAKTU</h2>
             <div className="space-y-3 text-sm">
               <div className="flex items-center gap-3">
                 <Calendar className="w-4 h-4 text-muted-foreground" />
@@ -116,14 +94,10 @@ function ProjectDetail({ project }) {
           </Card>
 
           {/* STATUS */}
-          <Card className="bg-gray-100 border border-gray-300 rounded-2xl shadow-sm p-6">            <h2 className="font-semibold text-center mb-4 text-lg">STATUS</h2>
+          <Card className="bg-secondary border border-border rounded-2xl shadow-sm p-6">
+            <h2 className="font-semibold text-center mb-4 text-lg">STATUS</h2>
             <div className="flex justify-center items-center">
-              <Button 
-                variant="outline"
-                className="bg-blue-600 text-white hover:bg-blue-700"
-              >
-                {project.status ?? "Dalam Proses"}
-              </Button>
+              <Button>{project.status ?? "Dalam Proses"}</Button>
             </div>
           </Card>
         </div>
@@ -132,6 +106,6 @@ function ProjectDetail({ project }) {
   );
 }
 
-ProjectDetail.layout = (page) => <Navbar children={page} />;
+ProjectDetail.layout = (page) => <Navbar>{page}</Navbar>;
 
 export default ProjectDetail;

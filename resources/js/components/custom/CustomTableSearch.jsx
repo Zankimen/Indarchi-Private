@@ -1,15 +1,15 @@
 import React from "react";
 
-import { SearchIcon } from "lucide-react"
+import { SearchIcon } from "lucide-react";
 
-import { Input } from "@components/ui/input"
+import { Input } from "@components/ui/input";
 
 function CustomTableSearch({ search, setSearch, onSearch, placeholder }) {
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      onSearch()
+      onSearch();
     }
-  }
+  };
 
   return (
     <div className="flex w-full max-w-sm items-center">
@@ -25,7 +25,7 @@ function CustomTableSearch({ search, setSearch, onSearch, placeholder }) {
         />
       </div>
     </div>
-  )
+  );
 }
 
-export default CustomTableSearch
+export default CustomTableSearch;

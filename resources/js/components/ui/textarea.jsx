@@ -1,11 +1,8 @@
-import * as React from "react"
+import * as React from "react";
 
-import { cn } from "@components/lib/utils"
+import { cn } from "@components/lib/utils";
 
-function Textarea({
-  className,
-  ...props
-}) {
+function Textarea({ className, ...props }) {
   return (
     <textarea
       data-slot="textarea"
@@ -14,8 +11,9 @@ function Textarea({
         "border-border dark:caret-foreground dark:text-foreground",
         className
       )}
-      {...props} />
+      {...props}
+    />
   );
 }
 
-export { Textarea }
+export { Textarea };
