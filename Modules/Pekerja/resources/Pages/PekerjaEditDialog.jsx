@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Head, useForm, Link } from "@inertiajs/react";
+import { useForm } from "@inertiajs/react";
 import { ChevronLeft, Pencil, Users, Save } from "lucide-react";
-import Dashboard from "@/layout/Dashboard";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

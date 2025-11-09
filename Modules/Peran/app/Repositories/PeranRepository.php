@@ -11,16 +11,35 @@ class PeranRepository
     {
         $query = Peran::with('permissions')
             ->withCount('permissions')
+            ->whereNull('team_id')
             ->when($request->search, function ($q, $search) {
                 $q->search($search);
             })
             ->when($request->sort_by, function ($q, $sortBy) use ($request) {
                 $q->orderBy($sortBy, $request->sort_direction ?? 'asc');
-            }, function ($q) {
-                $q->orderBy('created_at', 'desc');
             });
 
         return $query->paginate($request->per_page ?? 10);
+    }
+
+    public function getProjectPeransPaginated($request, $projectId)
+    {
+        $query = Peran::with('permissions')
+            ->withCount('permissions')
+            ->where('team_id', $projectId)
+            ->when($request->search, function ($q, $search) {
+                $q->search($search);
+            })
+            ->when($request->sort_by, function ($q, $sortBy) use ($request) {
+                $q->orderBy($sortBy, $request->sort_direction ?? 'asc');
+            });
+
+        return $query->paginate($request->per_page ?? 10);
+    }
+
+    public function getPeranById($id)
+    {
+        return Peran::findById($id);
     }
 
     public function getAllPermissions()
@@ -28,9 +47,21 @@ class PeranRepository
         return Permission::orderBy('name', 'asc')->get();
     }
 
+    public function getProjectPermissions()
+    {
+        return Permission::where('name', 'like', 'project.%')
+            ->orderBy('name', 'asc')
+            ->get();
+    }
+
     public function getAllPerans()
     {
-        return Peran::orderBy('name', 'asc')->get();
+        return Peran::orderBy('name', 'asc')->where('team_id', null)->get();
+    }
+
+    public function getAllProjectPerans($projectId)
+    {
+        return Peran::orderBy('name', 'asc')->where('team_id', $projectId)->get();
     }
 
     public function create(array $data): Peran

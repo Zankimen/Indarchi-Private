@@ -1,12 +1,6 @@
 import React, { useState } from "react";
 import { useForm, Link, Head } from "@inertiajs/react";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Circle,
-  useMapEvents,
-} from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Circle, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
 import { Button } from "@/components/ui/button";
@@ -14,7 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Calendar, Upload } from "lucide-react";
+import { Save, Upload } from "lucide-react";
 
 function LocationPicker({ onPick }) {
   const [position, setPosition] = useState(null);
@@ -86,21 +80,16 @@ export default function ProjectCreate() {
   return (
     <>
       <Head title="Tambah Project" />
-      <div className="min-h-screen bg-gradient-to-b from-blue-600 to-blue-700 p-6">
+      <div className="min-h-screen bg-primary p-6">
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-3xl font-bold text-white">Buat Project Baru</h1>
+            <h1 className="text-3xl font-bold text-background">Buat Project Baru</h1>
             <Link href="/dashboard/projects">
-              <Button
-                variant="outline"
-                className="bg-white text-blue-600 hover:bg-gray-100 font-semibold px-6"
-              >
-                Batal
-              </Button>
+              <Button variant="secondary">Batal</Button>
             </Link>
           </div>
 
-          <Card className="p-8 bg-white rounded-lg shadow-lg">
+          <Card className="p-8 bg-background rounded-lg shadow-lg">
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Nama Project */}
               <div>
@@ -112,7 +101,7 @@ export default function ProjectCreate() {
                   value={data.nama}
                   onChange={(e) => setData("nama", e.target.value)}
                   placeholder="Masukkan nama project"
-                  className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500"
+                  // className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -127,7 +116,7 @@ export default function ProjectCreate() {
                   onChange={(e) => setData("deskripsi", e.target.value)}
                   placeholder="Masukkan deskripsi project"
                   rows={3}
-                  className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500"
+                  // className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -141,7 +130,7 @@ export default function ProjectCreate() {
                   value={data.klien}
                   onChange={(e) => setData("klien", e.target.value)}
                   placeholder="Masukkan nama klien"
-                  className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500"
+                  // className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -156,9 +145,8 @@ export default function ProjectCreate() {
                     type="date"
                     value={data.tanggal_mulai}
                     onChange={(e) => setData("tanggal_mulai", e.target.value)}
-                    className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500 pr-10"
+                    // className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500 pr-10"
                   />
-                  <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
                 </div>
               </div>
 
@@ -173,9 +161,8 @@ export default function ProjectCreate() {
                     type="date"
                     value={data.tanggal_selesai}
                     onChange={(e) => setData("tanggal_selesai", e.target.value)}
-                    className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500 pr-10"
+                    // className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500 pr-10"
                   />
-                  <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
                 </div>
               </div>
 
@@ -189,16 +176,14 @@ export default function ProjectCreate() {
                   value={data.lokasi}
                   onChange={(e) => setData("lokasi", e.target.value)}
                   placeholder="Klik lokasi di peta"
-                  className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500"
+                  // className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
               {/* Peta */}
               <div className="mt-6">
-                <Label className="text-gray-700 font-semibold mb-2 block">
-                  Peta Lokasi
-                </Label>
-                <div className="rounded-lg overflow-hidden border border-gray-300">
+                <Label className="text-gray-700 font-semibold mb-2 block">Peta Lokasi</Label>
+                <div className="rounded-lg overflow-hidden border border-border">
                   <MapContainer
                     center={mapCenter}
                     zoom={16}
@@ -243,18 +228,14 @@ export default function ProjectCreate() {
                         <Button
                           type="button"
                           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg cursor-pointer"
-                          onClick={() =>
-                            document.getElementById("image-upload")?.click()
-                          }
+                          onClick={() => document.getElementById("image-upload")?.click()}
                         >
                           <Upload className="w-4 h-4 mr-2" />
                           Ganti Gambar
                         </Button>
                       </label>
                     </div>
-                    <p className="text-xs text-gray-500">
-                      Format: JPG, PNG, Maksimal 3MB
-                    </p>
+                    <p className="text-xs text-gray-500">Format: JPG, PNG, Maksimal 3MB</p>
                     <input
                       id="image-upload"
                       type="file"
@@ -267,12 +248,8 @@ export default function ProjectCreate() {
                   <label htmlFor="image-upload" className="block">
                     <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:bg-gray-50">
                       <Upload className="w-10 h-10 text-gray-400 mx-auto mb-2" />
-                      <p className="text-gray-600 font-medium">
-                        Pilih atau drag gambar ke sini
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        Format: JPG, PNG, Maksimal 3MB
-                      </p>
+                      <p className="text-gray-600 font-medium">Pilih atau drag gambar ke sini</p>
+                      <p className="text-xs text-gray-500 mt-1">Format: JPG, PNG, Maksimal 3MB</p>
                     </div>
                     <input
                       id="image-upload"
@@ -290,9 +267,15 @@ export default function ProjectCreate() {
                 <Button
                   type="submit"
                   disabled={processing}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-8 rounded-lg"
+                  // className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-8 rounded-lg"
                 >
-                  {processing ? "Menyimpan..." : "Simpan"}
+                  {processing ? (
+                    "Menyimpan..."
+                  ) : (
+                    <div className="flex justify-center items-center gap-2">
+                      <Save /> Simpan
+                    </div>
+                  )}
                 </Button>
               </div>
             </form>

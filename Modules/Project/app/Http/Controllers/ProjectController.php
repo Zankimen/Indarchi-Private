@@ -40,11 +40,20 @@ class ProjectController extends Controller
         try {
             $this->projectService->createProject($request->validated());
 
-            return back($this->SEE_OTHER)->with('success', 'Project berhasil ditambahkan.');
+            return redirect()->route('index')->with('success', 'Project berhasil ditambahkan.');
         } catch (Exception $e) {
             return back()
                 ->withErrors(['error' => $e->getMessage()])
                 ->withInput();
+        }
+    }
+
+    public function create()
+    {
+        try {
+            return Inertia::render('Project/ProjectCreate');
+        } catch (Exception $e) {
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
 

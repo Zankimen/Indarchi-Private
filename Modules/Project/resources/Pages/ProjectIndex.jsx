@@ -4,12 +4,10 @@ import { usePage, Head, router } from "@inertiajs/react";
 
 import { Button } from "@/components/ui/button";
 import Dashboard from "@/layout/Dashboard";
-import { FolderKanban } from "lucide-react";
+import { Plus } from "lucide-react";
 import DataTable from "@/components/custom/NewCustomDataTable";
 import CustomPagination from "@components/custom/CustomPagination";
 import CustomTableSearch from "@components/custom/CustomTableSearch";
-
-import ProjectCreate from "./ProjectCreate";
 
 function ProjectIndex({ projects, filters }) {
   const {
@@ -78,8 +76,8 @@ function ProjectIndex({ projects, filters }) {
           <div className="flex justify-between items-center gap-2">
             <Link href="/dashboard/projects/create">
               <Button className="flex items-center gap-2">
-                <FolderKanban className="w-4 h-4" />
                 Tambah Project
+                <Plus className="w-4 h-4" />
               </Button>
             </Link>
             

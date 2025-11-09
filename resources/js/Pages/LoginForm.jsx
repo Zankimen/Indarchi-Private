@@ -16,8 +16,6 @@ export default function LoginForm() {
     remember: false,
   });
 
-  console.log(errors);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     post("/login", {

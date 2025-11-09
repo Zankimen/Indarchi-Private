@@ -25,8 +25,14 @@ class PermissionsSeeder extends Seeder
             'dashboard.project.fullview',
             'dashboard.project.manage',
 
-            'project.attend',
-            'project.view',
+            'project.can.be.added',
+
+            'project.project.view',
+            'project.project.manage',
+            'project.worker.view',
+            'project.worker.manage',
+            'project.role.view',
+            'project.role.manage',
         ];
 
         foreach ($permissions as $permission) {
