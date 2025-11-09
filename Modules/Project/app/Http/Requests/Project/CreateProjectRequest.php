@@ -16,6 +16,7 @@ class CreateProjectRequest extends FormRequest
         return [
             'nama'            => 'required|string|max:255',
             'deskripsi'       => 'nullable|string',
+            'klien'       => 'nullable|string',
             'lokasi'          => 'required|string|max:255',
             'tanggal_mulai'   => 'required|date',
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',

@@ -12,10 +12,12 @@ class Project extends Model
     protected $fillable = [
         'nama',
         'deskripsi',
+        'klien',
         'tanggal_mulai',
         'tanggal_selesai',
         'lokasi',
         'radius',
+        'gambar',
     ];
 
 }

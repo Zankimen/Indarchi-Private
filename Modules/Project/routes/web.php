@@ -12,11 +12,6 @@ Route::middleware(['auth'])
                 Route::get('/create', [ProjectController::class, 'create'])->name('create');
                 Route::post('/', [ProjectController::class, 'store'])->name('store');
 
-                // Route::get('/{project}/edit', [ProjectController::class, 'edit'])->name('edit');
-                // Route::put('/{project}', [ProjectController::class, 'update'])->name('update');
-
-                // Route::delete('/{project}', [ProjectController::class, 'destroy'])->name('destroy');
-
             });
     })
     ->group(function () {

@@ -62,7 +62,7 @@ function ProjectDetail({ project }) {
                 <div>
                   <p className="font-medium text-muted-foreground">Client</p>
                   <p className="font-semibold text-foreground">
-                    {project.nama ?? "PT. Indarchi"}
+                    {project.klien ?? "PT. Indarchi"}
                   </p>
                 </div>
               </div>
