@@ -48,6 +48,11 @@ class ProjectController extends Controller
         }
     }
 
+    protected $routeMiddleware = [
+    //
+    ];
+
+
     public function create()
     {
         try {
