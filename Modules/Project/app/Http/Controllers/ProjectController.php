@@ -40,18 +40,14 @@ class ProjectController extends Controller
         try {
             $this->projectService->createProject($request->validated());
 
-            return redirect()->route('index')->with('success', 'Project berhasil ditambahkan.');
+            return redirect()->route('project.index')->with('success', 'Project berhasil ditambahkan.');
         } catch (Exception $e) {
+            dd($e);
             return back()
                 ->withErrors(['error' => $e->getMessage()])
                 ->withInput();
         }
     }
-
-    protected $routeMiddleware = [
-    //
-    ];
-
 
     public function create()
     {

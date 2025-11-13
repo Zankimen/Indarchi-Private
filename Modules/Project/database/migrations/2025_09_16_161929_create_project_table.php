@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('lokasi');
             $table->float('radius');
             $table->string('gambar')->nullable();
+            $table->timestamps();
         });
     }
 
