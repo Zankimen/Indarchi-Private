@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "@inertiajs/react";
 import { Save, ChevronLeft, Shield, Edit } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -19,13 +19,24 @@ import {
 } from "@/components/ui/dialog";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 
-function PeranEditDialog({ role, permissions, trigger }) {
+function PeranEditDialog({ peran, permissions, trigger }) {
   const [open, setOpen] = useState(false);
+
   const { data, setData, put, processing, errors, reset } = useForm({
-    name: role.name || "",
-    deskripsi: role.deskripsi || "",
-    permissions: role.permissions?.map((p) => p.id) || [],
+    name: peran.name || "",
+    deskripsi: peran.deskripsi || "",
+    permissions: peran.permissions?.map((p) => p.id) || [],
   });
+
+  useEffect(() => {
+    if (open) {
+      setData({
+        name: peran.name || "",
+        deskripsi: peran.deskripsi || "",
+        permissions: peran.permissions?.map((p) => p.id) || [],
+      });
+    }
+  }, [open, peran]);
 
   const handlePermissionChange = (permissionId, checked) => {
     if (checked) {
@@ -40,18 +51,27 @@ function PeranEditDialog({ role, permissions, trigger }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    put(`/role/edit/${role.id}`, {
+    put(`/dashboard/peran/edit/${peran.id}`, {
       onSuccess: () => {
         setOpen(false);
       },
     });
   };
 
+  const handleCancel = () => {
+    setData({
+      name: peran.name || "",
+      deskripsi: peran.deskripsi || "",
+      permissions: peran.permissions?.map((p) => p.id) || [],
+    });
+    setOpen(false);
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen} className="z-50">
       <DialogTrigger asChild>
         {trigger || (
-          <Button className="cursor-pointer">
+          <Button variant="outline">
             <Edit className="w-4 h-4" />
             Edit
           </Button>
@@ -73,9 +93,9 @@ function PeranEditDialog({ role, permissions, trigger }) {
               <DialogDescription className="sr-only">Form untuk mengedit Peran.</DialogDescription>
               <div className="grid grid-cols-1 gap-2 sm:flex">
                 <DialogPrimitive.Close asChild>
-                  <Button className="cursor-pointer">
+                  <Button onClick={handleCancel}>
                     <ChevronLeft className="w-4 h-4" />
-                    Back
+                    Kembali
                   </Button>
                 </DialogPrimitive.Close>
               </div>
@@ -139,17 +159,17 @@ function PeranEditDialog({ role, permissions, trigger }) {
             </div>
 
             <DialogFooter>
-              <DialogClose asChild>
-                <Button
-                  variant="outline"
-                  className="border-border cursor-pointer hover:border-accent"
-                >
-                  Cancel
-                </Button>
-              </DialogClose>
+              <Button
+                type="button"
+                variant="outline"
+                className="border-border cursor-pointer hover:border-accent"
+                onClick={handleCancel}
+              >
+                Cancel
+              </Button>
               <Button type="submit" className="cursor-pointer" disabled={processing}>
                 <Save className="w-4 h-4" />
-                {processing ? "Menyimpan..." : "Save"}
+                {processing ? "Menyimpan..." : "Simpan"}
               </Button>
             </DialogFooter>
           </form>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "@inertiajs/react";
 import { Save, ChevronLeft, Shield, Edit } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -21,11 +21,22 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 
 function PeranProjectEditDialog({ project, peran, permissions }) {
   const [open, setOpen] = useState(false);
+
   const { data, setData, put, processing, errors } = useForm({
     name: peran.name || "",
     deskripsi: peran.deskripsi || "",
     permissions: peran.permissions?.map((p) => p.id) || [],
   });
+
+  useEffect(() => {
+    if (open) {
+      setData({
+        name: peran.name || "",
+        deskripsi: peran.deskripsi || "",
+        permissions: peran.permissions?.map((p) => p.id) || [],
+      });
+    }
+  }, [open, peran]);
 
   const handlePermissionChange = (permissionId, checked) => {
     if (checked) {
@@ -45,6 +56,15 @@ function PeranProjectEditDialog({ project, peran, permissions }) {
         setOpen(false);
       },
     });
+  };
+
+  const handleCancel = () => {
+    setData({
+      name: peran.name || "",
+      deskripsi: peran.deskripsi || "",
+      permissions: peran.permissions?.map((p) => p.id) || [],
+    });
+    setOpen(false);
   };
 
   return (
@@ -71,7 +91,7 @@ function PeranProjectEditDialog({ project, peran, permissions }) {
               <DialogDescription className="sr-only">Form untuk mengedit Peran.</DialogDescription>
               <div className="grid grid-cols-1 gap-2 sm:flex">
                 <DialogPrimitive.Close asChild>
-                  <Button>
+                  <Button onClick={handleCancel}>
                     <ChevronLeft className="w-4 h-4" />
                     Kembali
                   </Button>
@@ -137,9 +157,9 @@ function PeranProjectEditDialog({ project, peran, permissions }) {
             </div>
 
             <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
-              </DialogClose>
+              <Button type="button" variant="outline" onClick={handleCancel}>
+                Cancel
+              </Button>
               <Button type="submit" disabled={processing}>
                 <Save className="w-4 h-4" />
                 {processing ? "Menyimpan..." : "Simpan"}

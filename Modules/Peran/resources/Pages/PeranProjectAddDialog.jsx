@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "@inertiajs/react";
 import { Save, ChevronLeft, Shield, Plus } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -28,6 +28,12 @@ function PeranProjectAddDialog({ project, permissions }) {
     permissions: [],
   });
 
+  useEffect(() => {
+    if (!open) {
+      reset();
+    }
+  }, [open]);
+
   const handlePermissionChange = (permissionId, checked) => {
     if (checked) {
       setData("permissions", [...data.permissions, permissionId]);
@@ -47,6 +53,11 @@ function PeranProjectAddDialog({ project, permissions }) {
         setOpen(false);
       },
     });
+  };
+
+  const handleCancel = () => {
+    reset();
+    setOpen(false);
   };
 
   return (
@@ -74,7 +85,7 @@ function PeranProjectAddDialog({ project, permissions }) {
               </DialogDescription>
               <div className="grid grid-cols-1 gap-2 sm:flex">
                 <DialogPrimitive.Close asChild>
-                  <Button className="cursor-pointer">
+                  <Button onClick={handleCancel}>
                     <ChevronLeft className="w-4 h-4" />
                     Kembali
                   </Button>
@@ -99,16 +110,11 @@ function PeranProjectAddDialog({ project, permissions }) {
                 placeholder="Masukkan nama peran"
                 onChange={(e) => setData("name", e.target.value)}
               />
-              {errors.name && (
-                <p className="text-sm text-red-500">{errors.name}</p>
-              )}
+              {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
             </div>
 
             <div className="space-y-2">
-              <Label
-                htmlFor="deskripsi"
-                className="text-foreground text-base block"
-              >
+              <Label htmlFor="deskripsi" className="text-foreground text-base block">
                 Deskripsi
               </Label>
               <Textarea
@@ -119,27 +125,18 @@ function PeranProjectAddDialog({ project, permissions }) {
                 placeholder="Masukkan deskripsi peran"
                 onChange={(e) => setData("deskripsi", e.target.value)}
               />
-              {errors.deskripsi && (
-                <p className="text-sm text-red-500">{errors.deskripsi}</p>
-              )}
+              {errors.deskripsi && <p className="text-sm text-red-500">{errors.deskripsi}</p>}
             </div>
 
             <div className="space-y-4">
-              <Label className="text-foreground text-base block">
-                Permissions
-              </Label>
+              <Label className="text-foreground text-base block">Permissions</Label>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 max-h-[300px] overflow-y-auto border border-border rounded-lg p-4">
                 {permissions.map((permission) => (
-                  <div
-                    key={permission.id}
-                    className="flex items-center space-x-2"
-                  >
+                  <div key={permission.id} className="flex items-center space-x-2">
                     <Checkbox
                       id={`permission-${permission.id}`}
                       checked={data.permissions.includes(permission.id)}
-                      onCheckedChange={(checked) =>
-                        handlePermissionChange(permission.id, checked)
-                      }
+                      onCheckedChange={(checked) => handlePermissionChange(permission.id, checked)}
                     />
                     <Label
                       htmlFor={`permission-${permission.id}`}
@@ -150,23 +147,14 @@ function PeranProjectAddDialog({ project, permissions }) {
                   </div>
                 ))}
               </div>
-              {errors.permissions && (
-                <p className="text-sm text-red-500">{errors.permissions}</p>
-              )}
+              {errors.permissions && <p className="text-sm text-red-500">{errors.permissions}</p>}
             </div>
 
             <DialogFooter>
-              <DialogClose asChild>
-                <Button
-                  variant="outline"
-                >
-                  Cancel
-                </Button>
-              </DialogClose>
-              <Button
-                type="submit"
-                disabled={processing}
-              >
+              <Button type="button" variant="outline" onClick={handleCancel}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={processing}>
                 <Save className="w-4 h-4" />
                 {processing ? "Menyimpan..." : "Simpan"}
               </Button>
