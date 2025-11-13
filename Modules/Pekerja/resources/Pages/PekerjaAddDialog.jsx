@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useForm } from "@inertiajs/react";
 
@@ -43,6 +43,8 @@ function PekerjaAddDialog({ perans }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     post("/dashboard/pekerja", {
+      preserveScroll: true,
+      preserveState: true,
       onSuccess: () => {
         reset();
         setOpen(false);

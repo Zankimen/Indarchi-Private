@@ -1,12 +1,13 @@
+import { Link } from "@inertiajs/react";
 import React, { useState } from "react";
-import { Head, router, usePage } from "@inertiajs/react";
+import { usePage, Head, router } from "@inertiajs/react";
 
+import { Button } from "@/components/ui/button";
 import Dashboard from "@/layout/Dashboard";
+import { Plus } from "lucide-react";
 import DataTable from "@/components/custom/NewCustomDataTable";
 import CustomPagination from "@components/custom/CustomPagination";
 import CustomTableSearch from "@components/custom/CustomTableSearch";
-
-import ProjectCreateDialog from "./ProjectCreateDialog";
 
 function ProjectIndex({ projects, filters }) {
   const {
@@ -73,8 +74,13 @@ function ProjectIndex({ projects, filters }) {
       <div className="">
         <div className="space-y-4">
           <div className="flex justify-between items-center gap-2">
-            {hasPermission("dashboard.project.manage") && <ProjectCreateDialog />}
-
+            <Link href="/dashboard/projects/create">
+              <Button className="flex items-center gap-2">
+                Tambah Project
+                <Plus className="w-4 h-4" />
+              </Button>
+            </Link>
+            
             <CustomTableSearch
               search={search}
               setSearch={setSearch}
@@ -91,21 +97,49 @@ function ProjectIndex({ projects, filters }) {
               noItem="Project"
             >
               <DataTable.Column accessor="nama" label="Nama" type="text" sort />
-              <DataTable.Column accessor="deskripsi" label="Deskripsi" type="text" sort />
-              <DataTable.Column accessor="lokasi" label="Lokasi" type="text" sort />
-              <DataTable.Column accessor="tanggal_mulai" label="Tanggal Mulai" type="date" sort />
+              <DataTable.Column
+                accessor="deskripsi"
+                label="Deskripsi"
+                type="text"
+                sort
+              />
+              <DataTable.Column
+                accessor="lokasi"
+                label="Lokasi"
+                type="text"
+                sort
+              />
+              <DataTable.Column
+                accessor="tanggal_mulai"
+                label="Tanggal Mulai"
+                type="date"
+                sort
+              />
               <DataTable.Column
                 accessor="tanggal_selesai"
                 label="Tanggal Selesai"
                 type="date"
                 sort
               />
-              <DataTable.Column accessor="radius" label="Radius" type="text" sort />
+              <DataTable.Column
+                accessor="radius"
+                label="Radius"
+                type="text"
+                sort
+              />
 
-              <DataTable.Column accessor="created_at" label="Created At" type="time" sort />
+              <DataTable.Column
+                accessor="created_at"
+                label="Created At"
+                type="time"
+                sort
+              />
             </DataTable>
 
-            <CustomPagination data={projects} onPaginationChange={onPaginationChange} />
+            <CustomPagination
+              data={projects}
+              onPaginationChange={onPaginationChange}
+            />
           </div>
         </div>
       </div>

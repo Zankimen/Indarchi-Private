@@ -8,4 +8,10 @@ return [
         'permission' => 'dashboard.role.view',
         'type' => 'dashboard',
     ],
+    [
+        'title' => 'Peran Project',
+        'icon' => 'UsersIcon',
+        'route' => '/peran',
+        'type' => 'project',
+    ],
 ];

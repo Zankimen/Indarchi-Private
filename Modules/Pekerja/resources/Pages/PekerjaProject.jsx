@@ -3,14 +3,28 @@ import { Head, useForm, router } from "@inertiajs/react";
 import Navbar from "@/layout/NavBar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose, DialogFooter } from "@/components/ui/dialog";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import DataTable from "@/components/custom/NewCustomDataTable";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus, Save, ChevronLeft, Users } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-
 
 function PekerjaProject({ pekerja, availableWorkers, project, roles }) {
   return (
@@ -19,27 +33,27 @@ function PekerjaProject({ pekerja, availableWorkers, project, roles }) {
       <div className="space-y-6">
         <Card className="p-6 border-border">
           <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Pekerja di Project {project?.nama ?? project?.name ?? `#${project?.id}`}</h1>
-          <div className="flex gap-2">
-            <AddWorkerModal availableWorkers={availableWorkers} project_id={project?.id} />
-            <AddNewWorker project_id={project?.id} roles={roles} />
+            <h1 className="text-2xl font-bold">
+              Pekerja di Project {project?.nama ?? project?.name ?? `#${project?.id}`}
+            </h1>
+            <div className="flex gap-2">
+              <AddWorkerModal availableWorkers={availableWorkers} project_id={project?.id} />
+              <AddNewWorker project_id={project?.id} roles={roles} />
+            </div>
           </div>
-          </div>
-        
+
           {pekerja.length === 0 ? (
-            <p className="text-muted-foreground text-center py-8">Belum ada pekerja di project ini.</p>
+            <p className="text-muted-foreground text-center py-8">
+              Belum ada pekerja di project ini.
+            </p>
           ) : (
             <DataTable
               data={pekerja}
-              onRowClick={(row) => router.visit(`/projects/${project?.id}/pekerja/${row.id}`)}
+              onRowClick={(row) => {
+                router.visit(`/projects/${project?.id}/pekerja/${row.id}`);
+              }}
             >
-              <DataTable.Column
-                accessor="name"
-                label="Nama"
-                render={(row) => (
-                  <span className="text-blue-600">{row.name}</span> 
-                )}
-              />
+              <DataTable.Column accessor="name" label="Nama" />
               <DataTable.Column accessor="email" label="Email" />
               <DataTable.Column accessor="posisi" label="Posisi" />
             </DataTable>
@@ -68,10 +82,7 @@ function AddWorkerModal({ availableWorkers, project_id }) {
           <DialogTitle>Pilih Pekerja yang Sudah Ada</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6 mt-4">
-          <Select
-            onValueChange={(v) => setData("pekerja_id", v)}
-            value={data.pekerja_id}
-          >
+          <Select onValueChange={(v) => setData("pekerja_id", v)} value={data.pekerja_id}>
             <SelectTrigger className="w-full border-border">
               <SelectValue placeholder="Pilih pekerja" />
             </SelectTrigger>
@@ -112,8 +123,8 @@ function AddNewWorker({ project_id, roles }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="default">
-          Tambah Pekerja Baru <Plus className="ml-2" />
+        <Button>
+          Tambah Pekerja Baru <Plus />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[800px] border-border">
@@ -212,7 +223,11 @@ function AddNewWorker({ project_id, roles }) {
                 </SelectTrigger>
                 <SelectContent className="rounded-lg border-border bg-background shadow">
                   {roles.map((role) => (
-                    <SelectItem key={role.id} value={role.name} className="text-foreground text-base hover:bg-border cursor-pointer">
+                    <SelectItem
+                      key={role.id}
+                      value={role.name}
+                      className="text-foreground text-base hover:bg-border cursor-pointer"
+                    >
                       {role.name}
                     </SelectItem>
                   ))}
@@ -221,7 +236,10 @@ function AddNewWorker({ project_id, roles }) {
             </div>
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline" className="border-border cursor-pointer hover:border-accent">
+                <Button
+                  variant="outline"
+                  className="border-border cursor-pointer hover:border-accent"
+                >
                   Cancel
                 </Button>
               </DialogClose>
@@ -236,7 +254,6 @@ function AddNewWorker({ project_id, roles }) {
     </Dialog>
   );
 }
-
 
 PekerjaProject.layout = (page) => <Navbar>{page}</Navbar>;
 export default PekerjaProject;

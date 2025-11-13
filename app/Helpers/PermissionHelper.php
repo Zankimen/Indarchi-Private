@@ -8,3 +8,10 @@ if (! function_exists('setTeamId')) {
         app(PermissionRegistrar::class)->setPermissionsTeamId($teamId);
     }
 }
+
+if (! function_exists('getTeamId')) {
+    function getTeamId(): ?int
+    {
+        return app(PermissionRegistrar::class)->getPermissionsTeamId();
+    }
+}

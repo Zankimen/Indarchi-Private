@@ -2,7 +2,6 @@
 
 namespace Modules\Peran\Services;
 
-use Auth;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -11,18 +10,11 @@ use Modules\Peran\Repositories\PeranRepository;
 
 class PeranService
 {
-    public function __construct(private PeranRepository $peranRepository)
-    {
-    }
+    public function __construct(private PeranRepository $peranRepository) {}
 
     public function getPeransPaginated($request)
     {
         return $this->peranRepository->getPeransPaginated($request);
-    }
-
-    public function getAllPermissions()
-    {
-        return $this->peranRepository->getAllPermissions();
     }
 
     public function getAllPerans()
@@ -30,17 +22,22 @@ class PeranService
         return $this->peranRepository->getAllPerans();
     }
 
-    public function createRole(array $data): Peran
+    public function getAllPermissions()
+    {
+        return $this->peranRepository->getAllPermissions();
+    }
+
+    public function createPeran(array $data): Peran
     {
         return $this->peranRepository->create($data);
     }
 
-    public function updateRole(Peran $role, array $data): Peran
+    public function updatePeran(Peran $peran, array $data): Peran
     {
-        return $this->peranRepository->update($role, $data);
+        return $this->peranRepository->update($peran, $data);
     }
 
-    public function deleteRole(Peran $role): bool
+    public function deletePeran(Peran $role): bool
     {
         if (method_exists($role, 'users') && $role->users()->count() > 0) {
             throw new Exception('Tidak dapat menghapus peran yang sedang digunakan oleh pengguna.');

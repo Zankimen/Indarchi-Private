@@ -4,7 +4,7 @@ namespace Modules\Pekerja\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
-use Modules\Pekerja\Repositories\Eloquent\PekerjaRepository;
+use Modules\Pekerja\Repositories\PekerjaRepository;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;

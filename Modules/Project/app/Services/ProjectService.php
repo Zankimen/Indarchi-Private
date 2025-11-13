@@ -20,7 +20,8 @@ class ProjectService
         return $this->projectRepository->getFilteredSortedAndSearched($request);
     }
 
-    public function getProjectById($id) {
+    public function getProjectById($id)
+    {
         return $this->projectRepository->find($id);
     }
 

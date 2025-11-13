@@ -13,5 +13,5 @@ return [
         'icon' => 'UsersIcon',
         'route' => '/pekerja',
         'type' => 'project',
-    ],  
+    ],
 ];

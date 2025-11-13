@@ -13,6 +13,6 @@ return [
         'icon' => 'FolderKanbanIcon',
         'route' => '/informasi',
         'type' => 'project',
-        'permission' => 'project.view',
+        'permission' => 'project.project.view',
     ],
 ];

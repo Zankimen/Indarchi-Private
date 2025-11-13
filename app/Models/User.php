@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Modules\Project\Models\Project;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -53,7 +54,7 @@ class User extends Authenticatable
     public function projects()
     {
         return $this->belongsToMany(
-            \Modules\Project\Models\Project::class, // arahkan ke model Project
+            Project::class, // arahkan ke model Project
             'project_user', // nama tabel pivot
             'user_id',      // foreign key untuk user
             'project_id'    // foreign key untuk project

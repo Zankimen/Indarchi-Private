@@ -44,7 +44,7 @@ function PekerjaProjectDetail({ project, pekerja, posisi, roles }) {
             </div>
             <div>
               <p className="text-muted-foreground text-sm">Posisi Saat Ini</p>
-              <p className="text-base font-medium">{posisi}</p>
+              <p className="text-base font-medium">{pekerja.roles[0].name}</p>
             </div>
             <div>
               <p className="text-muted-foreground text-sm">Tanggal Bergabung</p>
