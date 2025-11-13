@@ -19,12 +19,12 @@ import {
 } from "@/components/ui/dialog";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 
-function PeranEditDialog({ peran, permissions }) {
+function PeranEditDialog({ role, permissions, trigger }) {
   const [open, setOpen] = useState(false);
-  const { data, setData, put, processing, errors } = useForm({
-    name: peran.name || "",
-    deskripsi: peran.deskripsi || "",
-    permissions: peran.permissions?.map((p) => p.id) || [],
+  const { data, setData, put, processing, errors, reset } = useForm({
+    name: role.name || "",
+    deskripsi: role.deskripsi || "",
+    permissions: role.permissions?.map((p) => p.id) || [],
   });
 
   const handlePermissionChange = (permissionId, checked) => {
@@ -40,7 +40,7 @@ function PeranEditDialog({ peran, permissions }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    put(`/dashboard/peran/edit/${peran.id}`, {
+    put(`/role/edit/${role.id}`, {
       onSuccess: () => {
         setOpen(false);
       },
@@ -48,12 +48,14 @@ function PeranEditDialog({ peran, permissions }) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={setOpen} className="z-50">
       <DialogTrigger asChild>
-        <Button variant="outline">
-          <Edit className="w-4 h-4" />
-          Edit
-        </Button>
+        {trigger || (
+          <Button className="cursor-pointer">
+            <Edit className="w-4 h-4" />
+            Edit
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent
         className="sm:max-w-[800px] border-border max-h-[90vh] overflow-y-auto"
@@ -64,16 +66,16 @@ function PeranEditDialog({ peran, permissions }) {
             <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">
               <DialogTitle>
                 <div className="flex items-center justify-center sm:justify-start font-bold text-2xl md:text-2xl m-0 p-0">
-                  <Shield className="w-10 h-10 bg-accent text-background rounded-2xl mr-4 p-2" />
+                  <Shield className="w-10 h-10 bg-accent text-primary rounded-2xl mr-4 p-2" />
                   Edit Peran
                 </div>
               </DialogTitle>
               <DialogDescription className="sr-only">Form untuk mengedit Peran.</DialogDescription>
               <div className="grid grid-cols-1 gap-2 sm:flex">
                 <DialogPrimitive.Close asChild>
-                  <Button>
+                  <Button className="cursor-pointer">
                     <ChevronLeft className="w-4 h-4" />
-                    Kembali
+                    Back
                   </Button>
                 </DialogPrimitive.Close>
               </div>
@@ -138,11 +140,16 @@ function PeranEditDialog({ peran, permissions }) {
 
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
+                <Button
+                  variant="outline"
+                  className="border-border cursor-pointer hover:border-accent"
+                >
+                  Cancel
+                </Button>
               </DialogClose>
-              <Button type="submit" disabled={processing}>
+              <Button type="submit" className="cursor-pointer" disabled={processing}>
                 <Save className="w-4 h-4" />
-                {processing ? "Menyimpan..." : "Simpan"}
+                {processing ? "Menyimpan..." : "Save"}
               </Button>
             </DialogFooter>
           </form>

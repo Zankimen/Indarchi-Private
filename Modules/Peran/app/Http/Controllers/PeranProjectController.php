@@ -59,7 +59,7 @@ class PeranProjectController extends Controller
         }
     }
 
-    public function create(CreatePeranRequest $request)
+    public function create(CreatePeranRequest $request, $project_id)
     {
         try {
             $this->peranProjectService->createProjectPeran($request->validated());
@@ -69,12 +69,12 @@ class PeranProjectController extends Controller
         } catch (Exception $e) {
             return
                 back($this->SEE_OTHER)
-                    ->withErrors(['error' => $e->getMessage()])
-                    ->withInput();
+                ->withErrors(['error' => $e->getMessage()])
+                ->withInput();
         }
     }
 
-    public function update(UpdatePeranRequest $request, $peran_id)
+    public function update(UpdatePeranRequest $request, $project_id, $peran_id)
     {
         try {
             $peran = $this->peranProjectService->getPeranById($peran_id);
@@ -89,16 +89,18 @@ class PeranProjectController extends Controller
         }
     }
 
-    // public function delete(Peran $role)
-    // {
-    //     try {
-    //         $this->peranService->deleteRole($role);
+    public function delete($project_id, $peran_id)
+    {
+        try {
+            $peran = $this->peranProjectService->getPeranById($peran_id);
+            $peranName = $peran->name;
+            $this->peranService->deletePeran($peran);
 
-    //         return back($this->SEE_OTHER)
-    //             ->with('success', 'Peran berhasil dihapus.');
-    //     } catch (Exception $e) {
-    //         return back($this->SEE_OTHER)
-    //             ->withErrors(['error' => $e->getMessage()]);
-    //     }
-    // }
+            return redirect("/projects/{$project_id}/peran", $this->SEE_OTHER)
+                ->with('success', "Peran \"{$peranName}\" berhasil dihapus");
+        } catch (Exception $e) {
+            return back($this->SEE_OTHER)
+                ->withErrors(['error' => $e->getMessage()]);
+        }
+    }
 }
