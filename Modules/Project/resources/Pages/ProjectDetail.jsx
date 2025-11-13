@@ -121,6 +121,6 @@ function ProjectDetail({ project }) {
   );
 }
 
-ProjectDetail.layout = (page) => <Navbar children={page} />;
+ProjectDetail.layout = (page) => <Navbar >{page}</Navbar>;
 
 export default ProjectDetail;
