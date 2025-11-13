@@ -61,8 +61,8 @@ class PeranController extends Controller
         } catch (Exception $e) {
             return
                 back($this->SEE_OTHER)
-                    ->withErrors(['error' => $e->getMessage()])
-                    ->withInput();
+                ->withErrors(['error' => $e->getMessage()])
+                ->withInput();
         }
     }
 
@@ -80,16 +80,15 @@ class PeranController extends Controller
         }
     }
 
-    public function delete(Peran $role)
+    public function delete(Peran $peran)
     {
         try {
-            $this->peranService->deletePeran($role);
+            $this->peranService->deletePeran($peran);
 
             return back($this->SEE_OTHER)
                 ->with('success', 'Peran berhasil dihapus.');
         } catch (Exception $e) {
-            return back($this->SEE_OTHER)
-                ->withErrors(['error' => $e->getMessage()]);
+            return back($this->SEE_OTHER)->withErrors(['error' => $e->getMessage()]);
         }
     }
 }

@@ -1,11 +1,12 @@
 import React from "react";
 import { Head, Link, router, usePage } from "@inertiajs/react";
 import Dashboard from "@/layout/Dashboard";
-import { ChevronLeft, Trash, Shield, CheckCircle } from "lucide-react";
+import { ChevronLeft, Shield } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatDateNoHour } from "@/components/lib/utils";
 import PeranEditDialog from "./PeranEditDialog";
+import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 
 function PeranDetails({ peran, permissions }) {
   const {
@@ -15,26 +16,20 @@ function PeranDetails({ peran, permissions }) {
   const hasPermission = (permission) => auth.permissions.includes(permission);
 
   const handleDelete = () => {
-    if (confirm("Apakah Anda yakin ingin menghapus peran ini?")) {
-      router.delete(`/dashboard/peran/${peran.id}`, {
-        onSuccess: () => {
-          router.visit("/role");
-        },
-        onError: (errors) => {
-          if (errors.error) {
-            alert(errors.error);
-          }
-        },
-      });
-    }
+    router.delete(`/dashboard/peran/${peran.id}`, {
+      onSuccess: () => {
+        router.visit("/dashboard/peran");
+      },
+      onError: (errors) => {
+        console.error("Delete peran error:", errors);
+        if (errors?.error) {
+          alert(errors.error);
+        } else {
+          alert("Gagal menghapus peran – cek network/console untuk detail.");
+        }
+      },
+    });
   };
-
-  const PermissionBadge = ({ children }) => (
-    <div className="inline-flex items-center px-3 py-2 rounded-lg bg-accent/50 border border-border text-sm font-medium text-foreground hover:bg-accent/70 transition-colors">
-      <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
-      {children}
-    </div>
-  );
 
   return (
     <>
@@ -62,10 +57,12 @@ function PeranDetails({ peran, permissions }) {
                 <>
                   <PeranEditDialog peran={peran} permissions={permissions} />
 
-                  <Button variant="destructive" onClick={handleDelete}>
-                    <Trash className="w-4 h-4" />
-                    Hapus
-                  </Button>
+                  <DeleteConfirmationDialog
+                    onConfirm={handleDelete}
+                    title="Hapus Peran"
+                    description={`Apakah Anda yakin ingin menghapus peran "${peran.name}"?`}
+                    warningText="Peran yang dihapus tidak dapat dikembalikan."
+                  />
                 </>
               )}
             </div>
@@ -97,7 +94,6 @@ function PeranDetails({ peran, permissions }) {
                     <Button key={permission.id} variant="outline" disabled>
                       {permission.name}
                     </Button>
-                    // <PermissionBadge key={permission.id}>{permission.name}</PermissionBadge>
                   ))}
                 </div>
               ) : (
