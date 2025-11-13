@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 
-function PeranProjectEditDialog({ peran, permissions }) {
+function PeranProjectEditDialog({ project, peran, permissions }) {
   const [open, setOpen] = useState(false);
   const { data, setData, put, processing, errors } = useForm({
     name: peran.name || "",
@@ -40,7 +40,7 @@ function PeranProjectEditDialog({ peran, permissions }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    put(`/projects/${project?.id}/peran`, {
+    put(`/projects/${project?.id}/peran/${peran.id}/edit`, {
       onSuccess: () => {
         setOpen(false);
       },

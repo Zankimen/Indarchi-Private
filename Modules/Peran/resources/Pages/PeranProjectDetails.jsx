@@ -1,13 +1,14 @@
 import React from "react";
 import { Head, Link, router, usePage } from "@inertiajs/react";
-import { ChevronLeft, Trash, Shield, CheckCircle } from "lucide-react";
+import { ChevronLeft, Shield } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatDateNoHour } from "@/components/lib/utils";
-import PeranEditDialog from "./PeranEditDialog";
+import PeranProjectEditDialog from "./PeranProjectEditDialog";
+import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 import Navbar from "@/layout/NavBar";
 
-function PeranDetails({ project, peran, permissions }) {
+function PeranProjectDetails({ project, peran, permissions }) {
   const {
     props: { auth },
   } = usePage();
@@ -15,26 +16,17 @@ function PeranDetails({ project, peran, permissions }) {
   const hasPermission = (permission) => auth.permissions.includes(permission);
 
   const handleDelete = () => {
-    if (confirm("Apakah Anda yakin ingin menghapus peran ini?")) {
-      router.delete(`/dashboard/peran/${peran.id}`, {
-        onSuccess: () => {
-          router.visit("/role");
-        },
-        onError: (errors) => {
-          if (errors.error) {
-            alert(errors.error);
-          }
-        },
-      });
-    }
+    router.delete(`/projects/${project?.id}/peran/${peran.id}`, {
+      onSuccess: () => {
+        router.visit(`/projects/${project?.id}/peran`);
+      },
+      onError: (errors) => {
+        if (errors.error) {
+          alert(errors.error);
+        }
+      },
+    });
   };
-
-  const PermissionBadge = ({ children }) => (
-    <div className="inline-flex items-center px-3 py-2 rounded-lg bg-accent/50 border border-border text-sm font-medium text-foreground hover:bg-accent/70 transition-colors">
-      <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
-      {children}
-    </div>
-  );
 
   return (
     <>
@@ -58,14 +50,20 @@ function PeranDetails({ project, peran, permissions }) {
                 </Button>
               </Link>
 
-              {hasPermission("dashboard.role.manage") && (
+              {hasPermission("project.role.manage") && (
                 <>
-                  <PeranEditDialog peran={peran} permissions={permissions} />
+                  <PeranProjectEditDialog
+                    project={project}
+                    peran={peran}
+                    permissions={permissions}
+                  />
 
-                  <Button variant="destructive" onClick={handleDelete}>
-                    <Trash className="w-4 h-4" />
-                    Hapus
-                  </Button>
+                  <DeleteConfirmationDialog
+                    onConfirm={handleDelete}
+                    title="Hapus Peran"
+                    description={`Apakah Anda yakin ingin menghapus peran "${peran.name}"?`}
+                    warningText="Peran yang dihapus tidak dapat dikembalikan."
+                  />
                 </>
               )}
             </div>
@@ -97,7 +95,6 @@ function PeranDetails({ project, peran, permissions }) {
                     <Button key={permission.id} variant="outline" disabled>
                       {permission.name}
                     </Button>
-                    // <PermissionBadge key={permission.id}>{permission.name}</PermissionBadge>
                   ))}
                 </div>
               ) : (
@@ -140,6 +137,6 @@ const Detail = ({ label, value }) => (
   </div>
 );
 
-PeranDetails.layout = (page) => <Navbar>{page}</Navbar>;
+PeranProjectDetails.layout = (page) => <Navbar>{page}</Navbar>;
 
-export default PeranDetails;
+export default PeranProjectDetails;
