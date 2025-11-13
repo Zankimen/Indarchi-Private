@@ -55,7 +55,9 @@ function ProjectDetail({ project }) {
                 <User className="w-4 h-4 text-muted-foreground" />
                 <div>
                   <p className="font-medium text-muted-foreground">Client</p>
-                  <p className="font-semibold text-foreground">{project.nama ?? "PT. Indarchi"}</p>
+                  <p className="font-semibold text-foreground">
+                    {project.klien ?? "PT. Indarchi"}
+                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -106,6 +108,6 @@ function ProjectDetail({ project }) {
   );
 }
 
-ProjectDetail.layout = (page) => <Navbar>{page}</Navbar>;
+ProjectDetail.layout = (page) => <Navbar >{page}</Navbar>;
 
 export default ProjectDetail;

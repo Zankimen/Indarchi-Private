@@ -60,4 +60,16 @@ class User extends Authenticatable
             'project_id'    // foreign key untuk project
         )->withTimestamps();
     }
+
+    public function attendances()
+{
+    return $this->belongsToMany(
+        \Modules\Presensi\Models\Attendance::class,
+        'project_presensi_worker',
+        'user_id',
+        'attendance_id'
+    )->withPivot(['project_id', 'status'])
+     ->withTimestamps();
+}
+
 }
