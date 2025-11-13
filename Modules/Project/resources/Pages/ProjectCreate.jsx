@@ -32,7 +32,6 @@ export default function ProjectCreate() {
     tanggal_mulai: "",
     tanggal_selesai: "",
     lokasi: "",
-    alamat: "",
     radius: 150,
     gambar: null,
   });
@@ -64,7 +63,7 @@ export default function ProjectCreate() {
       );
       const result = await response.json();
       const alamatLengkap = result.display_name || "Alamat tidak ditemukan";
-      setData("alamat", alamatLengkap);
+      // setData("alamat", alamatLengkap);
     } catch (error) {
       console.error("Gagal mengambil alamat:", error);
     } finally {
