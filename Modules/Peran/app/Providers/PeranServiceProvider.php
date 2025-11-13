@@ -4,8 +4,8 @@ namespace Modules\Peran\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
-use Modules\Peran\Services\PeranService;
 use Modules\Peran\Repositories\PeranRepository;
+use Modules\Peran\Services\PeranService;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;

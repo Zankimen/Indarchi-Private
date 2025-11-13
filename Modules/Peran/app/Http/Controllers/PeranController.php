@@ -10,16 +10,20 @@ use Modules\Peran\Http\Requests\Peran\CreatePeranRequest;
 use Modules\Peran\Http\Requests\Peran\UpdatePeranRequest;
 use Modules\Peran\Models\Peran;
 use Modules\Peran\Services\PeranService;
+use Modules\Project\Services\ProjectService;
 
 class PeranController extends Controller
 {
     protected PeranService $peranService;
 
+    protected ProjectService $projectService;
+
     protected $SEE_OTHER = 303;
 
-    public function __construct(PeranService $peranService)
+    public function __construct(PeranService $peranService, ProjectService $projectService)
     {
         $this->peranService = $peranService;
+        $this->projectService = $projectService;
     }
 
     public function index(Request $request)
@@ -50,7 +54,7 @@ class PeranController extends Controller
     public function create(CreatePeranRequest $request)
     {
         try {
-            $this->peranService->createRole($request->validated());
+            $this->peranService->createPeran($request->validated());
 
             return back($this->SEE_OTHER)
                 ->with('success', 'Peran berhasil ditambahkan.');
@@ -65,7 +69,7 @@ class PeranController extends Controller
     public function update(UpdatePeranRequest $request, Peran $peran)
     {
         try {
-            $this->peranService->updateRole($peran, $request->validated());
+            $this->peranService->updatePeran($peran, $request->validated());
 
             return back($this->SEE_OTHER)
                 ->with('success', 'Peran berhasil diperbarui.');
@@ -79,7 +83,7 @@ class PeranController extends Controller
     public function delete(Peran $role)
     {
         try {
-            $this->peranService->deleteRole($role);
+            $this->peranService->deletePeran($role);
 
             return back($this->SEE_OTHER)
                 ->with('success', 'Peran berhasil dihapus.');

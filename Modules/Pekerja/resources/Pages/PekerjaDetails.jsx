@@ -17,6 +17,7 @@ function PekerjaDetails({ pekerja, perans }) {
   return (
     <>
       <Head title={pekerja.name} />
+      <Head title={pekerja.name} />
       <div className="space-y-4">
         <Card className="border-border">
           <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">
@@ -38,6 +39,7 @@ function PekerjaDetails({ pekerja, perans }) {
           </div>
         </Card>
 
+
         <Card className="p-6 px-8 border-border">
           <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-2">
             <Detail label="Nama" value={pekerja.name} />
@@ -48,6 +50,23 @@ function PekerjaDetails({ pekerja, perans }) {
             <Detail label="Terakhir Di-Update" value={formatDateNoHour(pekerja.updated_at)} />
           </div>
         </Card>
+
+        {/* Permissions Card - if needed */}
+        {pekerja.permissions && pekerja.permissions.length > 0 && (
+          <Card className="p-6 px-8 border-border">
+            <h3 className="text-lg font-semibold mb-4">Permissions</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {pekerja.permissions.map((permission) => (
+                <div
+                  key={permission.id}
+                  className="inline-flex items-center px-3 py-2 rounded-lg bg-accent/50 border border-border text-sm font-medium"
+                >
+                  {permission.name}
+                </div>
+              ))}
+            </div>
+          </Card>
+        )}
       </div>
     </>
   );

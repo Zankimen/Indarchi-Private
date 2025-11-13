@@ -2,12 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Pekerja\Http\Controllers\PekerjaController;
+use Modules\Pekerja\Http\Controllers\PekerjaProjectController;
 
 Route::middleware(['auth'])
     ->group(function () {
         Route::prefix('dashboard/pekerja')
             ->name('pekerja.')
-            ->middleware(['share.menu:dashboard', 'require.permission:dashboard.worker.view'])
+            ->middleware(['share.menu:dashboard', 'require.permission:dashboard.worker.view', 'reset.project.team'])
             ->group(function () {
                 Route::get('/', [PekerjaController::class, 'index'])->name('index');
                 Route::get('/{id}/edit', [PekerjaController::class, 'edit'])->name('edit');
@@ -22,23 +23,22 @@ Route::middleware(['auth'])
 
         Route::prefix('projects')
             ->name('pekerja.projects.')
-            ->middleware('share.menu:project')
+            ->middleware(['share.menu:project', 'set.project.team'])
             ->group(function () {
-                Route::get('/{project_id}/pekerja', [PekerjaController::class, 'project'])
+                Route::get('/{project_id}/pekerja', [PekerjaProjectController::class, 'index'])
                     ->name('pekerja');
 
-                Route::post('/{project_id}/pekerja/add', [PekerjaController::class, 'addToProject'])
+                Route::get('/{project_id}/pekerja/{pekerja_id}', [PekerjaProjectController::class, 'details'])
+                    ->name('details');
+
+                Route::post('/{project_id}/pekerja/add', [PekerjaProjectController::class, 'addToProject'])
                     ->name('addToProject');
 
-                Route::post('/{project_id}/pekerja/create', [PekerjaController::class, 'createAndAssign'])
-                    ->name('createAndAssign');
+                // Route::post('/{project_id}/pekerja/create', [PekerjaController::class, 'createAndAssign'])
+                //     ->name('createAndAssign');
 
-                Route::get('/{project_id}/pekerja/{pekerja_id}', [PekerjaController::class, 'showInProject'])
-                    ->name('showInProject');
-
-                Route::put('/{project_id}/pekerja/{pekerja_id}/update', [PekerjaController::class, 'updateRoleInProject'])
-                    ->name('updateRoleInProject');
-
+                Route::put('/{project_id}/pekerja/{pekerja_id}/update', [PekerjaProjectController::class, 'updateProjectPeran'])
+                    ->name('updateProjectPeran');
             });
 
     });

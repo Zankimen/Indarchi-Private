@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Head, router, usePage } from "@inertiajs/react";
-import Dashboard from "@/layout/Dashboard";
 import DataTable from "@/components/custom/NewCustomDataTable";
 import CustomPagination from "@components/custom/CustomPagination";
 import CustomTableSearch from "@components/custom/CustomTableSearch";
-import PeranAddDialog from "./PeranAddDialog";
+import PeranProjectAddDialog from "./PeranProjectAddDialog";
+import Navbar from "@/layout/NavBar";
 
-function PeranIndex({ perans, filters, permissions }) {
+function PeranProjectIndex({ project, perans, filters, permissions }) {
 
   const { props: { auth } } = usePage();
   
@@ -18,7 +18,7 @@ function PeranIndex({ perans, filters, permissions }) {
   const hasPermission = (permission) => auth.permissions.includes(permission);
 
   const onRowClick = (item) => {
-    router.visit(`/dashboard/peran/${item.id}`);
+    router.visit(`/projects/${project?.id}/peran/${item.id}`);
   };
 
   const handleSort = (column) => {
@@ -28,7 +28,7 @@ function PeranIndex({ perans, filters, permissions }) {
     }
 
     router.get(
-      "/dashboard/peran",
+      `/projects/${project?.id}/peran`,
       {
         per_page: perans.per_page,
         search,
@@ -41,7 +41,7 @@ function PeranIndex({ perans, filters, permissions }) {
 
   const onPaginationChange = (value) => {
     router.get(
-      `/dashboard/peran`,
+      `/projects/${project?.id}/peran`,
       {
         per_page: value,
         search,
@@ -56,7 +56,7 @@ function PeranIndex({ perans, filters, permissions }) {
 
   const onSearch = () => {
     router.get(
-      "/dashboard/peran",
+      `/projects/${project?.id}/peran`,
       {
         per_page: perans.per_page,
         search,
@@ -75,7 +75,7 @@ function PeranIndex({ perans, filters, permissions }) {
           <div className="flex justify-between items-center gap-2">
 
             {hasPermission('dashboard.role.manage') && (
-              <PeranAddDialog permissions={permissions} />
+              <PeranProjectAddDialog project={project} permissions={permissions} />
             )}
 
             <CustomTableSearch
@@ -106,5 +106,5 @@ function PeranIndex({ perans, filters, permissions }) {
   );
 }
 
-PeranIndex.layout = (page) => <Dashboard title={"Peran"}>{page}</Dashboard>;
-export default PeranIndex;
+PeranProjectIndex.layout = (page) => <Navbar>{page}</Navbar>;
+export default PeranProjectIndex;

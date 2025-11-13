@@ -4,7 +4,7 @@ namespace Modules\Pekerja\Services;
 
 use App\Models\User;
 use DB;
-use Modules\Pekerja\Repositories\Eloquent\PekerjaRepository;
+use Modules\Pekerja\Repositories\PekerjaRepository;
 
 class PekerjaService
 {
@@ -40,11 +40,6 @@ class PekerjaService
         return $this->pekerjaRepository->find($id);
     }
 
-    public function findPekerjaByIdWithPeran(int $id)
-    {
-        return $this->pekerjaRepository->findWithPeran($id);
-    }
-
     public function updatePekerja(User $user, array $data)
     {
         return DB::transaction(function () use ($user, $data) {
@@ -77,33 +72,5 @@ class PekerjaService
             'sort_direction' => $request->sort_direction,
             'role' => $request->role,
         ];
-    }
-
-    public function getPekerjaByProject($projectId)
-    {
-        $users = User::whereHas('projects', function ($q) use ($projectId) {
-            $q->where('project_id', $projectId);
-        })->with('roles')->get();
-
-        $users->transform(function ($user) {
-            $user->posisi = $user->roles->first()->name ?? '-';
-
-            return $user;
-        });
-
-        return $users;
-    }
-
-    public function getAvailablePekerjaForProject($projectId)
-    {
-        return User::whereDoesntHave('projects', function ($q) use ($projectId) {
-            $q->where('project_id', $projectId);
-        })->orderBy('name')->get(['id', 'name']);
-    }
-
-    public function assignPekerjaToProject($pekerjaId, $projectId)
-    {
-        $user = User::findOrFail($pekerjaId);
-        $user->projects()->attach($projectId);
     }
 }
