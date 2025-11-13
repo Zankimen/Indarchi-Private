@@ -4,15 +4,29 @@ namespace Modules\Presensi\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 use Modules\Presensi\Models\Attendance;
+use Modules\Project\Services\ProjectService;
 
 class PresensiController extends Controller
 {
+    protected ProjectService $projectService;
+
+    public function __construct(ProjectService $projectService)
+    {
+        $this->projectService = $projectService;
+    }
+
     public function index($projectId)
     {
-        return Inertia::render('Presensi/PresensiIndex', [
-            'projectId' => $projectId,
-        ]);
+        try {
+            return Inertia::render('Presensi/PresensiIndex', [
+                'project' => $this->projectService->getProjectById($projectId),
+                'projectId' => $projectId,
+            ]);
+        } catch (\Throwable $e) {
+            return back(303)->withErrors(['error' => 'Gagal memuat halaman presensi: ' . $e->getMessage()]);
+        }
     }
 
     public function getAttendances($projectId)
@@ -21,7 +35,9 @@ class PresensiController extends Controller
             $attendances = Attendance::where('project_id', $projectId)->get();
             return response()->json($attendances);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Gagal mengambil data presensi: ' . $e->getMessage()], 500);
+            return response()->json([
+                'error' => 'Gagal mengambil data presensi: ' . $e->getMessage(),
+            ], 500);
         }
     }
 
@@ -43,8 +59,20 @@ class PresensiController extends Controller
                 'type' => $data['type'],
             ]);
 
+            // Ambil semua pekerja project dan set default status "Absen"
+            $projectWorkers = \App\Models\User::whereHas('projects', function ($q) use ($projectId) {
+                $q->where('project_id', $projectId);
+            })->get();
+
+            foreach ($projectWorkers as $worker) {
+                $attendance->workers()->attach($worker->id, [
+                    'project_id' => $projectId,
+                    'status' => 'Absen',
+                ]);
+            }
+
             return response()->json([
-                'message' => 'Presensi berhasil disimpan.',
+                'message' => 'Presensi berhasil disimpan dan semua pekerja diatur ke status Absen.',
                 'data' => $attendance,
             ], 201);
         } catch (\Throwable $e) {
@@ -98,9 +126,71 @@ class PresensiController extends Controller
             }
 
             $attendance->delete();
+
             return response()->json(['message' => 'Presensi berhasil dihapus.']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Gagal menghapus presensi: ' . $e->getMessage()], 500);
+            return response()->json([
+                'error' => 'Gagal menghapus presensi: ' . $e->getMessage(),
+            ], 500);
         }
     }
+
+    public function getAttendancesworkers($projectId, $attendanceId)
+    {
+        $projectWorkers = \App\Models\User::whereHas('projects', function ($q) use ($projectId) {
+            $q->where('project_id', $projectId);
+        })->get();
+
+        $attendance = \Modules\Presensi\Models\Attendance::with(['workers' => function ($q) {
+            $q->select('users.id', 'users.name', 'users.email');
+        }])->findOrFail($attendanceId);
+
+        $workers = $projectWorkers->map(function ($worker) use ($attendance) {
+            $pivot = $attendance->workers->firstWhere('id', $worker->id);
+            return [
+                'id' => $worker->id,
+                'name' => $worker->name,
+                'email' => $worker->email,
+                'status' => $pivot ? $pivot->pivot->status : 'Absen',
+            ];
+        });
+
+        return response()->json([
+            'workers' => $workers,
+        ]);
+    }
+
+    public function updateWorkerStatus($projectId, $attendanceId, $userId, Request $request)
+    {
+        $validated = $request->validate([
+            'status' => 'required|string|in:Hadir,Absen,Izin',
+        ]);
+
+        $attendance = Attendance::where('project_id', $projectId)
+            ->where('id', $attendanceId)
+            ->firstOrFail();
+
+        $isWorkerInProject = \App\Models\User::whereHas('projects', function ($q) use ($projectId) {
+            $q->where('project_id', $projectId);
+        })->where('id', $userId)->exists();
+
+        if (! $isWorkerInProject) {
+            return response()->json(['error' => 'Pekerja tidak terdaftar di project ini.'], 403);
+        }
+
+        $attendance->workers()->syncWithoutDetaching([
+            $userId => [
+                'project_id' => $projectId,
+                'status' => $validated['status'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+
+        return response()->json([
+            'message' => 'Status updated successfully',
+            'worker' => ['id' => $userId, 'status' => $validated['status']],
+        ]);
+    }
+
 }

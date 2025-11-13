@@ -30,16 +30,11 @@ function formatKey(d) {
 }
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-const pekerjaDummy = [
-  { nama: "Pak Budi", posisi: "Mandor", status: "Hadir" },
-  { nama: "Pak Andi", posisi: "Kuli", status: "Hadir" },
-  { nama: "Bu Siti", posisi: "Admin", status: "Izin" },
-]
 
 function PresensiIndex() {
   const { props } = usePage()
   const projectId = props.projectId
-
+  const [workers, setWorkers] = useState([])
   const today = useMemo(() => new Date(), [])
   const [cursor, setCursor] = useState(() => new Date(today.getFullYear(), today.getMonth(), 1))
   const [attendance, setAttendance] = useState({})
@@ -66,7 +61,6 @@ function PresensiIndex() {
   }
   while (cells.length % 7 !== 0) cells.push({ date: null, key: null })
 
-  // 🔄 Fetch data attendance
   useEffect(() => {
     async function fetchAttendances() {
       try {
@@ -95,7 +89,6 @@ function PresensiIndex() {
     fetchAttendances()
   }, [projectId])
 
-  // ➕ Tambah Presensi
   async function addEntry() {
     if (!selectedKey || !startTime || !endTime) {
       alert("Lengkapi semua data presensi terlebih dahulu.")
@@ -145,7 +138,6 @@ function PresensiIndex() {
     }
   }
 
-  // ✏️ Update Presensi
   async function updatePresensi() {
     if (!selectedPresensi?.id) return
     if (!startTime || !endTime) {
@@ -179,13 +171,8 @@ function PresensiIndex() {
         if (updated[selectedKey]) {
           updated[selectedKey] = updated[selectedKey].map((item) =>
             item.id === selectedPresensi.id
-              ? {
-                ...item,
-                start: payload.start_time,
-                end: payload.end_time,
-                type: payload.type,
-              }
-              : item,
+              ? { ...item, start: payload.start_time, end: payload.end_time, type: payload.type }
+              : item
           )
         }
         return updated
@@ -198,7 +185,6 @@ function PresensiIndex() {
     }
   }
 
-  // 🗑 Hapus Presensi
   async function deletePresensi() {
     if (!selectedPresensi?.id) return
     if (!confirm("Yakin ingin menghapus presensi ini?")) return
@@ -285,7 +271,8 @@ function PresensiIndex() {
             return (
               <div
                 key={cell.key}
-                className={`flex flex-col h-20 sm:h-28 border rounded-md p-1 sm:p-2 cursor-pointer hover:bg-muted transition-colors ${isToday ? "ring-2 ring-primary" : ""}`}>
+                className={`flex flex-col h-20 sm:h-28 border rounded-md p-1 sm:p-2 cursor-pointer hover:bg-muted transition-colors ${isToday ? "ring-2 ring-primary" : ""}`}
+              >
                 <div className="flex justify-between mb-1">
                   <span className="text-xs sm:text-sm font-medium">{cell.date.getDate()}</span>
                   <Button
@@ -295,6 +282,7 @@ function PresensiIndex() {
                     onClick={(e) => {
                       e.stopPropagation()
                       setSelectedKey(cell.key)
+                      resetFields()
                       setIsModalOpen(true)
                     }}
                   >
@@ -308,17 +296,23 @@ function PresensiIndex() {
                       <div
                         key={i}
                         className={`text-xs rounded-md px-1 sm:px-2 py-0.5 sm:py-1 truncate mb-0.5 ${x.type === "Lembur"
-                            ? "bg-orange-200 text-orange-900"
-                            : "bg-secondary text-secondary-foreground"
+                          ? "bg-orange-200 text-orange-900"
+                          : "bg-secondary text-secondary-foreground"
                           }`}
                         onClick={(e) => {
-                          e.stopPropagation() 
+                          e.stopPropagation()
                           setSelectedKey(cell.key)
                           setSelectedPresensi(x)
                           setStartTime(x.start || "")
                           setEndTime(x.end || "")
                           setType(x.type || "Biasa")
                           setIsDetailOpen(true)
+                          setWorkers([])
+
+                          fetch(`/projects/${projectId}/attendances/${x.id}/getAttendancesworkers`,)
+                            .then((res) => res.json())
+                            .then((data) => setWorkers(data.workers || []))
+                            .catch((err) => console.error("Gagal ambil data pekerja:", err))
                         }}
                       >
                         {x.type} ({formatTime(x.start)}-{formatTime(x.end)})
@@ -368,7 +362,6 @@ function PresensiIndex() {
                 className="w-full sm:w-auto"
                 onClick={() => {
                   setIsModalOpen(false)
-                  resetFields()
                 }}
               >
                 Batal
@@ -381,6 +374,7 @@ function PresensiIndex() {
         </DialogContent>
       </Dialog>
 
+      {/* Detail Presensi */}
       <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
         <DialogContent className="w-[95vw] sm:max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -429,25 +423,70 @@ function PresensiIndex() {
               <thead className="bg-gray-100">
                 <tr>
                   <th className="p-2 sm:p-3 border text-left">Nama</th>
-                  <th className="p-2 sm:p-3 border text-left">Posisi</th>
+                  <th className="p-2 sm:p-3 border text-left">Email</th>
                   <th className="p-2 sm:p-3 border text-left">Status</th>
                 </tr>
               </thead>
               <tbody>
-                {pekerjaDummy.map((p, i) => (
-                  <tr key={i}>
-                    <td className="border p-2 sm:p-3">{p.nama}</td>
-                    <td className="border p-2 sm:p-3">{p.posisi}</td>
-                    <td className="border p-2 sm:p-3">
-                      <span
-                        className={`px-2 py-1 text-xs rounded text-white inline-block ${p.status === "Hadir" ? "bg-green-500" : p.status === "Absen" ? "bg-red-500" : "bg-yellow-500"
-                          }`}
-                      >
-                        {p.status}
-                      </span>
+                {workers.length > 0 ? (
+                  workers.map((p, i) => (
+                    <tr key={i}>
+                      <td className="border p-2 sm:p-3">{p.name}</td>
+                      <td className="border p-2 sm:p-3">{p.email}</td>
+                      <td className="border p-2 sm:p-3">
+                        <Select
+                          value={p.status || "Absen"}
+                          onValueChange={async (newStatus) => {
+                            try {
+                              const res = await fetch(
+                                `/projects/${projectId}/attendances/${selectedPresensi.id}/workers/${p.id}`,
+                                {
+                                  method: "PATCH",
+                                  credentials: "same-origin",
+                                  headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')?.getAttribute("content"),
+                                    Accept: "application/json",
+                                  },
+                                  body: JSON.stringify({ status: newStatus }),
+                                }
+                              );
+
+                              const json = await res.json();
+                              if (!res.ok) throw new Error(json?.message || json?.error || "Gagal memperbarui status");
+
+                              setWorkers((prev) => prev.map((w) => (w.id === p.id ? { ...w, status: newStatus } : w)));
+                            } catch (err) {
+                              alert(err.message);
+                            }
+                          }}
+                        >
+                          <SelectTrigger
+                            className={`w-24 text-xs font-medium ${(p.status || "Absen") === "Hadir"
+                                ? "bg-green-100 text-green-700 border-green-400"
+                                : (p.status || "Absen") === "Izin"
+                                  ? "bg-yellow-100 text-yellow-700 border-yellow-400"
+                                  : "bg-red-100 text-red-700 border-red-400"
+                              }`}
+                          >
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Hadir">Hadir</SelectItem>
+                            <SelectItem value="Absen">Absen</SelectItem>
+                            <SelectItem value="Izin">Izin</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className="text-center p-3 text-muted-foreground">
+                      Tidak ada data pekerja
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
@@ -462,12 +501,12 @@ function PresensiIndex() {
                   Batal
                 </Button>
                 <Button onClick={updatePresensi} className="w-full sm:w-auto">
-                  Simpan Perubahan
+                  💾 Simpan
                 </Button>
               </>
             ) : (
               <Button onClick={() => setIsEditMode(true)} className="w-full sm:w-auto">
-                ✏️ Edit Presensi
+                ✏️ Edit
               </Button>
             )}
           </DialogFooter>
@@ -477,6 +516,6 @@ function PresensiIndex() {
   )
 }
 
-PresensiIndex.layout = (page) => <Navbar children={page} />
+PresensiIndex.layout = (page) => <Navbar>{page}</Navbar>
 
 export default PresensiIndex
