@@ -1,0 +1,11 @@
+{
+    "name": "Timeline",
+    "alias": "timeline",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Timeline\\Providers\\TimelineServiceProvider"
+    ],
+    "files": []
+}
