@@ -27,7 +27,7 @@ return new class extends Migration
             $table->enum('status', ['hadir', 'izin', 'sakit', 'alpha'])->default('hadir');
             $table->text('keterangan')->nullable();
             $table->timestamps();
-            
+
             // Ensure one attendance record per user per project per day
             $table->unique(['user_id', 'project_id', 'tanggal']);
         });
@@ -41,4 +41,3 @@ return new class extends Migration
         Schema::dropIfExists('presensi');
     }
 };
-

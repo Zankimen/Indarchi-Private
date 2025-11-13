@@ -3,8 +3,8 @@
 namespace Modules\Presensi\Models;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Modules\Project\Models\Project;
 
 class Presensi extends Model
@@ -51,4 +51,3 @@ class Presensi extends Model
         return $this->belongsTo(Project::class);
     }
 }
-

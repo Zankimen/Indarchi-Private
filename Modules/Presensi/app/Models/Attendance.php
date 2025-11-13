@@ -16,5 +16,4 @@ class Attendance extends Model
         'end_time',
         'type',
     ];
-
 }

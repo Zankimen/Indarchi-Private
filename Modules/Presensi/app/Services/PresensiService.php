@@ -2,14 +2,15 @@
 
 namespace Modules\Presensi\Services;
 
+use Carbon\Carbon;
 use Modules\Presensi\Models\Presensi;
 use Modules\Presensi\Repositories\Eloquent\PresensiRepository;
 use Modules\Project\Repositories\Eloquent\ProjectRepository;
-use Carbon\Carbon;
 
 class PresensiService
 {
     protected PresensiRepository $presensiRepository;
+
     protected ProjectRepository $projectRepository;
 
     public function __construct(
@@ -23,7 +24,7 @@ class PresensiService
     public function clockIn(array $data)
     {
         $today = Carbon::today()->toDateString();
-        
+
         // Check if already clocked in today
         $existingPresensi = $this->presensiRepository->findByUserProjectAndDate(
             $data['user_id'],
@@ -38,7 +39,7 @@ class PresensiService
         // Verify location if needed
         if (isset($data['latitude_masuk']) && isset($data['longitude_masuk'])) {
             $project = $this->projectRepository->find($data['project_id']);
-            
+
             // Simple distance check (you might want to implement a more accurate method)
             $isWithinRadius = $this->checkLocationWithinRadius(
                 $data['latitude_masuk'],
@@ -46,7 +47,7 @@ class PresensiService
                 $project
             );
 
-            if (!$isWithinRadius) {
+            if (! $isWithinRadius) {
                 throw new \Exception('Lokasi Anda diluar jangkauan radius project');
             }
         }
@@ -68,14 +69,14 @@ class PresensiService
     public function clockOut(array $data)
     {
         $today = Carbon::today()->toDateString();
-        
+
         $existingPresensi = $this->presensiRepository->findByUserProjectAndDate(
             $data['user_id'],
             $data['project_id'],
             $today
         );
 
-        if (!$existingPresensi) {
+        if (! $existingPresensi) {
             throw new \Exception('Anda belum melakukan absen masuk hari ini');
         }
 
@@ -96,7 +97,7 @@ class PresensiService
     public function getMonthlyAttendance($userId, $projectId, $year, $month)
     {
         $attendance = $this->presensiRepository->getMonthlyAttendance($userId, $projectId, $year, $month);
-        
+
         // Convert to array indexed by date
         $attendanceByDate = [];
         foreach ($attendance as $record) {
@@ -116,7 +117,7 @@ class PresensiService
         $today = Carbon::today()->toDateString();
         $attendance = $this->presensiRepository->findByUserProjectAndDate($userId, $projectId, $today);
 
-        if (!$attendance) {
+        if (! $attendance) {
             return [
                 'has_clocked_in' => false,
                 'has_clocked_out' => false,
@@ -126,7 +127,7 @@ class PresensiService
 
         return [
             'has_clocked_in' => true,
-            'has_clocked_out' => !is_null($attendance->jam_keluar),
+            'has_clocked_out' => ! is_null($attendance->jam_keluar),
             'attendance' => $attendance,
         ];
     }
@@ -140,10 +141,10 @@ class PresensiService
     {
         // This is a simple implementation
         // You might want to use a more accurate method like Haversine formula
-        
+
         // For now, we'll return true - implement actual distance calculation
         // based on project->radius and project->lokasi coordinates
-        
+
         return true;
     }
 
@@ -162,4 +163,3 @@ class PresensiService
         return $this->presensiRepository->delete($id);
     }
 }
-

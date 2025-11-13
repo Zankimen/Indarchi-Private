@@ -3,7 +3,6 @@
 namespace Modules\Presensi\Repositories\Eloquent;
 
 use Modules\Presensi\Models\Presensi;
-use Carbon\Carbon;
 
 class PresensiRepository
 {
@@ -70,12 +69,12 @@ class PresensiRepository
         $allowedSorts = ['tanggal', 'jam_masuk', 'jam_keluar', 'status', 'created_at'];
 
         $sortBy = $request->get('sort_by', 'tanggal');
-        if (!in_array($sortBy, $allowedSorts)) {
+        if (! in_array($sortBy, $allowedSorts)) {
             $sortBy = 'tanggal';
         }
 
         $sortDirection = strtolower($request->get('sort_direction', 'desc'));
-        if (!in_array($sortDirection, ['asc', 'desc'])) {
+        if (! in_array($sortDirection, ['asc', 'desc'])) {
             $sortDirection = 'desc';
         }
 
@@ -99,4 +98,3 @@ class PresensiRepository
         return $query->paginate($perPage)->withQueryString();
     }
 }
-

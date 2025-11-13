@@ -5,9 +5,9 @@ namespace Modules\Presensi\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Modules\Pekerja\Services\PekerjaService;
 use Modules\Presensi\Models\Attendance;
 use Modules\Presensi\Models\Presensi;
-use Modules\Pekerja\Services\PekerjaService;
 
 class PresensiController extends Controller
 {
@@ -22,9 +22,10 @@ class PresensiController extends Controller
     {
         try {
             $attendances = Attendance::where('project_id', $projectId)->get();
+
             return response()->json($attendances);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Gagal mengambil data presensi: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Gagal mengambil data presensi: '.$e->getMessage()], 500);
         }
     }
 
@@ -72,7 +73,7 @@ class PresensiController extends Controller
                 ->where('id', $attendanceId)
                 ->first();
 
-            if (!$attendance) {
+            if (! $attendance) {
                 return response()->json(['error' => 'Presensi tidak ditemukan.'], 404);
             }
 
@@ -84,7 +85,7 @@ class PresensiController extends Controller
             ]);
         } catch (\Throwable $e) {
             return response()->json([
-                'error' => 'Gagal memperbarui presensi: ' . $e->getMessage(),
+                'error' => 'Gagal memperbarui presensi: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -96,14 +97,15 @@ class PresensiController extends Controller
                 ->where('id', $attendanceId)
                 ->first();
 
-            if (!$attendance) {
+            if (! $attendance) {
                 return response()->json(['error' => 'Presensi tidak ditemukan.'], 404);
             }
 
             $attendance->delete();
+
             return response()->json(['message' => 'Presensi berhasil dihapus.']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Gagal menghapus presensi: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Gagal menghapus presensi: '.$e->getMessage()], 500);
         }
     }
 
@@ -113,10 +115,10 @@ class PresensiController extends Controller
         try {
             $pekerjaService = app(PekerjaService::class);
             $pekerja = $pekerjaService->getPekerjaByProject($projectId);
-            
+
             return response()->json($pekerja);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Gagal mengambil data pekerja: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Gagal mengambil data pekerja: '.$e->getMessage()], 500);
         }
     }
 
@@ -125,7 +127,7 @@ class PresensiController extends Controller
     {
         try {
             $date = $request->query('date');
-            
+
             $presensi = Presensi::where('project_id', $projectId)
                 ->where('tanggal', $date)
                 ->with('user:id,name')
@@ -144,7 +146,7 @@ class PresensiController extends Controller
 
             return response()->json($presensi);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Gagal mengambil presensi: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Gagal mengambil presensi: '.$e->getMessage()], 500);
         }
     }
 
@@ -181,7 +183,7 @@ class PresensiController extends Controller
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Gagal menyimpan presensi: ' . $e->getMessage()
+                'error' => 'Gagal menyimpan presensi: '.$e->getMessage(),
             ], 500);
         }
     }
