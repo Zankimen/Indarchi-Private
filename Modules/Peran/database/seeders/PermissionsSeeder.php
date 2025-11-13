@@ -25,7 +25,7 @@ class PermissionsSeeder extends Seeder
             'dashboard.project.fullview',
             'dashboard.project.manage',
 
-            'project.can.be.added',
+            'dashboard.project.can.be.added',
 
             'project.project.view',
             'project.project.manage',
