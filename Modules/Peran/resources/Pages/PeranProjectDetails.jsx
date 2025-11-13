@@ -4,6 +4,7 @@ import { ChevronLeft, Shield } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatDateNoHour } from "@/components/lib/utils";
+import { toast } from "sonner";
 import PeranProjectEditDialog from "./PeranProjectEditDialog";
 import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 import Navbar from "@/layout/NavBar";
@@ -18,12 +19,13 @@ function PeranProjectDetails({ project, peran, permissions }) {
   const handleDelete = () => {
     router.delete(`/projects/${project?.id}/peran/${peran.id}`, {
       onSuccess: () => {
-        router.visit(`/projects/${project?.id}/peran`);
+        toast.success(`Peran "${peran.name}" berhasil dihapus`);
       },
       onError: (errors) => {
-        if (errors.error) {
-          alert(errors.error);
-        }
+        console.error("Delete peran error:", errors);
+        const errorMessage =
+          errors?.error || "Gagal menghapus peran – cek network/console untuk detail.";
+        toast.error(errorMessage);
       },
     });
   };

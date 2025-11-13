@@ -100,7 +100,7 @@ class PekerjaRepository
         $pekerjas = User::whereDoesntHave('projects', function ($q) use ($projectId) {
             $q->where('project_id', $projectId);
         })
-            ->permission('project.can.be.added')
+            ->permission('dashboard.project.can.be.added')
             ->orderBy('name')
             ->get(['id', 'name']);
 

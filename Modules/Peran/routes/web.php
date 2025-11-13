@@ -30,7 +30,12 @@ Route::middleware(['auth'])
             ->group(function () {
                 Route::get('/{project_id}/peran', [PeranProjectController::class, 'index'])->name('peran.project.index');
                 Route::get('/{project_id}/peran/{peran_id}', [PeranProjectController::class, 'details'])->name('peran.project.details');
-                Route::post('/{project_id}/peran', [PeranProjectController::class, 'create'])->name('peran.project.create');
-                Route::put('/{project_id}/peran/{peran_id}/edit', [PeranProjectController::class, 'create'])->name('peran.project.create');
+
+                // Route untuk create dan edit dengan permission manage
+                Route::middleware(['require.permission:project.role.manage'])->group(function () {
+                    Route::post('/{project_id}/peran', [PeranProjectController::class, 'create'])->name('peran.project.create');
+                    Route::put('/{project_id}/peran/{peran_id}/edit', [PeranProjectController::class, 'update'])->name('peran.project.update');
+                    Route::delete('/{project_id}/peran/{peran_id}', [PeranProjectController::class, 'delete'])->name('peran.project.delete');
+                });
             });
     });

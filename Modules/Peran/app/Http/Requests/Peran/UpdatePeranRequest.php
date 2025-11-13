@@ -13,8 +13,13 @@ class UpdatePeranRequest extends FormRequest
 
     public function rules(): array
     {
+        // Cek apakah ini route untuk dashboard atau project
+        $peranId = $this->route('peran')
+            ? $this->route('peran')->id
+            : $this->route('peran_id');
+
         return [
-            'name' => 'required|string|max:255|unique:roles,name,'.$this->route('peran')->id,
+            'name' => 'required|string|max:255|unique:roles,name,' . $peranId,
             'deskripsi' => 'nullable|string',
             'permissions' => 'nullable|array',
             'permissions.*' => 'exists:permissions,id',
