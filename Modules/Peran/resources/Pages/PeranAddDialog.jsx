@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useForm } from "@inertiajs/react";
 import { Save, ChevronLeft, Shield, Plus } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -27,6 +27,10 @@ function PeranAddDialog({ permissions }) {
     deskripsi: "",
     permissions: [],
   });
+
+  const dashboardPermissions = useMemo(() => {
+    return permissions.filter((permission) => !permission.name.startsWith("project."));
+  }, [permissions]);
 
   useEffect(() => {
     if (!open) {
@@ -129,23 +133,36 @@ function PeranAddDialog({ permissions }) {
             </div>
 
             <div className="space-y-4">
-              <Label className="text-foreground text-base block">Permissions</Label>
+              <Label className="text-foreground text-base block">
+                Permissions
+                <span className="text-sm text-muted-foreground font-normal ml-2">
+                  (Hanya permissions untuk dashboard global)
+                </span>
+              </Label>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 max-h-[300px] overflow-y-auto border border-border rounded-lg p-4">
-                {permissions.map((permission) => (
-                  <div key={permission.id} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`permission-${permission.id}`}
-                      checked={data.permissions.includes(permission.id)}
-                      onCheckedChange={(checked) => handlePermissionChange(permission.id, checked)}
-                    />
-                    <Label
-                      htmlFor={`permission-${permission.id}`}
-                      className="text-sm font-normal cursor-pointer"
-                    >
-                      {permission.name}
-                    </Label>
-                  </div>
-                ))}
+                {dashboardPermissions.length > 0 ? (
+                  dashboardPermissions.map((permission) => (
+                    <div key={permission.id} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`permission-${permission.id}`}
+                        checked={data.permissions.includes(permission.id)}
+                        onCheckedChange={(checked) =>
+                          handlePermissionChange(permission.id, checked)
+                        }
+                      />
+                      <Label
+                        htmlFor={`permission-${permission.id}`}
+                        className="text-sm font-normal cursor-pointer"
+                      >
+                        {permission.name}
+                      </Label>
+                    </div>
+                  ))
+                ) : (
+                  <p className="col-span-3 text-sm text-muted-foreground text-center py-4">
+                    Tidak ada permission tersedia
+                  </p>
+                )}
               </div>
               {errors.permissions && <p className="text-sm text-red-500">{errors.permissions}</p>}
             </div>

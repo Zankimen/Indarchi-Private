@@ -18,14 +18,13 @@ class Attendance extends Model
     ];
 
     public function workers()
-{
-    return $this->belongsToMany(
-        \App\Models\User::class,
-        'project_presensi_worker',
-        'attendance_id',
-        'user_id'
-    )->withPivot(['project_id', 'status'])
-     ->withTimestamps();
-}
-
+    {
+        return $this->belongsToMany(
+            \App\Models\User::class,
+            'project_presensi_worker',
+            'attendance_id',
+            'user_id'
+        )->withPivot(['project_id', 'status'])
+            ->withTimestamps();
+    }
 }
