@@ -2,6 +2,7 @@
 
 namespace Modules\Peran\Http\Controllers;
 
+use App\Helpers\PermissionDisplayHelper;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\Request;
@@ -32,11 +33,14 @@ class PeranProjectController extends Controller
     public function index(Request $request, $project_id)
     {
         try {
+            $permissions = $this->peranProjectService->getPeranProjectPermissions();
+            $permissionsWithDisplayNames = PermissionDisplayHelper::withDisplayNames($permissions);
+
             return Inertia::render('Peran/PeranProjectIndex', [
                 'project' => $this->projectService->getProjectById($project_id),
                 'perans' => $this->peranProjectService->getProjectPeransPaginated($request, $project_id),
                 'filters' => $this->peranProjectService->getAllPeranProjectFilter($request),
-                'permissions' => $this->peranProjectService->getPeranProjectPermissions(),
+                'permissions' => $permissionsWithDisplayNames,
             ]);
         } catch (Exception $e) {
             return back($this->SEE_OTHER)->withErrors(['error' => $e->getMessage()]);
@@ -47,11 +51,13 @@ class PeranProjectController extends Controller
     {
         try {
             $peran = $this->peranProjectService->getPeranById($peran_id);
+            $permissions = $this->peranProjectService->getPeranProjectPermissions();
+            $permissionsWithDisplayNames = PermissionDisplayHelper::withDisplayNames($permissions);
 
             return Inertia::render('Peran/PeranProjectDetails', [
                 'project' => $this->projectService->getProjectById($project_id),
                 'peran' => $peran->load('permissions'),
-                'permissions' => $this->peranProjectService->getPeranProjectPermissions(),
+                'permissions' => $permissionsWithDisplayNames,
             ]);
         } catch (Exception $e) {
             return back($this->SEE_OTHER)->withErrors(['error' => $e->getMessage()]);
@@ -66,8 +72,7 @@ class PeranProjectController extends Controller
             return back($this->SEE_OTHER)
                 ->with('success', 'Peran berhasil ditambahkan.');
         } catch (Exception $e) {
-            return
-                back($this->SEE_OTHER)
+            return back($this->SEE_OTHER)
                 ->withErrors(['error' => $e->getMessage()])
                 ->withInput();
         }

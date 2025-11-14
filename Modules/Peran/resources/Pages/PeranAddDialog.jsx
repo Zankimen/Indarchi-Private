@@ -153,8 +153,9 @@ function PeranAddDialog({ permissions }) {
                       <Label
                         htmlFor={`permission-${permission.id}`}
                         className="text-sm font-normal cursor-pointer"
+                        title={permission.name}
                       >
-                        {permission.name}
+                        {permission.display_name || permission.name}
                       </Label>
                     </div>
                   ))
