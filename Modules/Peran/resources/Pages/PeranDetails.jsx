@@ -1,7 +1,7 @@
 import React from "react";
 import { Head, Link, router, usePage } from "@inertiajs/react";
 import Dashboard from "@/layout/Dashboard";
-import { ChevronLeft, Shield } from "lucide-react";
+import { ChevronLeft, Shield, Lock } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatDateNoHour } from "@/components/lib/utils";
@@ -15,6 +15,8 @@ function PeranDetails({ peran, permissions }) {
   } = usePage();
 
   const hasPermission = (permission) => auth.permissions.includes(permission);
+
+  const isProtectedRole = peran.name.toLowerCase() === "admin";
 
   const handleDelete = () => {
     router.delete(`/dashboard/peran/${peran.id}`, {
@@ -36,9 +38,17 @@ function PeranDetails({ peran, permissions }) {
             <div className="flex items-center justify-center sm:justify-start font-bold text-2xl md:text-2xl m-0 p-0">
               <Shield className="w-10 h-10 bg-accent text-background rounded-2xl mr-4 p-2" />
               <div>
-                <h1 className="flex items-center h-full m-0 p-0 font-bold text-2xl md:text-2xl">
-                  {peran.name}
-                </h1>
+                <div className="flex items-center gap-2">
+                  <h1 className="flex items-center h-full m-0 p-0 font-bold text-2xl md:text-2xl">
+                    {peran.name}
+                  </h1>
+                  {isProtectedRole && (
+                    <div className="flex items-center gap-1 px-2 py-1 bg-amber-500/10 border border-amber-500/20 rounded-md">
+                      <Lock className="w-3 h-3 text-amber-600" />
+                      <span className="text-xs font-medium text-amber-600">Protected</span>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
             <div className="grid grid-cols-1 gap-2 sm:flex">
@@ -49,7 +59,7 @@ function PeranDetails({ peran, permissions }) {
                 </Button>
               </Link>
 
-              {hasPermission("dashboard.role.manage") && (
+              {hasPermission("dashboard.role.manage") && !isProtectedRole && (
                 <>
                   <PeranEditDialog peran={peran} permissions={permissions} />
 
@@ -60,6 +70,14 @@ function PeranDetails({ peran, permissions }) {
                     warningText="Peran yang dihapus tidak dapat dikembalikan."
                   />
                 </>
+              )}
+
+              {isProtectedRole && (
+                <div className="px-4 py-2 bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 rounded-lg">
+                  <p className="text-sm text-amber-800 dark:text-amber-200">
+                    Peran ini dilindungi dan tidak dapat diubah
+                  </p>
+                </div>
               )}
             </div>
           </div>

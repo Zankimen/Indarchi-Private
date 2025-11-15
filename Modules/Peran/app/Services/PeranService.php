@@ -10,6 +10,9 @@ use Modules\Peran\Repositories\PeranRepository;
 
 class PeranService
 {
+    // Protected roles that cannot be deleted or modified
+    protected array $protectedRoles = ['admin'];
+
     public function __construct(private PeranRepository $peranRepository) {}
 
     public function getPeransPaginated($request)
@@ -34,11 +37,21 @@ class PeranService
 
     public function updatePeran(Peran $peran, array $data): Peran
     {
+        // Protect admin role from being modified
+        if ($this->isProtectedRole($peran)) {
+            throw new Exception('Peran "'.$peran->name.'" dilindungi dan tidak dapat diubah.');
+        }
+
         return $this->peranRepository->update($peran, $data);
     }
 
     public function deletePeran(Peran $role): bool
     {
+        // Protect admin role from being deleted
+        if ($this->isProtectedRole($role)) {
+            throw new Exception('Peran "'.$role->name.'" dilindungi dan tidak dapat dihapus.');
+        }
+
         if (method_exists($role, 'users') && $role->users()->count() > 0) {
             throw new Exception('Tidak dapat menghapus peran yang sedang digunakan oleh pengguna.');
         }
@@ -64,5 +77,21 @@ class PeranService
             'sort_direction' => $request->sort_direction ?? 'desc',
             'per_page' => $request->per_page ?? 10,
         ];
+    }
+
+    /**
+     * Check if the role is protected
+     */
+    protected function isProtectedRole(Peran $role): bool
+    {
+        return in_array(strtolower($role->name), array_map('strtolower', $this->protectedRoles));
+    }
+
+    /**
+     * Check if role name is protected (for validation)
+     */
+    public function isProtectedRoleName(string $roleName): bool
+    {
+        return in_array(strtolower($roleName), array_map('strtolower', $this->protectedRoles));
     }
 }

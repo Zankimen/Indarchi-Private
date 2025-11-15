@@ -2,6 +2,7 @@
 
 namespace Modules\Peran\Http\Controllers;
 
+use App\Helpers\PermissionDisplayHelper;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\Request;
@@ -29,10 +30,13 @@ class PeranController extends Controller
     public function index(Request $request)
     {
         try {
+            $permissions = $this->peranService->getAllPermissions();
+            $permissionsWithDisplayNames = PermissionDisplayHelper::withDisplayNames($permissions);
+
             return Inertia::render('Peran/PeranIndex', [
                 'perans' => $this->peranService->getPeransPaginated($request),
                 'filters' => $this->peranService->getAllPeranFilter($request),
-                'permissions' => $this->peranService->getAllPermissions(),
+                'permissions' => $permissionsWithDisplayNames,
             ]);
         } catch (Exception $e) {
             return back($this->SEE_OTHER)->withErrors(['error' => $e->getMessage()]);
@@ -42,9 +46,12 @@ class PeranController extends Controller
     public function details(Peran $peran)
     {
         try {
+            $permissions = $this->peranService->getAllPermissions();
+            $permissionsWithDisplayNames = PermissionDisplayHelper::withDisplayNames($permissions);
+
             return Inertia::render('Peran/PeranDetails', [
                 'peran' => $peran->load('permissions'),
-                'permissions' => $this->peranService->getAllPermissions(),
+                'permissions' => $permissionsWithDisplayNames,
             ]);
         } catch (Exception $e) {
             return back($this->SEE_OTHER)->withErrors(['error' => $e->getMessage()]);
@@ -59,10 +66,9 @@ class PeranController extends Controller
             return back($this->SEE_OTHER)
                 ->with('success', 'Peran berhasil ditambahkan.');
         } catch (Exception $e) {
-            return
-                back($this->SEE_OTHER)
-                    ->withErrors(['error' => $e->getMessage()])
-                    ->withInput();
+            return back($this->SEE_OTHER)
+                ->withErrors(['error' => $e->getMessage()])
+                ->withInput();
         }
     }
 
