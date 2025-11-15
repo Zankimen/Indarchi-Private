@@ -43,6 +43,7 @@ class ProjectController extends Controller
             return redirect()->route('projects.index')->with('success', 'Project berhasil ditambahkan.');
         } catch (Exception $e) {
             dd($e);
+
             return back()
                 ->withErrors(['error' => $e->getMessage()])
                 ->withInput();

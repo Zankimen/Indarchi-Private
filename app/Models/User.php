@@ -62,14 +62,13 @@ class User extends Authenticatable
     }
 
     public function attendances()
-{
-    return $this->belongsToMany(
-        \Modules\Presensi\Models\Attendance::class,
-        'project_presensi_worker',
-        'user_id',
-        'attendance_id'
-    )->withPivot(['project_id', 'status'])
-     ->withTimestamps();
-}
-
+    {
+        return $this->belongsToMany(
+            \Modules\Presensi\Models\Attendance::class,
+            'project_presensi_worker',
+            'user_id',
+            'attendance_id'
+        )->withPivot(['project_id', 'status'])
+            ->withTimestamps();
+    }
 }

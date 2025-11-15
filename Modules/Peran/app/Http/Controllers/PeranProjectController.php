@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Peran\Http\Requests\Peran\CreatePeranRequest;
 use Modules\Peran\Http\Requests\Peran\UpdatePeranRequest;
-use Modules\Peran\Models\Peran;
 use Modules\Peran\Services\PeranProjectService;
 use Modules\Peran\Services\PeranService;
 use Modules\Project\Services\ProjectService;
@@ -69,8 +68,8 @@ class PeranProjectController extends Controller
         } catch (Exception $e) {
             return
                 back($this->SEE_OTHER)
-                ->withErrors(['error' => $e->getMessage()])
-                ->withInput();
+                    ->withErrors(['error' => $e->getMessage()])
+                    ->withInput();
         }
     }
 

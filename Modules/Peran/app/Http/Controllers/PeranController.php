@@ -61,8 +61,8 @@ class PeranController extends Controller
         } catch (Exception $e) {
             return
                 back($this->SEE_OTHER)
-                ->withErrors(['error' => $e->getMessage()])
-                ->withInput();
+                    ->withErrors(['error' => $e->getMessage()])
+                    ->withInput();
         }
     }
 

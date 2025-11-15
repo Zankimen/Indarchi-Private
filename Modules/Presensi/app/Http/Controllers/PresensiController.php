@@ -25,7 +25,7 @@ class PresensiController extends Controller
                 'projectId' => $projectId,
             ]);
         } catch (\Throwable $e) {
-            return back(303)->withErrors(['error' => 'Gagal memuat halaman presensi: ' . $e->getMessage()]);
+            return back(303)->withErrors(['error' => 'Gagal memuat halaman presensi: '.$e->getMessage()]);
         }
     }
 
@@ -37,7 +37,7 @@ class PresensiController extends Controller
             return response()->json($attendances);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Gagal mengambil data presensi: ' . $e->getMessage(),
+                'error' => 'Gagal mengambil data presensi: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -131,7 +131,7 @@ class PresensiController extends Controller
             return response()->json(['message' => 'Presensi berhasil dihapus.']);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Gagal menghapus presensi: ' . $e->getMessage(),
+                'error' => 'Gagal menghapus presensi: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -148,6 +148,7 @@ class PresensiController extends Controller
 
         $workers = $projectWorkers->map(function ($worker) use ($attendance) {
             $pivot = $attendance->workers->firstWhere('id', $worker->id);
+
             return [
                 'id' => $worker->id,
                 'name' => $worker->name,
@@ -193,5 +194,4 @@ class PresensiController extends Controller
             'worker' => ['id' => $userId, 'status' => $validated['status']],
         ]);
     }
-
 }

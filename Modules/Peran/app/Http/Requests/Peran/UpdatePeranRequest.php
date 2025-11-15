@@ -19,7 +19,7 @@ class UpdatePeranRequest extends FormRequest
             : $this->route('peran_id');
 
         return [
-            'name' => 'required|string|max:255|unique:roles,name,' . $peranId,
+            'name' => 'required|string|max:255|unique:roles,name,'.$peranId,
             'deskripsi' => 'nullable|string',
             'permissions' => 'nullable|array',
             'permissions.*' => 'exists:permissions,id',
