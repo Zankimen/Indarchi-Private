@@ -13,16 +13,35 @@ function PekerjaProjectDetail({ project, pekerja, posisi, roles }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    put(`/projects/${project.id}/pekerja/${pekerja.id}/update`);
+    put(`/projects/${project?.id}/pekerja/${pekerja?.id}/update`);
   };
+
+  // Safety check - if data is missing, show error message
+  if (!project || !pekerja) {
+    return (
+      <>
+        <Head title="Detail Pekerja" />
+        <div className="space-y-6">
+          <Card className="p-6 border-border">
+            <p className="text-muted-foreground text-center py-8">
+              Data pekerja tidak ditemukan.
+            </p>
+            <Button variant="outline" onClick={() => window.history.back()}>
+              Kembali
+            </Button>
+          </Card>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
-      <Head title={`Detail ${pekerja.name} - ${project.nama}`} />
+      <Head title={`Detail ${pekerja?.name || "Pekerja"} - ${project?.nama || "Project"}`} />
       <div className="space-y-6">
         <Card className="p-6 border-border flex items-center justify-between">
           <h1 className="text-2xl font-bold">
-            Detail Pekerja di Project {project.nama}
+            Detail Pekerja di Project {project?.nama || project?.name || `#${project?.id}`}
           </h1>
           <Button variant="outline" onClick={() => window.history.back()}>
             Kembali
@@ -36,20 +55,24 @@ function PekerjaProjectDetail({ project, pekerja, posisi, roles }) {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-muted-foreground text-sm">Nama</p>
-              <p className="text-base font-medium">{pekerja.name}</p>
+              <p className="text-base font-medium">{pekerja?.name || "-"}</p>
             </div>
             <div>
               <p className="text-muted-foreground text-sm">Email</p>
-              <p className="text-base font-medium">{pekerja.email}</p>
+              <p className="text-base font-medium">{pekerja?.email || "-"}</p>
             </div>
             <div>
               <p className="text-muted-foreground text-sm">Posisi Saat Ini</p>
-              <p className="text-base font-medium">{pekerja.roles[0].name}</p>
+              <p className="text-base font-medium">
+                {posisi || pekerja?.roles?.[0]?.name || (pekerja?.roles && pekerja.roles.length > 0 ? pekerja.roles[0].name : "-")}
+              </p>
             </div>
             <div>
               <p className="text-muted-foreground text-sm">Tanggal Bergabung</p>
               <p className="text-base font-medium">
-                {new Date(pekerja.created_at).toLocaleDateString("id-ID")}
+                {pekerja?.created_at 
+                  ? new Date(pekerja.created_at).toLocaleDateString("id-ID")
+                  : "-"}
               </p>
             </div>
           </div>
@@ -60,27 +83,33 @@ function PekerjaProjectDetail({ project, pekerja, posisi, roles }) {
           <h2 className="text-xl font-semibold mb-2">Edit Posisi Pekerja</h2>
           <Separator />
 
-          <form onSubmit={handleSubmit} className="flex items-center gap-4">
-            <Select
-              value={data.posisi}
-              onValueChange={(value) => setData("posisi", value)}
-            >
-              <SelectTrigger className="w-64 border-border">
-                <SelectValue placeholder="Pilih Posisi Baru" />
-              </SelectTrigger>
-              <SelectContent>
-                {roles.map((r) => (
-                  <SelectItem key={r.id} value={r.name}>
-                    {r.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          {roles && roles.length > 0 ? (
+            <form onSubmit={handleSubmit} className="flex items-center gap-4">
+              <Select
+                value={data.posisi}
+                onValueChange={(value) => setData("posisi", value)}
+              >
+                <SelectTrigger className="w-64 border-border">
+                  <SelectValue placeholder="Pilih Posisi Baru" />
+                </SelectTrigger>
+                <SelectContent>
+                  {roles.map((r) => (
+                    <SelectItem key={r.id} value={r.name}>
+                      {r.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-            <Button type="submit" disabled={processing}>
-              {processing ? "Menyimpan..." : "Simpan Perubahan"}
-            </Button>
-          </form>
+              <Button type="submit" disabled={processing}>
+                {processing ? "Menyimpan..." : "Simpan Perubahan"}
+              </Button>
+            </form>
+          ) : (
+            <p className="text-muted-foreground">
+              Tidak ada posisi tersedia untuk project ini.
+            </p>
+          )}
         </Card>
       </div>
     </>

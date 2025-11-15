@@ -4,6 +4,7 @@ namespace Modules\Pekerja\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Modules\Pekerja\Http\Request\Pekerja\AddToProjectRequest;
 use Modules\Pekerja\Http\Request\Pekerja\UpdateProjectPekerjaPeranRequest;
@@ -31,9 +32,11 @@ class PekerjaProjectController extends Controller
     public function index($project_id)
     {
         try {
+            $pekerja = $this->pekerjaProjectService->getPekerjaByProject($project_id);
+            
             return Inertia::render('Pekerja/PekerjaProject', [
                 'project' => $this->projectService->getProjectById($project_id),
-                'pekerja' => $this->pekerjaProjectService->getPekerjaByProject($project_id),
+                'pekerja' => $pekerja->values()->all(), // Convert collection to array
                 'availableWorkers' => $this->pekerjaProjectService->getAvailablePekerjaForProject($project_id),
                 'roles' => $this->peranProjectService->getAllProjectPerans($project_id),
             ]);
@@ -79,10 +82,46 @@ class PekerjaProjectController extends Controller
             $project = $this->projectService->getProjectById($project_id);
             $pekerja = $this->pekerjaProjectService->findPekerjaByIdWithPeran($pekerja_id);
             $roles = $this->peranProjectService->getAllProjectPerans($project_id);
+            
+            // Query role directly from database for this project
+            $posisi = DB::table('model_has_roles')
+                ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+                ->where('model_has_roles.model_id', $pekerja_id)
+                ->where('model_has_roles.model_type', 'App\\Models\\User')
+                ->where(function ($q) use ($project_id) {
+                    $q->where('model_has_roles.team_id', $project_id)
+                        ->orWhereNull('model_has_roles.team_id');
+                })
+                ->value('roles.name');
+            
+            // If still empty, try getRoleNames() with team context
+            if (empty($posisi)) {
+                $roleNames = $pekerja->getRoleNames();
+                if ($roleNames->isNotEmpty()) {
+                    $posisi = $roleNames->first();
+                } elseif ($pekerja->roles && $pekerja->roles->isNotEmpty()) {
+                    $pekerja->load('roles');
+                    $posisi = $pekerja->roles->first()->name ?? '';
+                }
+            }
+            
+            // Ensure roles are properly serialized as array
+            $pekerjaData = $pekerja->toArray();
+            if ($pekerja->roles && $pekerja->roles->isNotEmpty()) {
+                $pekerjaData['roles'] = $pekerja->roles->map(function ($role) {
+                    return [
+                        'id' => $role->id,
+                        'name' => $role->name,
+                    ];
+                })->values()->toArray();
+            } else {
+                $pekerjaData['roles'] = [];
+            }
 
-            return inertia('Pekerja/PekerjaProjectDetail', [
+            return Inertia::render('Pekerja/PekerjaProjectDetail', [
                 'project' => $project,
-                'pekerja' => $pekerja,
+                'pekerja' => $pekerjaData,
+                'posisi' => $posisi,
                 'roles' => $roles,
             ]);
         } catch (Exception $e) {
