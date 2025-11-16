@@ -8,28 +8,7 @@ import { formatDateNoHour } from "@/components/lib/utils";
 import { toast } from "sonner";
 import PeranEditDialog from "./PeranEditDialog";
 import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
-
-// Helper function to get display name (inline version)
-const getPermissionDisplayName = (permissionName) => {
-  const displayNames = {
-    "dashboard.view": "Akses Dashboard",
-    "dashboard.role.view": "Lihat Daftar Peran",
-    "dashboard.role.manage": "Kelola Peran",
-    "dashboard.worker.view": "Lihat Daftar Pekerja",
-    "dashboard.worker.manage": "Kelola Pekerja",
-    "dashboard.project.view": "Lihat Daftar Proyek",
-    "dashboard.project.fullview": "Lihat Detail Lengkap Proyek",
-    "dashboard.project.manage": "Kelola Proyek",
-    "dashboard.project.can.be.added": "Dapat Ditambahkan ke Proyek",
-    "project.project.view": "Lihat Detail Proyek (Lokal)",
-    "project.project.manage": "Kelola Proyek (Lokal)",
-    "project.worker.view": "Lihat Anggota Proyek",
-    "project.worker.manage": "Kelola Anggota Proyek",
-    "project.role.view": "Lihat Peran Proyek",
-    "project.role.manage": "Kelola Peran Proyek",
-  };
-  return displayNames[permissionName] || permissionName;
-};
+import { getPermissionDisplayName } from "@/components/lib/permissionDisplayUtils";
 
 function PeranDetails({ peran, permissions }) {
   const {
