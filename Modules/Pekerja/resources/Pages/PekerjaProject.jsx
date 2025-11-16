@@ -37,8 +37,7 @@ function PekerjaProject({ pekerja, availableWorkers, project, roles }) {
               Pekerja di Project {project?.nama ?? project?.name ?? `#${project?.id}`}
             </h1>
             <div className="flex gap-2">
-              <AddWorkerModal availableWorkers={availableWorkers} project_id={project?.id} />
-              <AddNewWorker project_id={project?.id} roles={roles} />
+          <AddWorkerModal availableWorkers={availableWorkers} project_id={project?.id} />
             </div>
           </div>
 
@@ -72,6 +71,9 @@ function AddWorkerModal({ availableWorkers, project_id }) {
     post(`/projects/${project_id}/pekerja/add`);
   };
 
+  // Find selected worker name to display
+  const selectedWorker = availableWorkers.find((w) => w.id.toString() === data.pekerja_id?.toString());
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -82,20 +84,30 @@ function AddWorkerModal({ availableWorkers, project_id }) {
           <DialogTitle>Pilih Pekerja yang Sudah Ada</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6 mt-4">
-          <Select onValueChange={(v) => setData("pekerja_id", v)} value={data.pekerja_id}>
-            <SelectTrigger className="w-full border-border">
-              <SelectValue placeholder="Pilih pekerja" />
-            </SelectTrigger>
-            <SelectContent>
-              {availableWorkers.map((w) => (
-                <SelectItem key={w.id} value={w.id}>
-                  {w.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="space-y-2">
+            <Select 
+              onValueChange={(v) => setData("pekerja_id", v)} 
+              value={data.pekerja_id?.toString() || ""}
+            >
+              <SelectTrigger className="w-full border-border">
+                <SelectValue placeholder="Pilih pekerja" />
+              </SelectTrigger>
+              <SelectContent>
+                {availableWorkers.map((w) => (
+                  <SelectItem key={w.id} value={w.id.toString()}>
+                    {w.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {selectedWorker && (
+              <p className="text-xs text-muted-foreground">
+                Pekerja yang dipilih: <span className="font-medium">{selectedWorker.name}</span>
+              </p>
+            )}
+          </div>
 
-          <Button type="submit" disabled={processing} className="w-full">
+          <Button type="submit" disabled={processing || !data.pekerja_id} className="w-full">
             {processing ? "Menambahkan..." : "Tambah ke Project"}
           </Button>
         </form>
