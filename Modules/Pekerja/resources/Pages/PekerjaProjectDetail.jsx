@@ -1,5 +1,5 @@
-import React from "react";
-import { Head, useForm } from "@inertiajs/react";
+import React, { useEffect } from "react";
+import { Head, useForm, usePage } from "@inertiajs/react";
 import Navbar from "@/layout/NavBar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,13 +7,28 @@ import { Separator } from "@/components/ui/separator";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 
 function PekerjaProjectDetail({ project, pekerja, posisi, roles }) {
+  const { flash } = usePage().props;
+  
   const { data, setData, put, processing } = useForm({
     posisi: posisi || "",
   });
 
+  // Update form when posisi prop changes
+  useEffect(() => {
+    if (posisi) {
+      setData("posisi", posisi);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [posisi]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    put(`/projects/${project?.id}/pekerja/${pekerja?.id}/update`);
+    put(`/projects/${project?.id}/pekerja/${pekerja?.id}/update`, {
+      preserveScroll: true,
+      onSuccess: () => {
+        // Form will be reset and page will reload with new data
+      },
+    });
   };
 
   // Safety check - if data is missing, show error message
@@ -83,32 +98,73 @@ function PekerjaProjectDetail({ project, pekerja, posisi, roles }) {
           <h2 className="text-xl font-semibold mb-2">Edit Posisi Pekerja</h2>
           <Separator />
 
-          {roles && roles.length > 0 ? (
-            <form onSubmit={handleSubmit} className="flex items-center gap-4">
-              <Select
-                value={data.posisi}
-                onValueChange={(value) => setData("posisi", value)}
-              >
-                <SelectTrigger className="w-64 border-border">
-                  <SelectValue placeholder="Pilih Posisi Baru" />
-                </SelectTrigger>
-                <SelectContent>
-                  {roles.map((r) => (
-                    <SelectItem key={r.id} value={r.name}>
-                      {r.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          {/* Success/Error Messages */}
+          {flash?.success && (
+            <div className="p-3 bg-green-50 border border-green-200 rounded-md text-green-800 text-sm">
+              {flash.success}
+            </div>
+          )}
+          {flash?.error && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-md text-red-800 text-sm">
+              {flash.error}
+            </div>
+          )}
 
-              <Button type="submit" disabled={processing}>
-                {processing ? "Menyimpan..." : "Simpan Perubahan"}
-              </Button>
+          {roles && roles.length > 0 ? (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="flex items-center gap-4">
+                <div className="flex-1 max-w-xs">
+                  <div className="text-sm font-medium text-muted-foreground mb-2">
+                    Pilih Posisi
+                  </div>
+                  <Select
+                    value={data.posisi}
+                    onValueChange={(value) => setData("posisi", value)}
+                  >
+                    <SelectTrigger className="w-full border-border">
+                      <SelectValue placeholder="Pilih Posisi Baru" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {roles.map((r) => (
+                        <SelectItem key={r.id} value={r.name}>
+                          {r.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex items-end">
+                  <Button type="submit" disabled={processing || !data.posisi}>
+                    {processing ? "Menyimpan..." : "Simpan Perubahan"}
+                  </Button>
+                </div>
+              </div>
+              {data.posisi && (
+                <p className="text-xs text-muted-foreground">
+                  Posisi yang dipilih: <span className="font-medium">{data.posisi}</span>
+                </p>
+              )}
             </form>
           ) : (
-            <p className="text-muted-foreground">
-              Tidak ada posisi tersedia untuk project ini.
-            </p>
+            <div className="space-y-3">
+              <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+                <p className="text-yellow-800 text-sm font-medium mb-2">
+                  Tidak ada posisi tersedia
+                </p>
+                <p className="text-yellow-700 text-sm mb-3">
+                  Silakan buat posisi (peran) terlebih dahulu di halaman Peran Project sebelum dapat mengedit posisi pekerja.
+                </p>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    // Navigate to peran project page to create roles
+                    window.location.href = `/projects/${project?.id}/peran`;
+                  }}
+                >
+                  Pergi ke Halaman Peran Project
+                </Button>
+              </div>
+            </div>
           )}
         </Card>
       </div>

@@ -30,9 +30,10 @@ class PekerjaProjectService
                 });
         })
         ->leftJoin('roles', 'model_has_roles.role_id', '=', 'roles.id')
-        ->select('users.*', 'roles.name as posisi')
+        ->select('users.*', 'roles.name as posisi', 'model_has_roles.team_id as role_team_id')
+        ->orderByRaw('CASE WHEN model_has_roles.team_id = ? THEN 0 ELSE 1 END', [$projectId])
         ->get()
-        ->unique('id'); // Remove duplicates if user has multiple roles
+        ->unique('id'); // Remove duplicates if user has multiple roles, keeping the one with matching team_id
 
         // Add posisi attribute to each user
         return $users->map(function ($user) use ($projectId) {
@@ -99,12 +100,25 @@ class PekerjaProjectService
         return $this->pekerjaRepository->find($id);
     }
 
-    public function updatePekerjaProjectPeran($request, $pekerja_id)
+    public function updatePekerjaProjectPeran($request, $pekerja_id, $project_id = null)
     {
-        return DB::transaction(function () use ($request, $pekerja_id) {
+        return DB::transaction(function () use ($request, $pekerja_id, $project_id) {
             $pekerja = $this->findPekerjaById($pekerja_id);
+            
+            // Set team context if project_id is provided
+            $originalTeamId = null;
+            if ($project_id) {
+                $originalTeamId = getTeamId();
+                setTeamId($project_id);
+            }
 
+            // Sync roles (will use current team context)
             $pekerja->syncRoles($request);
+            
+            // Restore original team context if it was changed
+            if ($project_id && $originalTeamId !== null) {
+                setTeamId($originalTeamId);
+            }
         });
     }
 }

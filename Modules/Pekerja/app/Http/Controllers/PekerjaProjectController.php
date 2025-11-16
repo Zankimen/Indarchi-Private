@@ -133,9 +133,14 @@ class PekerjaProjectController extends Controller
     public function updateProjectPeran(UpdateProjectPekerjaPeranRequest $request, $project_id, $pekerja_id)
     {
         try {
-            $this->pekerjaProjectService->updatePekerjaProjectPeran([$request->validated()['posisi']], $pekerja_id);
+            $this->pekerjaProjectService->updatePekerjaProjectPeran(
+                [$request->validated()['posisi']], 
+                $pekerja_id, 
+                $project_id
+            );
 
-            return back($this->SEE_OTHER)
+            // Redirect to list page to show updated data
+            return redirect()->route('pekerja.projects.pekerja', $project_id, $this->SEE_OTHER)
                 ->with('success', 'Posisi pekerja berhasil diperbarui.');
         } catch (Exception $e) {
             return back()
