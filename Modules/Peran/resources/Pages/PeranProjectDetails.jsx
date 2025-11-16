@@ -9,6 +9,28 @@ import PeranProjectEditDialog from "./PeranProjectEditDialog";
 import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 import Navbar from "@/layout/NavBar";
 
+// Helper function to get display name (inline version)
+const getPermissionDisplayName = (permissionName) => {
+  const displayNames = {
+    "dashboard.view": "Akses Dashboard",
+    "dashboard.role.view": "Lihat Daftar Peran",
+    "dashboard.role.manage": "Kelola Peran",
+    "dashboard.worker.view": "Lihat Daftar Pekerja",
+    "dashboard.worker.manage": "Kelola Pekerja",
+    "dashboard.project.view": "Lihat Daftar Proyek",
+    "dashboard.project.fullview": "Lihat Detail Lengkap Proyek",
+    "dashboard.project.manage": "Kelola Proyek",
+    "dashboard.project.can.be.added": "Dapat Ditambahkan ke Proyek",
+    "project.project.view": "Lihat Detail Proyek (Lokal)",
+    "project.project.manage": "Kelola Proyek (Lokal)",
+    "project.worker.view": "Lihat Anggota Proyek",
+    "project.worker.manage": "Kelola Anggota Proyek",
+    "project.role.view": "Lihat Peran Proyek",
+    "project.role.manage": "Kelola Peran Proyek",
+  };
+  return displayNames[permissionName] || permissionName;
+};
+
 function PeranProjectDetails({ project, peran, permissions }) {
   const {
     props: { auth },
@@ -94,8 +116,14 @@ function PeranProjectDetails({ project, peran, permissions }) {
               {peran.permissions && peran.permissions.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {peran.permissions.map((permission) => (
-                    <Button key={permission.id} variant="outline" disabled>
-                      {permission.name}
+                    <Button
+                      key={permission.id}
+                      variant="outline"
+                      disabled
+                      title={permission.name}
+                      className="justify-start text-left"
+                    >
+                      {getPermissionDisplayName(permission.name)}
                     </Button>
                   ))}
                 </div>

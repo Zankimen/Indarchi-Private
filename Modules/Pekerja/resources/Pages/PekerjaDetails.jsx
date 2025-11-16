@@ -7,6 +7,28 @@ import { ChevronLeft, Users } from "lucide-react";
 import { formatDateNoHour } from "@/components/lib/utils";
 import PekerjaEditDialog from "./PekerjaEditDialog";
 
+// Helper function to get display name (inline version)
+const getPermissionDisplayName = (permissionName) => {
+  const displayNames = {
+    "dashboard.view": "Akses Dashboard",
+    "dashboard.role.view": "Lihat Daftar Peran",
+    "dashboard.role.manage": "Kelola Peran",
+    "dashboard.worker.view": "Lihat Daftar Pekerja",
+    "dashboard.worker.manage": "Kelola Pekerja",
+    "dashboard.project.view": "Lihat Daftar Proyek",
+    "dashboard.project.fullview": "Lihat Detail Lengkap Proyek",
+    "dashboard.project.manage": "Kelola Proyek",
+    "dashboard.project.can.be.added": "Dapat Ditambahkan ke Proyek",
+    "project.project.view": "Lihat Detail Proyek (Lokal)",
+    "project.project.manage": "Kelola Proyek (Lokal)",
+    "project.worker.view": "Lihat Anggota Proyek",
+    "project.worker.manage": "Kelola Anggota Proyek",
+    "project.role.view": "Lihat Peran Proyek",
+    "project.role.manage": "Kelola Peran Proyek",
+  };
+  return displayNames[permissionName] || permissionName;
+};
+
 function PekerjaDetails({ pekerja, perans }) {
   const {
     props: { auth },
@@ -16,7 +38,6 @@ function PekerjaDetails({ pekerja, perans }) {
 
   return (
     <>
-      <Head title={pekerja.name} />
       <Head title={pekerja.name} />
       <div className="space-y-4">
         <Card className="border-border">
@@ -39,7 +60,6 @@ function PekerjaDetails({ pekerja, perans }) {
           </div>
         </Card>
 
-
         <Card className="p-6 px-8 border-border">
           <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-2">
             <Detail label="Nama" value={pekerja.name} />
@@ -51,19 +71,27 @@ function PekerjaDetails({ pekerja, perans }) {
           </div>
         </Card>
 
-        {/* Permissions Card - if needed */}
+        {/* Permissions Card */}
         {pekerja.permissions && pekerja.permissions.length > 0 && (
           <Card className="p-6 px-8 border-border">
-            <h3 className="text-lg font-semibold mb-4">Permissions</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {pekerja.permissions.map((permission) => (
-                <div
-                  key={permission.id}
-                  className="inline-flex items-center px-3 py-2 rounded-lg bg-accent/50 border border-border text-sm font-medium"
-                >
-                  {permission.name}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">Permissions</h3>
+                <div className="text-sm text-muted-foreground">
+                  Total: {pekerja.permissions.length} permissions
                 </div>
-              ))}
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {pekerja.permissions.map((permission) => (
+                  <div
+                    key={permission.id}
+                    className="inline-flex items-center px-3 py-2 rounded-lg bg-accent/50 border border-border text-sm font-medium"
+                    title={permission.name}
+                  >
+                    {getPermissionDisplayName(permission.name)}
+                  </div>
+                ))}
+              </div>
             </div>
           </Card>
         )}
