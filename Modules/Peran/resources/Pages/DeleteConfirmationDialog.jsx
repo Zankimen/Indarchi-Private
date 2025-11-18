@@ -45,9 +45,11 @@ function DeleteConfirmationDialog({
             </div>
             <AlertDialogTitle className="text-xl font-semibold">{title}</AlertDialogTitle>
           </div>
-          <AlertDialogDescription className="text-base text-foreground/80 space-y-2 pt-2">
-            <p>{description}</p>
-            <p className="text-sm text-destructive font-medium">{warningText}</p>
+          <AlertDialogDescription asChild>
+            <div className="text-base text-foreground/80 space-y-2 pt-2">
+              <div>{description}</div>
+              <div className="text-sm text-destructive font-medium">{warningText}</div>
+            </div>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="gap-2 sm:gap-2 mt-4">

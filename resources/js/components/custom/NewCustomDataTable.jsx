@@ -187,17 +187,23 @@ function renderCell(column, value, item, onEdit, onDelete) {
         >
           <Edit className="h-4 w-4" />
         </Button>
-        <Button
-          size="sm"
-          variant="ghost"
-          className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete?.(item);
-          }}
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
+        {/* Only show delete button when the item is not an admin user */}
+        {!(
+          (item?.role && typeof item.role === "string" && item.role.toLowerCase() === "admin") ||
+          (Array.isArray(item?.roles) && item.roles.some((r) => (r?.name || r)?.toString().toLowerCase() === "admin"))
+        ) && (
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete?.(item);
+            }}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        )}
       </div>
     );
   }

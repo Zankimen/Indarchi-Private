@@ -1,11 +1,13 @@
 import React from "react";
-import { Head, Link, usePage } from "@inertiajs/react";
+import { Head, Link, router, usePage } from "@inertiajs/react";
 import Dashboard from "@/layout/Dashboard";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Users } from "lucide-react";
 import { formatDateNoHour } from "@/components/lib/utils";
 import PekerjaEditDialog from "./PekerjaEditDialog";
+import DeleteConfirmationDialog from "../../../Peran/resources/Pages/DeleteConfirmationDialog";
+import { toast } from "sonner";
 import { getPermissionDisplayName } from "@/components/lib/permissionDisplayUtils";
 
 function PekerjaDetails({ pekerja, perans }) {
@@ -14,6 +16,20 @@ function PekerjaDetails({ pekerja, perans }) {
   } = usePage();
 
   const hasPermission = (permission) => auth.permissions.includes(permission);
+  const isAdmin = pekerja?.roles && Array.isArray(pekerja.roles) && pekerja.roles.some((r) => (r?.name || r)?.toString().toLowerCase() === "admin");
+
+  const handleDelete = () => {
+    router.delete(`/dashboard/pekerja/${pekerja.id}`, {
+      onError: (errors) => {
+        console.error("Delete pekerja error:", errors);
+        const errorMessage = errors?.error || "Gagal menghapus pekerja – cek network/console untuk detail.";
+        toast.error(errorMessage);
+      },
+      onSuccess: () => {
+        router.visit(`/dashboard/pekerja`);
+      },
+    });
+  };
 
   return (
     <>
@@ -33,7 +49,22 @@ function PekerjaDetails({ pekerja, perans }) {
                 </Button>
               </Link>
               {hasPermission("dashboard.worker.manage") && (
-                <PekerjaEditDialog pekerja={pekerja} perans={perans} />
+                <>
+                  <PekerjaEditDialog pekerja={pekerja} perans={perans} />
+
+                  {!isAdmin ? (
+                    <DeleteConfirmationDialog
+                      onConfirm={handleDelete}
+                      title="Hapus Pekerja"
+                      description={`Apakah Anda yakin ingin menghapus pekerja "${pekerja.name}"?`}
+                      warningText="Pekerja yang dihapus tidak dapat dikembalikan."
+                    />
+                  ) : (
+                    <div className="px-4 py-2 bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 rounded-lg">
+                      <p className="text-sm text-amber-800 dark:text-amber-200">Akun admin tidak dapat dihapus</p>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>

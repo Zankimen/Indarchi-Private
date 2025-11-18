@@ -91,9 +91,15 @@ class PekerjaController extends Controller
         try {
             $user = $this->pekerjaService->findPekerjaById($id);
 
+            // Prevent deleting admin accounts server-side as extra safety
+            if (method_exists($user, 'hasRole') && $user->hasRole('admin')) {
+                return back()->with(['error' => 'Akun admin tidak dapat dihapus.']);
+            }
+
             $this->pekerjaService->deletePekerja($user);
 
-            return back($this->SEE_OTHER)
+            // redirect to index route to avoid redirect loops when called from SPA
+            return redirect()->route('pekerja.index', [], $this->SEE_OTHER)
                 ->with('success', 'Karyawan berhasil dihapus.');
         } catch (Exception $e) {
             return back()
