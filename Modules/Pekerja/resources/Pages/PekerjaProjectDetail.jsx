@@ -112,7 +112,7 @@ function PekerjaProjectDetail({ project, pekerja, posisi, roles }) {
 
           {roles && roles.length > 0 ? (
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="flex items-center gap-4">
+              <div className="flex items-start gap-4">
                 <div className="flex-1 max-w-xs">
                   <div className="text-sm font-medium text-muted-foreground mb-2">
                     Pilih Posisi
@@ -133,7 +133,7 @@ function PekerjaProjectDetail({ project, pekerja, posisi, roles }) {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="flex items-end">
+                <div className="flex items-center mt-7">
                   <Button type="submit" disabled={processing || !data.posisi}>
                     {processing ? "Menyimpan..." : "Simpan Perubahan"}
                   </Button>

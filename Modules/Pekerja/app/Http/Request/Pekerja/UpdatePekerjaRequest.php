@@ -17,7 +17,7 @@ class UpdatePekerjaRequest extends FormRequest
 
         return [
             'name' => 'required|string|max:255',
-            'alamat' => 'required|string',
+            'alamat' => 'nullable|string',
             'posisi' => 'required|string|max:50',
             'email' => 'required|email|unique:users,email,'.$userId,
             'password' => 'nullable|min:8',
@@ -33,7 +33,7 @@ class UpdatePekerjaRequest extends FormRequest
             'password.min' => 'Password minimal 8 karakter.',
             'nama_karyawan.required' => 'Nama karyawan wajib diisi.',
             'nama_karyawan.max' => 'Nama karyawan maksimal 255 karakter.',
-            'alamat.required' => 'Alamat wajib diisi.',
+            // 'alamat' dibuat optional; tidak perlu pesan required
             'posisi.required' => 'Posisi wajib dipilih.',
         ];
     }
