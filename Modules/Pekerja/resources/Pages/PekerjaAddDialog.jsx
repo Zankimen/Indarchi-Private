@@ -38,7 +38,20 @@ function PekerjaAddDialog({ perans }) {
     name: "",
     alamat: "",
     posisi: "",
+    avatar: null,
   });
+
+  const [avatarPreview, setAvatarPreview] = useState(null);
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setData("avatar", file);
+      const reader = new FileReader();
+      reader.onload = (ev) => setAvatarPreview(ev.target.result);
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -86,6 +99,34 @@ function PekerjaAddDialog({ perans }) {
 
         <Card className="px-6 py-8 space-y-2 border-border">
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Avatar upload */}
+            <div className="space-y-2">
+              <Label htmlFor="avatar" className="text-foreground text-base block">
+                Foto Profil (Opsional)
+              </Label>
+              <div className="flex items-center gap-4">
+                <label className="block">
+                  <div
+                    className="w-16 h-16 rounded-full overflow-hidden bg-muted flex items-center justify-center cursor-pointer"
+                    onClick={() => document.getElementById("pekerja-avatar-upload")?.click()}
+                  >
+                    {avatarPreview ? (
+                      <img src={avatarPreview} alt="avatar-preview" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="text-sm text-muted-foreground">Pilih</div>
+                    )}
+                  </div>
+                  <input
+                    id="pekerja-avatar-upload"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageUpload}
+                  />
+                </label>
+                <div className="text-sm text-muted-foreground">Kosongkan jika tidak ingin menyertakan foto.</div>
+              </div>
+            </div>
             <div className="space-y-2">
               <Label
                 htmlFor="email"

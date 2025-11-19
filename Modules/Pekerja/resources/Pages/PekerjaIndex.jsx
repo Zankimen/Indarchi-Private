@@ -94,7 +94,7 @@ function PekerjaIndex({ pekerjas, perans, filters }) {
               onRowClick={onRowClick}
               noItem="Pekerja"
             >
-              <DataTable.Column accessor="name" label="Nama" type="text" sort />
+              <DataTable.Column accessor="name" label="Nama" type="avatar" sort />
               <DataTable.Column accessor="email" label="Email" type="text" sort />
               <DataTable.Column accessor="role" label="Role" type="text" sort />
               <DataTable.Column accessor="created_at" label="Created At" type="time" sort />

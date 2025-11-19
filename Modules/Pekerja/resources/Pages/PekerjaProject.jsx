@@ -52,7 +52,7 @@ function PekerjaProject({ pekerja, availableWorkers, project, roles }) {
                 router.visit(`/projects/${project?.id}/pekerja/${row.id}`);
               }}
             >
-              <DataTable.Column accessor="name" label="Nama" />
+              <DataTable.Column accessor="name" label="Nama" type="avatar" />
               <DataTable.Column accessor="email" label="Email" />
               <DataTable.Column accessor="posisi" label="Posisi" />
             </DataTable>

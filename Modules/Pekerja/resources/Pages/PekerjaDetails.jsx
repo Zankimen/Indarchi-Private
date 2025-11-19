@@ -3,7 +3,8 @@ import { Head, Link, router, usePage } from "@inertiajs/react";
 import Dashboard from "@/layout/Dashboard";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Users } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { formatDateNoHour } from "@/components/lib/utils";
 import PekerjaEditDialog from "./PekerjaEditDialog";
 import DeleteConfirmationDialog from "../../../Peran/resources/Pages/DeleteConfirmationDialog";
@@ -38,7 +39,13 @@ function PekerjaDetails({ pekerja, perans }) {
         <Card className="border-border">
           <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">
             <div className="flex items-center justify-center sm:justify-start font-bold text-2xl md:text-2xl m-0 p-0">
-              <Users className="w-10 h-10 bg-accent text-background rounded-2xl mr-4 p-2" />
+              <Avatar className="w-10 h-10 mr-4">
+                {pekerja.avatar_url || pekerja.avatar ? (
+                  <AvatarImage src={pekerja.avatar_url || pekerja.avatar} />
+                ) : (
+                  <AvatarFallback>{(pekerja.name || "").split(" ").map((s) => s[0]).slice(0,2).join("")}</AvatarFallback>
+                )}
+              </Avatar>
               {pekerja.name}
             </div>
             <div className="grid grid-cols-1 gap-2 sm:flex">

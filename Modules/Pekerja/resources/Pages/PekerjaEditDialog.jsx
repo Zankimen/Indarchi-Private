@@ -34,7 +34,20 @@ function PekerjaEditDialog({ pekerja, perans }) {
     posisi: pekerja.roles?.[0]?.name || "",
     email: pekerja.email || "",
     password: "",
+    avatar: null,
   });
+
+  const [avatarPreview, setAvatarPreview] = useState(pekerja.avatar_url || pekerja.avatar || null);
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setData("avatar", file);
+      const reader = new FileReader();
+      reader.onload = (ev) => setAvatarPreview(ev.target.result);
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -94,6 +107,35 @@ function PekerjaEditDialog({ pekerja, perans }) {
                 onChange={(e) => setData("email", e.target.value)}
               />
               {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
+            </div>
+
+            {/* Avatar upload */}
+            <div className="space-y-2">
+              <Label htmlFor="avatar" className="text-foreground text-base block">
+                Foto Profil (Opsional)
+              </Label>
+              <div className="flex items-center gap-4">
+                <label className="block">
+                  <div
+                    className="w-16 h-16 rounded-full overflow-hidden bg-muted flex items-center justify-center cursor-pointer"
+                    onClick={() => document.getElementById("pekerja-avatar-edit-upload")?.click()}
+                  >
+                    {avatarPreview ? (
+                      <img src={avatarPreview} alt="avatar-preview" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="text-sm text-muted-foreground">Pilih</div>
+                    )}
+                  </div>
+                  <input
+                    id="pekerja-avatar-edit-upload"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageUpload}
+                  />
+                </label>
+                <div className="text-sm text-muted-foreground">Kosongkan jika tidak ingin mengubah foto.</div>
+              </div>
             </div>
 
             <div className="space-y-2">

@@ -16,6 +16,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const DataTableContext = createContext();
 
@@ -159,6 +160,19 @@ function Body() {
 }
 
 function renderCell(column, value, item, onEdit, onDelete) {
+  // avatar type renders avatar + name (if available)
+  if (column.type === "avatar") {
+    const src = item.avatar_url || item.avatar || item.photo || item.avatar_url || null;
+    const initials = (item.name || item.email || "").split(" ").map((s) => s[0]).slice(0,2).join("");
+    return (
+      <div className="flex items-center gap-3">
+        <Avatar className="h-8 w-8">
+          {src ? <AvatarImage src={src} /> : <AvatarFallback>{initials || "U"}</AvatarFallback>}
+        </Avatar>
+        <span className="truncate max-w-[180px]">{item.name || value || "-"}</span>
+      </div>
+    );
+  }
   if (column.type === "badge") {
     const badgeClasses = {
       selesai: "bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium",
