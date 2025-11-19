@@ -33,7 +33,7 @@ class PekerjaProjectController extends Controller
     {
         try {
             $pekerja = $this->pekerjaProjectService->getPekerjaByProject($project_id);
-            
+
             return Inertia::render('Pekerja/PekerjaProject', [
                 'project' => $this->projectService->getProjectById($project_id),
                 'pekerja' => $pekerja->values()->all(), // Convert collection to array
@@ -82,7 +82,7 @@ class PekerjaProjectController extends Controller
             $project = $this->projectService->getProjectById($project_id);
             $pekerja = $this->pekerjaProjectService->findPekerjaByIdWithPeran($pekerja_id);
             $roles = $this->peranProjectService->getAllProjectPerans($project_id);
-            
+
             // Query role directly from database for this project
             $posisi = DB::table('model_has_roles')
                 ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
@@ -93,7 +93,7 @@ class PekerjaProjectController extends Controller
                         ->orWhereNull('model_has_roles.team_id');
                 })
                 ->value('roles.name');
-            
+
             // If still empty, try getRoleNames() with team context
             if (empty($posisi)) {
                 $roleNames = $pekerja->getRoleNames();
@@ -104,7 +104,7 @@ class PekerjaProjectController extends Controller
                     $posisi = $pekerja->roles->first()->name ?? '';
                 }
             }
-            
+
             // Ensure roles are properly serialized as array
             $pekerjaData = $pekerja->toArray();
             if ($pekerja->roles && $pekerja->roles->isNotEmpty()) {
@@ -134,8 +134,8 @@ class PekerjaProjectController extends Controller
     {
         try {
             $this->pekerjaProjectService->updatePekerjaProjectPeran(
-                [$request->validated()['posisi']], 
-                $pekerja_id, 
+                [$request->validated()['posisi']],
+                $pekerja_id,
                 $project_id
             );
 

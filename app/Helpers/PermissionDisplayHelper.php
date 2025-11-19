@@ -6,9 +6,6 @@ class PermissionDisplayHelper
 {
     /**
      * Get human-readable display name for permission
-     *
-     * @param  string  $permissionName
-     * @return string
      */
     public static function getDisplayName(string $permissionName): string
     {
@@ -66,9 +63,6 @@ class PermissionDisplayHelper
 
     /**
      * Get permission category from permission name
-     *
-     * @param  string  $permissionName
-     * @return string
      */
     public static function getCategory(string $permissionName): string
     {
@@ -81,7 +75,6 @@ class PermissionDisplayHelper
      * Group permissions by category
      *
      * @param  \Illuminate\Support\Collection  $permissions
-     * @return array
      */
     public static function groupByCategory($permissions): array
     {
