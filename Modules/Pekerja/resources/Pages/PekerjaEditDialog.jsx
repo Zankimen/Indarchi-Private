@@ -109,7 +109,7 @@ function PekerjaEditDialog({ pekerja, perans }) {
               {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
             </div>
 
-            {/* Avatar upload */}
+            
             <div className="space-y-2">
               <Label htmlFor="avatar" className="text-foreground text-base block">
                 Foto Profil (Opsional)

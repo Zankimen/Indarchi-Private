@@ -99,7 +99,7 @@ function PekerjaAddDialog({ perans }) {
 
         <Card className="px-6 py-8 space-y-2 border-border">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Avatar upload */}
+            
             <div className="space-y-2">
               <Label htmlFor="avatar" className="text-foreground text-base block">
                 Foto Profil (Opsional)

@@ -20,12 +20,10 @@ function PekerjaProjectDetail({ project, pekerja, posisi, roles }) {
     posisi: posisi || "",
   });
 
-  // Update form when posisi prop changes
   useEffect(() => {
     if (posisi) {
       setData("posisi", posisi);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [posisi]);
 
   const handleSubmit = (e) => {
@@ -33,7 +31,6 @@ function PekerjaProjectDetail({ project, pekerja, posisi, roles }) {
     put(`/projects/${project?.id}/pekerja/${pekerja?.id}/update`, {
       preserveScroll: true,
       onSuccess: () => {
-        // Form will be reset and page will reload with new data
       },
     });
   };
@@ -51,7 +48,6 @@ function PekerjaProjectDetail({ project, pekerja, posisi, roles }) {
     });
   };
 
-  // Safety check - if data is missing, show error message
   if (!project || !pekerja) {
     return (
       <>
@@ -95,7 +91,7 @@ function PekerjaProjectDetail({ project, pekerja, posisi, roles }) {
           </div>
         </Card>
 
-        {/* Informasi Pekerja */}
+        
         <Card className="p-6 border-border space-y-4">
           <h2 className="text-xl font-semibold mb-2">Informasi Pekerja</h2>
           <Separator />
@@ -125,12 +121,12 @@ function PekerjaProjectDetail({ project, pekerja, posisi, roles }) {
           </div>
         </Card>
 
-        {/* Form Edit Role */}
+       
         <Card className="p-6 border-border space-y-4">
           <h2 className="text-xl font-semibold mb-2">Edit Posisi Pekerja</h2>
           <Separator />
 
-          {/* Success/Error Messages */}
+          
           {flash?.success && (
             <div className="p-3 bg-green-50 border border-green-200 rounded-md text-green-800 text-sm">
               {flash.success}
@@ -189,7 +185,6 @@ function PekerjaProjectDetail({ project, pekerja, posisi, roles }) {
                 <Button
                   variant="outline"
                   onClick={() => {
-                    // Navigate to peran project page to create roles
                     window.location.href = `/projects/${project?.id}/peran`;
                   }}
                 >
