@@ -148,4 +148,17 @@ class PekerjaProjectController extends Controller
         }
 
     }
+
+    public function remove($project_id, $pekerja_id)
+    {
+        try {
+            $this->pekerjaProjectService->removePekerjaFromProject($pekerja_id, $project_id);
+
+            return redirect()->route('pekerja.projects.pekerja', $project_id, $this->SEE_OTHER)
+                ->with('success', 'Pekerja berhasil dikeluarkan dari project.');
+        } catch (Exception $e) {
+            return back()
+                ->with(['error' => $e->getMessage()]);
+        }
+    }
 }

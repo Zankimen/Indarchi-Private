@@ -59,10 +59,7 @@ function PekerjaAddDialog({ perans }) {
           Tambah Pekerja <Plus />
         </Button>
       </DialogTrigger>
-      <DialogContent
-        className="sm:max-w-[800px] border-border"
-        aria-describedby={undefined}
-      >
+      <DialogContent className="sm:max-w-[800px] border-border">
         <DialogHeader>
           <Card className="border-border">
             <div className="grid grid-cols-1 sm:flex sm:justify-between items-center px-6 py-2 gap-4">

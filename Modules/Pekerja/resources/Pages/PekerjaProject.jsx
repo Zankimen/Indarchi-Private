@@ -82,6 +82,9 @@ function AddWorkerModal({ availableWorkers, project_id }) {
       <DialogContent className="sm:max-w-[500px] border-border">
         <DialogHeader>
           <DialogTitle>Pilih Pekerja yang Sudah Ada</DialogTitle>
+          <DialogDescription className="sr-only">
+            Pilih pekerja dari daftar untuk ditambahkan ke project.
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6 mt-4">
           <div className="space-y-2">

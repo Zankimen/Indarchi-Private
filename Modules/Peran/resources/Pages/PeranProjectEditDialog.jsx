@@ -75,9 +75,8 @@ function PeranProjectEditDialog({ project, peran, permissions }) {
           Edit
         </Button>
       </DialogTrigger>
-      <DialogContent
-        className="sm:max-w-[800px] border-border max-h-[90vh] overflow-y-auto"
-        aria-describedby={undefined}
+          <DialogContent
+            className="sm:max-w-[800px] border-border max-h-[90vh] overflow-y-auto"
       >
         <DialogHeader>
           <Card className="border-border">

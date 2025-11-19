@@ -1,13 +1,20 @@
 import React, { useEffect } from "react";
-import { Head, useForm, usePage } from "@inertiajs/react";
+import { Head, useForm, usePage, router } from "@inertiajs/react";
 import Navbar from "@/layout/NavBar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import DeleteConfirmationDialog from "../../../Peran/resources/Pages/DeleteConfirmationDialog";
+import { toast } from "sonner";
 
 function PekerjaProjectDetail({ project, pekerja, posisi, roles }) {
   const { flash } = usePage().props;
+  const {
+    props: { auth },
+  } = usePage();
+
+  const hasPermission = (permission) => auth.permissions.includes(permission);
   
   const { data, setData, put, processing } = useForm({
     posisi: posisi || "",
@@ -27,6 +34,19 @@ function PekerjaProjectDetail({ project, pekerja, posisi, roles }) {
       preserveScroll: true,
       onSuccess: () => {
         // Form will be reset and page will reload with new data
+      },
+    });
+  };
+
+  const handleRemove = () => {
+    router.delete(`/projects/${project?.id}/pekerja/${pekerja?.id}`, {
+      onError: (errors) => {
+        console.error("Remove pekerja error:", errors);
+        const errorMessage = errors?.error || "Gagal mengeluarkan pekerja — cek network/console untuk detail.";
+        toast.error(errorMessage);
+      },
+      onSuccess: () => {
+        router.visit(`/projects/${project?.id}/pekerja`);
       },
     });
   };
@@ -58,9 +78,21 @@ function PekerjaProjectDetail({ project, pekerja, posisi, roles }) {
           <h1 className="text-2xl font-bold">
             Detail Pekerja di Project {project?.nama || project?.name || `#${project?.id}`}
           </h1>
-          <Button variant="outline" onClick={() => window.history.back()}>
-            Kembali
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={() => window.history.back()}>
+              Kembali
+            </Button>
+            {hasPermission && hasPermission("project.worker.manage") && (
+              <DeleteConfirmationDialog
+                onConfirm={handleRemove}
+                title="Keluarkan Pekerja dari Project"
+                description={`Apakah Anda yakin ingin mengeluarkan pekerja "${pekerja?.name || "-"}" dari project "${project?.nama || project?.name || "-"}"?`}
+                warningText="Aksi ini akan menghapus keanggotaan pekerja di project."
+                triggerText="Keluarkan"
+                variant="destructive"
+              />
+            )}
+          </div>
         </Card>
 
         {/* Informasi Pekerja */}

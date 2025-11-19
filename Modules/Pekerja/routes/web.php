@@ -39,6 +39,10 @@ Route::middleware(['auth'])
 
                 Route::put('/{project_id}/pekerja/{pekerja_id}/update', [PekerjaProjectController::class, 'updateProjectPeran'])
                     ->name('updateProjectPeran');
+                // Remove pekerja from project (requires project worker manage permission)
+                Route::delete('/{project_id}/pekerja/{pekerja_id}', [PekerjaProjectController::class, 'remove'])
+                    ->name('remove')
+                    ->middleware(['require.permission:project.worker.manage']);
             });
 
     });

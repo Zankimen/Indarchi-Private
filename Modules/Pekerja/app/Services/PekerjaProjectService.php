@@ -121,4 +121,15 @@ class PekerjaProjectService
             }
         });
     }
+
+    public function removePekerjaFromProject(int $pekerjaId, int $projectId)
+    {
+        return DB::transaction(function () use ($pekerjaId, $projectId) {
+            $user = $this->findPekerjaById($pekerjaId);
+            // Detach the user from the project
+            if ($user) {
+                $user->projects()->detach($projectId);
+            }
+        });
+    }
 }
