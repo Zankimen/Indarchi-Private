@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Head, useForm, usePage, router } from "@inertiajs/react";
 import Navbar from "@/layout/NavBar";
 import { Card } from "@/components/ui/card";
@@ -194,8 +194,100 @@ function PekerjaProjectDetail({ project, pekerja, posisi, roles }) {
             </div>
           )}
         </Card>
+
+        <Card className="p-6 border-border space-y-4">
+          <h2 className="text-xl font-semibold mb-2">Presensi Pekerja</h2>
+          <Separator />
+          <div>
+            <p className="text-sm text-muted-foreground mb-2">Lihat hasil presensi pekerja pada project ini (bulan berjalan).</p>
+
+            <PresensiList projectId={project?.id} pekerjaId={pekerja?.id} />
+          </div>
+        </Card>
       </div>
     </>
+  );
+}
+
+function PresensiList({ projectId, pekerjaId }) {
+  const [loading, setLoading] = useState(true);
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    if (!projectId || !pekerjaId) return;
+
+    async function fetchPresensi() {
+      setLoading(true);
+      try {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+
+        const res = await window.fetch(`/projects/${projectId}/presensi-pekerja?user_id=${pekerjaId}&year=${year}&month=${month}`, {
+          credentials: "same-origin",
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Gagal ambil data presensi.");
+
+        setItems(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error("Gagal load presensi:", err);
+        setItems([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchPresensi();
+  }, [projectId, pekerjaId]);
+
+  if (loading) {
+    return <p className="text-sm text-muted-foreground">Memuat presensi...</p>;
+  }
+
+  if (!items || items.length === 0) {
+    return <p className="text-center text-muted-foreground py-6">Tidak ada presensi dibuka</p>;
+  }
+
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+      {items.map((it, idx) => {
+        const status = (it.status || "").toLowerCase();
+        const isHadir = status === "hadir";
+        const dateLabel = it.tanggal ? new Date(it.tanggal).toLocaleDateString("id-ID", { day: '2-digit', month: 'long', year: 'numeric' }) : "-";
+        const timeLabel = it.jam_masuk || it.jam_keluar ? `${(it.jam_masuk || '-')}` + (it.jam_keluar ? ` - ${it.jam_keluar}` : '') : "-";
+
+        return (
+          <div
+            key={it.id || idx}
+            className={`rounded-lg p-3 min-h-[88px] flex flex-col justify-between ${isHadir ? 'bg-[#2afa5b]/50' : 'bg-gray-50 border border-gray-200'}`}>
+            <div className="flex items-center justify-between mb-1">
+              <div className="text-sm font-semibold">Presensi</div>
+              <div className="text-xs px-2 py-0.5 rounded-full bg-white text-muted-foreground">{idx + 1}</div>
+            </div>
+
+            <div className="text-sm text-black mb-2">{dateLabel} · {timeLabel} WIB</div>
+
+
+            <div className="flex items-center justify-between mt-2">
+              <div className={`text-xs font-medium ${isHadir ? 'text-black' : 'text-gray-800'}`}>Kehadiran anda: {it.status ? String(it.status).toUpperCase() : 'TIDAK TERDATA'}</div>
+              <div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    const presensiId = it.id || it.schedule_id || `sched_${it.id}`;
+                    router.visit(`/projects/${projectId}/presensi/${presensiId}`);
+                  }}
+                >
+                  Detail
+                </Button>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
   );
 }
 

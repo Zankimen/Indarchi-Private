@@ -5,7 +5,7 @@ namespace Modules\Presensi\Services;
 use Carbon\Carbon;
 use Modules\Presensi\Models\Presensi;
 use Modules\Presensi\Repositories\Eloquent\PresensiRepository;
-use Modules\Project\Repositories\Eloquent\ProjectRepository;
+use Modules\Project\Repositories\ProjectRepository;
 
 class PresensiService
 {
@@ -25,7 +25,6 @@ class PresensiService
     {
         $today = Carbon::today()->toDateString();
 
-        // Check if already clocked in today
         $existingPresensi = $this->presensiRepository->findByUserProjectAndDate(
             $data['user_id'],
             $data['project_id'],
@@ -36,11 +35,9 @@ class PresensiService
             throw new \Exception('Anda sudah melakukan absen masuk hari ini');
         }
 
-        // Verify location if needed
         if (isset($data['latitude_masuk']) && isset($data['longitude_masuk'])) {
             $project = $this->projectRepository->find($data['project_id']);
 
-            // Simple distance check (you might want to implement a more accurate method)
             $isWithinRadius = $this->checkLocationWithinRadius(
                 $data['latitude_masuk'],
                 $data['longitude_masuk'],
@@ -139,11 +136,7 @@ class PresensiService
 
     private function checkLocationWithinRadius($latitude, $longitude, $project)
     {
-        // This is a simple implementation
-        // You might want to use a more accurate method like Haversine formula
-
-        // For now, we'll return true - implement actual distance calculation
-        // based on project->radius and project->lokasi coordinates
+      
 
         return true;
     }

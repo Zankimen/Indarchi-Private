@@ -88,7 +88,7 @@ function PekerjaDetails({ pekerja, perans }) {
           </div>
         </Card>
 
-        {/* Permissions Card */}
+        
         {pekerja.permissions && pekerja.permissions.length > 0 && (
           <Card className="p-6 px-8 border-border">
             <div className="space-y-4">

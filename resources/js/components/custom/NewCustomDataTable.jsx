@@ -160,7 +160,6 @@ function Body() {
 }
 
 function renderCell(column, value, item, onEdit, onDelete) {
-  // avatar type renders avatar + name (if available)
   if (column.type === "avatar") {
     const src = item.avatar_url || item.avatar || item.photo || item.avatar_url || null;
     const initials = (item.name || item.email || "").split(" ").map((s) => s[0]).slice(0,2).join("");
@@ -201,7 +200,6 @@ function renderCell(column, value, item, onEdit, onDelete) {
         >
           <Edit className="h-4 w-4" />
         </Button>
-        {/* Only show delete button when the item is not an admin user */}
         {!(
           (item?.role && typeof item.role === "string" && item.role.toLowerCase() === "admin") ||
           (Array.isArray(item?.roles) && item.roles.some((r) => (r?.name || r)?.toString().toLowerCase() === "admin"))

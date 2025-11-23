@@ -71,7 +71,6 @@ function AddWorkerModal({ availableWorkers, project_id }) {
     post(`/projects/${project_id}/pekerja/add`);
   };
 
-  // Find selected worker name to display
   const selectedWorker = availableWorkers.find((w) => w.id.toString() === data.pekerja_id?.toString());
 
   return (
